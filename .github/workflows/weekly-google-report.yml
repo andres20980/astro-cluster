@@ -2,7 +2,7 @@ name: "📊 Weekly Google Report"
 
 on:
   schedule:
-    - cron: '0 9 * * 1'   # Lunes 09:00 UTC
+    - cron: '0 9 * * 4'   # Jueves 09:00 UTC (mide impacto del auto-PR del martes)
   workflow_dispatch:
 
 permissions:

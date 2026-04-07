@@ -60,13 +60,34 @@ function optimizeFile(rule) {
 }
 
 function main() {
-  const rules = readJson(RULES_PATH, { rulesByQuery: {} }).rulesByQuery || {};
-  const payload = readJson(RECS_PATH, { topRecommendations: [] });
-  const recs = Array.isArray(payload.topRecommendations) ? payload.topRecommendations : [];
-  const state = readJson(STATE_PATH, { lastRun: null, actions: {} });
+  const rulesData = readJson(RULES_PATH, { rulesByQuery: {}, targetKeywords: [] });
+  const rules = rulesData.rulesByQuery || {};
+  const state = readJson(STATE_PATH, { lastRun: null, lastQuery: null, actions: {} });
+
+  // Build recommendations from targetKeywords (rotating through them each week)
+  // If SEO_AGENT_RECOMMENDATIONS.json exists, prefer it; otherwise auto-generate
+  let recs;
+  const payload = readJson(RECS_PATH, null);
+  if (payload && Array.isArray(payload.topRecommendations) && payload.topRecommendations.length > 0) {
+    recs = payload.topRecommendations;
+  } else {
+    // Auto-rotate through keywords sorted by priority
+    const keywords = (rulesData.targetKeywords || [])
+      .filter(k => rules[k.query])
+      .sort((a, b) => (a.priority || 99) - (b.priority || 99));
+    // Pick the next keyword after last applied one
+    const lastIdx = keywords.findIndex(k => k.query === state.lastQuery);
+    const startIdx = (lastIdx + 1) % Math.max(keywords.length, 1);
+    recs = keywords.slice(startIdx, startIdx + MAX_CHANGES).map(k => ({ query: k.query }));
+    if (recs.length === 0 && keywords.length > 0) {
+      recs = keywords.slice(0, MAX_CHANGES).map(k => ({ query: k.query }));
+    }
+  }
+
   const runAt = new Date().toISOString();
   const results = [];
   let applied = 0;
+  let lastQuery = state.lastQuery;
 
   for (const rec of recs) {
     if (applied >= MAX_CHANGES) break;
@@ -75,10 +96,11 @@ function main() {
     if (!rule) continue;
     const res = optimizeFile(rule);
     results.push(res);
-    if (res.changed) applied++;
+    if (res.changed) { applied++; lastQuery = key; }
   }
 
   state.lastRun = runAt;
+  state.lastQuery = lastQuery;
   state.results = results;
   fs.mkdirSync(path.dirname(STATE_PATH), { recursive: true });
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2), 'utf8');
