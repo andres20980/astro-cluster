@@ -7,14 +7,18 @@ contenido en los PDFs emitidos por la Secretaría de Estado de Justicia.
 Soporta:
   - Certificados modernos (texto digital embebido) vía pdfplumber
   - Actas antiguas manuscritas (escaneadas) vía OCR con pytesseract
+  - Certificados escaneados difíciles vía Gemini Vision (fallback)
   - Formato moderno con campos estructurados (Nombre, Primer apellido...)
   - Formato antiguo en prosa ("se procede a inscribir el nacimiento...")
 """
 
+import base64
 import logging
+import os
 import re
 from pathlib import Path
 
+import httpx
 import pdfplumber
 
 log = logging.getLogger(__name__)
@@ -25,6 +29,9 @@ try:
     HAS_OCR = True
 except ImportError:
     HAS_OCR = False
+
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_MODEL = "gemini-2.5-flash"
 
 
 MESES = {
@@ -97,6 +104,135 @@ def _ocr_pdf(pdf_path: str | Path) -> str:
         text = pytesseract.image_to_string(img, lang="spa")
         texts.append(text)
     return "\n".join(texts)
+
+
+def _gemini_vision_ocr(pdf_path: str | Path) -> str:
+    """Extrae datos de nacimiento de un PDF escaneado usando Gemini Vision."""
+    if not GEMINI_KEY:
+        log.warning("GEMINI_API_KEY not set, skipping Gemini Vision OCR")
+        return ""
+    if not HAS_OCR:
+        return ""
+
+    images = convert_from_path(str(pdf_path), dpi=200)
+    if not images:
+        return ""
+
+    # Convert first 2 pages to base64 JPEG
+    parts = []
+    parts.append({
+        "text": (
+            "Este es un certificado de nacimiento español escaneado. "
+            "Extrae EXACTAMENTE estos campos del documento:\n"
+            "- Nombre completo del inscrito\n"
+            "- Primer apellido\n"
+            "- Segundo apellido\n"
+            "- Día de nacimiento (número)\n"
+            "- Mes de nacimiento (nombre en español)\n"
+            "- Año de nacimiento (número)\n"
+            "- Hora de nacimiento (HH:MM)\n"
+            "- Lugar de nacimiento\n"
+            "- Sexo\n\n"
+            "Responde SOLO en este formato exacto, una línea por campo:\n"
+            "Nombre: ...\n"
+            "Primer apellido: ...\n"
+            "Segundo apellido: ...\n"
+            "Día: ...\n"
+            "Mes: ...\n"
+            "Año: ...\n"
+            "Hora de nacimiento: HH:MM\n"
+            "Lugar: ...\n"
+            "Sexo: varón/hembra\n"
+            "Si no puedes leer un campo, escribe: NO LEGIBLE"
+        )
+    })
+
+    import io
+    for img in images[:2]:
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=85)
+        b64 = base64.b64encode(buf.getvalue()).decode()
+        parts.append({
+            "inlineData": {
+                "mimeType": "image/jpeg",
+                "data": b64
+            }
+        })
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent?key={GEMINI_KEY}"
+    payload = {
+        "contents": [{"parts": parts}],
+        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 500}
+    }
+
+    try:
+        resp = httpx.post(url, json=payload, timeout=30.0)
+        resp.raise_for_status()
+        data = resp.json()
+        text = data["candidates"][0]["content"]["parts"][0]["text"]
+        log.info("Gemini Vision OCR result: %s", text[:300])
+        return text
+    except Exception as e:
+        log.error("Gemini Vision OCR failed: %s", e)
+        return ""
+
+
+def _parse_gemini_response(text: str) -> dict:
+    """Parse structured Gemini Vision response into fields."""
+    result = {}
+
+    def _get(pattern: str) -> str | None:
+        m = re.search(pattern, text, re.IGNORECASE)
+        if m:
+            val = m.group(1).strip()
+            if val and val.upper() != "NO LEGIBLE":
+                return val
+        return None
+
+    result["name"] = _get(r"Nombre:\s*(.+)")
+    result["first_surname"] = _get(r"Primer apellido:\s*(.+)")
+    result["second_surname"] = _get(r"Segundo apellido:\s*(.+)")
+
+    day_str = _get(r"D[ií]a:\s*(.+)")
+    if day_str:
+        d = re.search(r"\d+", day_str)
+        result["day"] = int(d.group()) if d else NUMEROS_TEXTO.get(day_str.lower())
+    else:
+        result["day"] = None
+
+    mes_str = _get(r"Mes:\s*(.+)")
+    result["month"] = MESES.get(mes_str.lower()) if mes_str else None
+
+    year_str = _get(r"A[ñn]o:\s*(.+)")
+    if year_str:
+        y = re.search(r"\d{4}", year_str)
+        result["year"] = int(y.group()) if y else None
+    else:
+        result["year"] = None
+
+    hora_str = _get(r"Hora de nacimiento:\s*(.+)")
+    if hora_str:
+        hm = re.search(r"(\d{1,2})[:\.](\d{2})", hora_str)
+        if hm:
+            result["hour"] = int(hm.group(1))
+            result["minute"] = int(hm.group(2))
+        else:
+            result["hour"] = None
+            result["minute"] = None
+    else:
+        result["hour"] = None
+        result["minute"] = None
+
+    result["birthplace"] = _get(r"Lugar:\s*(.+)")
+
+    sexo_str = _get(r"Sexo:\s*(.+)")
+    if sexo_str:
+        s = sexo_str.lower()
+        result["sex"] = "M" if "var" in s else ("F" if "hembr" in s or "mujer" in s else None)
+    else:
+        result["sex"] = None
+
+    return result
 
 
 def _is_text_useful(text: str) -> bool:
@@ -406,5 +542,22 @@ def parse_birth_certificate(pdf_path: str | Path) -> dict:
              result.get("name"), result.get("day"), result.get("month"),
              result.get("year"), result.get("hour"), result.get("minute"),
              result.get("birthplace"), ocr_used)
+
+    # Paso 3: si faltan campos críticos (day/month/year/hour), usar Gemini Vision
+    critical_missing = not result.get("day") or not result.get("month") or not result.get("year") or result.get("hour") is None
+    if critical_missing and GEMINI_KEY:
+        log.info("Critical fields missing after regex parsing, trying Gemini Vision...")
+        gemini_text = _gemini_vision_ocr(pdf_path)
+        if gemini_text:
+            gemini_fields = _parse_gemini_response(gemini_text)
+            log.info("Gemini extracted: %s", {k: v for k, v in gemini_fields.items() if v is not None})
+            result["gemini_used"] = True
+            # Fill in only missing fields
+            for key in ("name", "first_surname", "second_surname", "day", "month", "year", "hour", "minute", "birthplace", "sex"):
+                if not result.get(key) and gemini_fields.get(key) is not None:
+                    result[key] = gemini_fields[key]
+                    log.info("Gemini filled field %s = %s", key, gemini_fields[key])
+    else:
+        result["gemini_used"] = False
 
     return result
