@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carta Astral Gratis — Calcula tu mapa natal con hora exacta</title>
+  <meta name="description" content="Genera tu carta astral natal gratis con la hora exacta de tu partida de nacimiento. Cálculo preciso con Swiss Ephemeris: planetas, casas, ascendente y aspectos.">
+  <meta name="keywords" content="carta astral, carta natal, mapa astral, ascendente, horóscopo natal, calcular carta astral gratis, carta astral gratis online">
+  <link rel="canonical" href="https://carta-astral-gratis.es/">
+  <meta property="og:title" content="Carta Astral Gratis — Tu mapa natal con hora exacta">
+  <meta property="og:description" content="La única carta astral que extrae automáticamente tu hora de nacimiento de la partida civil. Cálculo astronómico preciso.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:url" content="https://carta-astral-gratis.es/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#7c3aed">
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DEWMQ73FH5');</script>
+  <!-- AdSense Auto Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#faf8f5;--surface:#fff;--border:#e8e0d8;--text:#2d2a26;--muted:#7a7268;
+      --accent:#7c3aed;--accent2:#c084fc;--gold:#d4a017;--success:#16a34a;--danger:#dc2626;
+      --gradient:linear-gradient(135deg,#7c3aed 0%,#c084fc 50%,#d4a017 100%);
+      --shadow:0 2px 12px rgba(124,58,237,.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* LAYOUT */
+    .page-wrap{display:flex;justify-content:center;gap:1rem;max-width:1400px;margin:0 auto;padding:0 .5rem}
+    .ad-col{width:160px;flex-shrink:0;padding-top:2rem}
+    .ad-col .ad-slot{width:160px;min-height:600px;position:sticky;top:1rem}
+    .main-col{flex:1;max-width:780px;min-width:0}
+    @media(max-width:1100px){.ad-col{display:none}}
+
+    /* HEADER */
+    header{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(180deg,#f3eeff 0%,var(--bg) 100%)}
+    .logo{font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600}
+    header h1{font-family:'Playfair Display',Georgia,serif;font-size:2.4rem;font-weight:700;color:var(--text);margin:.4rem 0}
+    header h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-desc{max-width:620px;margin:.8rem auto 0;font-size:.95rem;line-height:1.65;color:var(--muted);font-weight:300}
+    .sparkle{display:inline-block;animation:twinkle 2s ease-in-out infinite}
+    @keyframes twinkle{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* STEPS */
+    .steps{display:flex;gap:.4rem;justify-content:center;margin:1.5rem 0;padding:0 1rem}
+    .step-pill{display:flex;align-items:center;gap:.4rem;padding:.4rem .9rem;border-radius:999px;font-size:.8rem;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .3s}
+    .step-pill.active{border-color:var(--accent);color:var(--accent);background:#f3eeff}
+    .step-pill.done{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .step-pill .num{width:1.4rem;height:1.4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;background:var(--border);color:var(--muted)}
+    .step-pill.active .num{background:var(--accent);color:#fff}
+    .step-pill.done .num{background:rgba(255,255,255,.3);color:#fff}
+
+    /* PANELS */
+    .container{padding:0 1.5rem 2rem}
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.8rem;box-shadow:var(--shadow);margin-bottom:1.2rem}
+    .panel h2{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:1rem}
+    .hidden{display:none!important}
+
+    /* OPTION CARDS */
+    .opt-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+    .opt-card{border:2px solid var(--border);border-radius:12px;padding:1.2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)}
+    .opt-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:var(--shadow)}
+    .opt-card.sel{border-color:var(--accent);background:#f9f5ff}
+    .opt-card .ic{font-size:2rem;margin-bottom:.5rem}
+    .opt-card .tl{font-weight:600;font-size:.9rem;margin-bottom:.3rem}
+    .opt-card .ds{font-size:.75rem;color:var(--muted);line-height:1.4}
+    .opt-card .hl{font-size:.7rem;color:var(--accent);margin-top:.4rem;display:inline-block}
+    @media(max-width:500px){.opt-cards{grid-template-columns:1fr}}
+
+    /* FORM */
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    .fgroup{display:flex;flex-direction:column;gap:.25rem}
+    .fgroup.full{grid-column:1/-1}
+    label{font-size:.75rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+    input,select{padding:.6rem .8rem;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit;color:var(--text);background:var(--bg);transition:border-color .2s}
+    input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+    @media(max-width:500px){.fg{grid-template-columns:1fr}}
+
+    /* UPLOAD */
+    .upload{border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:#faf8f5}
+    .upload:hover,.upload.dragover{border-color:var(--accent);background:#f9f5ff}
+    .upload .ic{font-size:2.5rem}
+    .upload input[type="file"]{display:none}
+
+    /* BUTTONS */
+    .btn{padding:.65rem 1.5rem;border:none;border-radius:10px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+    .btn-p{background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.3)}
+    .btn-p:hover{background:#6d28d9;transform:translateY(-1px)}
+    .btn-p:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-s{background:var(--bg);color:var(--accent);border:1px solid var(--border)}
+    .btn-s:hover{background:#f3eeff}
+    .acts{display:flex;gap:.8rem;justify-content:flex-end;margin-top:1.2rem}
+
+    /* MAP */
+    #map{height:350px;border-radius:12px;border:1px solid var(--border)}
+    .map-i{display:flex;gap:1.5rem;margin-top:.8rem;font-size:.85rem;color:var(--muted);flex-wrap:wrap}
+    .map-i strong{color:var(--text)}
+
+    /* RESULTS */
+    table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.8rem 0 1.5rem}
+    th{background:#f3eeff;color:var(--accent);font-weight:600;text-transform:uppercase;font-size:.7rem;letter-spacing:.05em}
+    th,td{padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--border)}
+    tr:hover td{background:#faf8f5}
+    .glyph{font-size:1.1rem}
+    .asp-conj{color:var(--accent)}.asp-opos{color:var(--danger)}.asp-trig{color:var(--success)}.asp-cuad{color:#ea580c}.asp-sext{color:#0284c7}.asp-quin{color:var(--muted)}
+    .elem-bars{margin:.5rem 0 1.5rem}
+    .ebar{display:flex;align-items:center;gap:.5rem;margin:.35rem 0}
+    .ebar .lb{width:5rem;font-size:.8rem;font-weight:500;text-align:right}
+    .ebar .br{height:1.2rem;border-radius:6px;transition:width .6s ease}
+    .ebar .ct{font-size:.8rem;font-weight:600;color:var(--accent)}
+    .br.fire{background:linear-gradient(90deg,#ef4444,#f97316)}.br.earth{background:linear-gradient(90deg,#16a34a,#65a30d)}
+    .br.air{background:linear-gradient(90deg,#0ea5e9,#7c3aed)}.br.water{background:linear-gradient(90deg,#3b82f6,#6366f1)}
+    h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin:1.2rem 0 .5rem;color:var(--text)}
+
+    /* CASAS TABLE */
+    .casas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:.8rem 0 1.5rem}
+    .casa-card{display:flex;gap:.7rem;padding:.7rem;border-radius:10px;background:var(--bg);border:1px solid var(--border)}
+    .casa-card .casa-num{width:2rem;height:2rem;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+    .casa-card .casa-info{min-width:0}
+    .casa-card .casa-area{font-weight:600;font-size:.82rem;color:var(--text)}
+    .casa-card .casa-desc{font-size:.72rem;color:var(--muted);line-height:1.4}
+
+    /* ALERTS */
+    .alert{padding:.7rem 1rem;border-radius:8px;font-size:.82rem;margin-top:.8rem}
+    .alert-ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+    .alert-err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+    .spinner{width:2rem;height:2rem;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* MODAL */
+    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+    .modal-ov.open{opacity:1;pointer-events:auto}
+    .modal{background:var(--surface);border-radius:16px;padding:2rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem}
+    .modal ol{padding-left:1.4rem;line-height:1.8;color:var(--text);font-size:.9rem}
+    .modal ol a{color:var(--accent);font-weight:500}
+    .modal .cls{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);line-height:1}
+    .modal .cls:hover{color:var(--text)}
+
+    /* FOOTER */
+    footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
+    footer a{color:var(--accent);text-decoration:none}
+
+    /* AD SLOTS mobile */
+    .ad-h{width:100%;max-width:728px;margin:1rem auto;min-height:90px;text-align:center}
+    @media(min-width:1100px){.ad-h.mob{display:none}}
+
+    /* AD PLACEHOLDERS (shown until AdSense loads) */
+    .ad-ph{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.3rem;background:linear-gradient(135deg,#f3eeff 0%,#fef9ee 100%);border:1px dashed var(--border);border-radius:10px;color:var(--muted);font-size:.7rem;letter-spacing:.04em;overflow:hidden;position:relative}
+    .ad-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(124,58,237,.03) 10px,rgba(124,58,237,.03) 20px)}
+    .ad-ph .ad-icon{font-size:1.5rem;opacity:.5;position:relative}
+    .ad-ph .ad-label{position:relative;opacity:.6;text-transform:uppercase;font-weight:500}
+    .ad-ph-v{width:160px;min-height:600px}
+    .ad-ph-h{width:100%;height:90px}
+    .ad-ph-h.tall{height:250px}
+  </style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Carta Astral Gratis","url":"https://carta-astral-gratis.es/","applicationCategory":"LifestyleApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Genera tu carta astral natal gratis con cálculo astronómico preciso. Planetas, casas, ascendente y aspectos.","inLanguage":"es"}
+  </script>
+</head>
+<body>
+
+<!-- Modal: Cómo descargar certificado -->
+<div class="modal-ov" id="certModal">
+  <div class="modal">
+    <button class="cls" onclick="closeModal()">&times;</button>
+    <h2>📄 ¿Cómo obtener tu certificado?</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">
+      Puedes descargar tu certificado de nacimiento digital desde la sede electrónica del Ministerio de Justicia. Es gratis.
+    </p>
+    <ol>
+      <li>Accede a <a href="https://sede.mjusticia.gob.es/es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a></li>
+      <li>Identifícate con <strong>Cl@ve</strong>, certificado digital o DNI-e</li>
+      <li>Selecciona <strong>"Certificado de nacimiento"</strong></li>
+      <li>Rellena los datos del titular</li>
+      <li>Solicita el certificado en formato <strong>PDF</strong></li>
+      <li>Descárgalo desde <strong>"Mi Carpeta Ciudadana"</strong></li>
+    </ol>
+    <p style="color:var(--muted);font-size:.8rem;margin-top:1rem">
+      💡 Pide el certificado <em>literal</em> (no extracto) — contiene la hora exacta de nacimiento.
+    </p>
+    <div class="acts" style="margin-top:1.5rem"><button class="btn btn-p" onclick="closeModal()">Entendido</button></div>
+  </div>
+</div>
+
+<header>
+  <div class="logo">✦ Carta Astral Gratis ✦</div>
+  <h1>Descubre tu <span>Carta Astral</span></h1>
+  <p class="hero-desc">
+    Tu Carta Astral es una fotografía del cielo en el instante en que naciste, vista desde tu lugar de nacimiento.
+    El cielo se divide en 12 Casas — familia, pareja, trabajo, dinero… — y la posición de los planetas y constelaciones
+    en ese momento revela las energías que guían tu camino de vida. <span class="sparkle">✨</span>
+  </p>
+</header>
+
+<!-- Ad horizontal mobile -->
+<div class="ad-h mob">
+  <div class="ad-ph ad-ph-h" id="ad-top">
+    <span class="ad-icon">✦</span>
+    <span class="ad-label">Publicidad · 728×90</span>
+  </div>
+  <ins class="adsbygoogle" style="display:none" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+</div>
+
+<div class="page-wrap">
+  <!-- AD LEFT -->
+  <div class="ad-col"><div class="ad-slot">
+    <div class="ad-ph ad-ph-v" id="ad-left">
+      <span class="ad-icon">☽</span>
+      <span class="ad-label">Publicidad</span>
+      <span class="ad-label">160×600</span>
+    </div>
+    <ins class="adsbygoogle" style="display:none" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="vertical" data-full-width-responsive="false"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div></div>
+
+  <!-- MAIN -->
+  <div class="main-col">
+    <div class="steps">
+      <div class="step-pill active" id="sp1"><span class="num">1</span> Datos</div>
+      <div class="step-pill" id="sp2"><span class="num">2</span> Lugar</div>
+      <div class="step-pill" id="sp3"><span class="num">3</span> Resultado</div>
+    </div>
+    <div class="container">
+
+      <!-- STEP 1 -->
+      <div id="s1">
+        <div class="panel">
+          <h2>¿Cómo quieres introducir tus datos?</h2>
+          <div class="opt-cards">
+            <div class="opt-card" id="optPdf" onclick="selOpt('pdf')">
+              <div class="ic">📄</div>
+              <div class="tl">Subir certificado de nacimiento</div>
+              <div class="ds">Extraemos automáticamente tu nombre, fecha y hora exacta del PDF.</div>
+              <a href="#" class="hl" onclick="event.stopPropagation();openModal()">¿Cómo descargarlo?</a>
+            </div>
+            <div class="opt-card" id="optMan" onclick="selOpt('manual')">
+              <div class="ic">✏️</div>
+              <div class="tl">Introducir datos manualmente</div>
+              <div class="ds">Fecha, hora y lugar de nacimiento — cuanto más exacto el lugar, mejor el cálculo.</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel hidden" id="pdfSec">
+          <h2>Sube tu certificado</h2>
+          <div class="upload" id="dropzone">
+            <div class="ic">📄</div>
+            <p><strong>Arrastra el PDF aquí</strong> o haz clic para seleccionar</p>
+            <p style="font-size:.8rem;margin-top:.4rem;color:var(--muted)">Máx. 10 MB · Solo PDF</p>
+            <input type="file" id="pdfInput" accept=".pdf">
+          </div>
+          <div class="alert alert-ok hidden" id="upOk">✓ Datos extraídos</div>
+          <div class="alert alert-err hidden" id="upErr"></div>
+        </div>
+        <div class="panel hidden" id="formSec">
+          <h2>Datos de nacimiento</h2>
+          <div class="fg">
+            <div class="fgroup"><label for="fdate">Fecha de nacimiento *</label><input type="date" id="fdate"></div>
+            <div class="fgroup"><label for="ftime">Hora de nacimiento *</label><input type="time" id="ftime"></div>
+            <div class="fgroup full"><label for="fplace">Lugar de nacimiento *</label><input type="text" id="fplace" placeholder="Ej: Hospital Vall d'Hebron, Barcelona"><p style="font-size:.7rem;color:var(--muted);margin-top:.2rem">📍 Cuanto más exacto, mejor — hospital, pueblo, barrio…</p></div>
+            <div class="fgroup full"><label for="ftz">Zona horaria</label>
+              <select id="ftz">
+                <option value="Europe/Madrid">España peninsular</option>
+                <option value="Atlantic/Canary">Canarias</option>
+                <option value="Europe/London">Reino Unido</option>
+                <option value="Europe/Paris">Francia</option>
+                <option value="America/Mexico_City">México</option>
+                <option value="America/Argentina/Buenos_Aires">Argentina</option>
+                <option value="America/Bogota">Colombia</option>
+              </select>
+            </div>
+            <div class="fgroup full"><label for="fname">Nombre <span style="font-weight:300;text-transform:none">(opcional, solo para personalizar)</span></label><input type="text" id="fname" placeholder="Ej: María García López"></div>
+          </div>
+          <div class="acts">
+            <button class="btn btn-s" onclick="goBack()">← Atrás</button>
+            <button class="btn btn-p" id="btnN1" disabled onclick="goNext()">Siguiente →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="s2" class="hidden">
+        <div class="panel">
+          <h2>¿Dónde naciste?</h2>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Busca tu ciudad o haz clic en el mapa para marcar el lugar exacto.</p>
+          <div style="display:flex;gap:.5rem;margin-bottom:.8rem">
+            <input type="text" id="mapSearch" placeholder="Buscar ciudad…" style="flex:1">
+            <button class="btn btn-s" onclick="searchPlace()">Buscar</button>
+          </div>
+          <div id="map"></div>
+          <input type="hidden" id="fcity" value="">
+          <div class="map-i">
+            <span>📍 Lat: <strong id="dispLat">—</strong></span>
+            <span>Lng: <strong id="dispLng">—</strong></span>
+            <span>Ciudad: <strong id="dispCity">—</strong></span>
+          </div>
+          <div class="acts">
+            <button class="btn btn-s" onclick="goBack()">← Atrás</button>
+            <button class="btn btn-p" id="btnN2" disabled onclick="goNext()">Calcular mi carta ✨</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="s3" class="hidden">
+        <div class="panel">
+          <div id="chartLoad" class="hidden" style="text-align:center;padding:3rem"><div class="spinner"></div><p style="margin-top:1rem;color:var(--muted)">Calculando posiciones planetarias…</p></div>
+          <div id="chartRes" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Ad mid-content -->
+      <div class="ad-h">
+        <div class="ad-ph ad-ph-h tall" id="ad-mid">
+          <span class="ad-icon">☆</span>
+          <span class="ad-label">Publicidad · 728×250</span>
+        </div>
+        <ins class="adsbygoogle" style="display:none" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+
+      <!-- MAPA DE TU VIDA -->
+      <div class="panel" id="casas-info">
+        <h2>🏠 El Mapa de tu Vida — Las 12 Casas</h2>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:1rem">
+          Imagina que el cielo se divide en 12 "habitaciones", cada una gobernando un área diferente de tu vida.
+          Los planetas que estaban en cada habitación cuando naciste marcan cómo vives esa área.
+        </p>
+        <div class="casas-grid">
+          <div class="casa-card"><div class="casa-num">1</div><div class="casa-info"><div class="casa-area">Identidad</div><div class="casa-desc">Tu personalidad, tu físico y cómo te ven los demás (Ascendente).</div></div></div>
+          <div class="casa-card"><div class="casa-num">2</div><div class="casa-info"><div class="casa-area">Recursos</div><div class="casa-desc">Tu dinero, tus posesiones y lo que valoras.</div></div></div>
+          <div class="casa-card"><div class="casa-num">3</div><div class="casa-info"><div class="casa-area">Entorno</div><div class="casa-desc">Cómo te comunicas, tus hermanos y los estudios cortos.</div></div></div>
+          <div class="casa-card"><div class="casa-num">4</div><div class="casa-info"><div class="casa-area">Hogar</div><div class="casa-desc">Tu familia, tus raíces y de dónde vienes.</div></div></div>
+          <div class="casa-card"><div class="casa-num">5</div><div class="casa-info"><div class="casa-area">Creatividad</div><div class="casa-desc">El placer, los romances, los hijos y la diversión.</div></div></div>
+          <div class="casa-card"><div class="casa-num">6</div><div class="casa-info"><div class="casa-area">Rutina</div><div class="casa-desc">El trabajo diario, la salud y tus hábitos.</div></div></div>
+          <div class="casa-card"><div class="casa-num">7</div><div class="casa-info"><div class="casa-area">Pareja</div><div class="casa-desc">El matrimonio, los socios y las relaciones estables.</div></div></div>
+          <div class="casa-card"><div class="casa-num">8</div><div class="casa-info"><div class="casa-area">Transformación</div><div class="casa-desc">Herencias, crisis, miedos y la intimidad compartida.</div></div></div>
+          <div class="casa-card"><div class="casa-num">9</div><div class="casa-info"><div class="casa-area">Expansión</div><div class="casa-desc">Viajes largos, filosofía, religión y estudios superiores.</div></div></div>
+          <div class="casa-card"><div class="casa-num">10</div><div class="casa-info"><div class="casa-area">Éxito</div><div class="casa-desc">Tu profesión, tu vocación y tu estatus social.</div></div></div>
+          <div class="casa-card"><div class="casa-num">11</div><div class="casa-info"><div class="casa-area">Amigos</div><div class="casa-desc">Tus grupos, los proyectos sociales y tus anhelos.</div></div></div>
+          <div class="casa-card"><div class="casa-num">12</div><div class="casa-info"><div class="casa-area">Inconsciente</div><div class="casa-desc">Lo oculto, la espiritualidad y los finales de ciclo.</div></div></div>
+        </div>
+        <p style="color:var(--muted);font-size:.85rem;line-height:1.6;margin-top:.5rem;background:#f9f5ff;padding:1rem;border-radius:10px">
+          <strong>¿Cómo funciona?</strong> Imagina que al nacer, Marte (energía y lucha) estaba en tu Casa 7 (pareja).
+          Tu camino en las relaciones será muy activo — mucha pasión, intensidad, quizás discusiones —
+          porque esa energía "vive" en esa habitación de tu vida.
+        </p>
+      </div>
+
+      <!-- SEO Block -->
+      <div class="panel">
+        <h2>¿Qué es una Carta Astral?</h2>
+        <p style="line-height:1.7;color:var(--muted);font-size:.9rem">
+          La carta astral — también llamada carta natal o mapa astral — es la representación gráfica
+          de las posiciones de los planetas, el Sol y la Luna en el momento exacto de tu nacimiento.
+          Cada planeta refleja una energía distinta: el Sol es tu identidad, la Luna tus emociones,
+          Mercurio tu mente, Venus cómo amas, y Marte cómo actúas.
+          Para un cálculo preciso necesitas tres datos: <strong>fecha</strong>, <strong>hora exacta</strong>
+          y <strong>lugar de nacimiento</strong>. Nuestra herramienta utiliza la Swiss Ephemeris
+          y el sistema de casas Placidus para ofrecerte la máxima precisión astronómica, de forma totalmente gratuita.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD RIGHT -->
+  <div class="ad-col"><div class="ad-slot">
+    <div class="ad-ph ad-ph-v" id="ad-right">
+      <span class="ad-icon">☾</span>
+      <span class="ad-label">Publicidad</span>
+      <span class="ad-label">160×600</span>
+    </div>
+    <ins class="adsbygoogle" style="display:none" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="vertical" data-full-width-responsive="false"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div></div>
+</div>
+
+<footer>
+  <p>© 2026 Carta Astral Gratis · Cálculo con Swiss Ephemeris · Sistema Placidus</p>
+  <p style="margin-top:.3rem"><a href="#">Política de privacidad</a> · <a href="#">Términos de uso</a></p>
+  <p style="margin-top:.5rem;font-style:italic">"Las estrellas no obligan, inclinan."</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+let step=1,bLat=null,bLng=null,bCity='',map=null,marker=null,geoT=null,chartData=null,mode=null;
+
+function openModal(){document.getElementById('certModal').classList.add('open')}
+function closeModal(){document.getElementById('certModal').classList.remove('open')}
+document.getElementById('certModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+
+function selOpt(m){
+  mode=m;
+  document.getElementById('optPdf').classList.toggle('sel',m==='pdf');
+  document.getElementById('optMan').classList.toggle('sel',m==='manual');
+  document.getElementById('pdfSec').classList.toggle('hidden',m!=='pdf');
+  document.getElementById('formSec').classList.remove('hidden');
+  valStep();
+}
+
+function updSteps(){
+  for(let i=1;i<=3;i++){
+    const p=document.getElementById('sp'+i);
+    p.classList.remove('active','done');
+    if(i<step)p.classList.add('done');else if(i===step)p.classList.add('active');
+    document.getElementById('s'+i).classList.toggle('hidden',i!==step);
+  }
+  valStep();
+}
+
+function valStep(){
+  if(step===1){const d=document.getElementById('fdate').value,t=document.getElementById('ftime').value,p=document.getElementById('fplace')?document.getElementById('fplace').value.trim():'';document.getElementById('btnN1').disabled=!(d&&t&&p)}
+  else if(step===2){document.getElementById('btnN2').disabled=!(bLat!==null&&bLng!==null)}
+}
+
+function goNext(){if(step===1){step=2;updSteps();setTimeout(()=>{initMap();autoGeoPlace()},100)}else if(step===2){step=3;updSteps();calcChart()}}
+async function autoGeoPlace(){
+  const p=document.getElementById('fplace')?document.getElementById('fplace').value.trim():'';
+  if(!p)return;
+  document.getElementById('mapSearch').value=p;
+  try{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(p)}&format=json&limit=1&accept-language=es`,{headers:{'User-Agent':'CartaAstralApp/1.0'}});const res=await r.json();if(res.length>0){const x=res[0];const ll=L.latLng(parseFloat(x.lat),parseFloat(x.lon));map.setView(ll,16);updPoint(ll)}}catch{}
+}
+function goBack(){if(step>1){step--;updSteps()}}
+document.addEventListener('input',valStep);
+
+// PDF
+const dz=document.getElementById('dropzone'),pi=document.getElementById('pdfInput');
+dz.addEventListener('click',()=>pi.click());
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0])});
+pi.addEventListener('change',()=>{if(pi.files.length)handleFile(pi.files[0])});
+
+async function handleFile(f){
+  const er=document.getElementById('upErr'),ok=document.getElementById('upOk');
+  er.classList.add('hidden');ok.classList.add('hidden');
+  if(!f.name.toLowerCase().endsWith('.pdf')){er.textContent='Solo se aceptan archivos PDF.';er.classList.remove('hidden');return}
+  dz.innerHTML='<div class="spinner"></div><p style="color:var(--muted);margin-top:.5rem">Procesando PDF…</p>';
+  const fd=new FormData();fd.append('file',f);
+  try{
+    const r=await fetch('/api/parse-pdf',{method:'POST',body:fd});
+    if(!r.ok){const e=await r.json();throw new Error(e.detail||'Error al procesar')}
+    const d=await r.json(),ext=fillPdf(d);
+    if(ext===0){er.textContent='No se pudieron extraer datos. Rellena los campos manualmente.';er.classList.remove('hidden');dz.innerHTML=`<div class="ic">⚠️</div><p><strong>${f.name}</strong></p><p style="font-size:.8rem;color:var(--muted)">Rellena manualmente</p>`}
+    else{const ocr=d.ocr_used?' (OCR — revisa)':'',part=ext<3?' ⚠️ Completa los campos vacíos.':'';ok.textContent='✓ Datos extraídos'+ocr+part;ok.classList.remove('hidden');dz.innerHTML=`<div class="ic">✅</div><p><strong>${f.name}</strong></p><p style="font-size:.8rem;color:var(--muted)">Verifica abajo${ocr}</p>`}
+  }catch(e){
+    er.textContent='Error: '+e.message;er.classList.remove('hidden');
+    dz.innerHTML='<div class="ic">📄</div><p><strong>Arrastra el PDF aquí</strong></p><p style="font-size:.8rem;color:var(--muted)">Máx. 10 MB</p><input type="file" id="pdfInput" accept=".pdf">';
+    document.getElementById('pdfInput').addEventListener('change',()=>{if(document.getElementById('pdfInput').files.length)handleFile(document.getElementById('pdfInput').files[0])});
+  }
+}
+
+function fillPdf(d){
+  let ext=0,name='';
+  if(d.name)name=d.name;if(d.first_surname)name+=' '+d.first_surname;if(d.second_surname)name+=' '+d.second_surname;
+  if(name.trim())document.getElementById('fname').value=name.trim();
+  if(d.birth_place&&document.getElementById('fplace')){document.getElementById('fplace').value=d.birth_place;ext++}
+  if(d.year&&d.month&&d.day){document.getElementById('fdate').value=`${d.year}-${String(d.month).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;ext++}
+  if(d.hour!==null&&d.minute!==null){document.getElementById('ftime').value=`${String(d.hour).padStart(2,'0')}:${String(d.minute).padStart(2,'0')}`;ext++}
+  valStep();return ext;
+}
+
+// Map
+function initMap(){
+  if(map)return;
+  map=L.map('map').setView([40,-3.7],6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+  map.on('click',e=>updPoint(e.latlng));
+  setTimeout(()=>map.invalidateSize(),200);
+}
+function updPoint(ll){
+  bLat=Math.round(ll.lat*1e6)/1e6;bLng=Math.round(ll.lng*1e6)/1e6;
+  if(marker)marker.setLatLng(ll);else{marker=L.marker(ll,{draggable:true}).addTo(map);marker.on('dragend',()=>updPoint(marker.getLatLng()))}
+  document.getElementById('dispLat').textContent=bLat;document.getElementById('dispLng').textContent=bLng;
+  document.getElementById('dispCity').textContent='buscando…';valStep();revGeo(bLat,bLng);
+}
+function revGeo(lat,lng){
+  clearTimeout(geoT);
+  geoT=setTimeout(async()=>{
+    try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=es`,{headers:{'User-Agent':'CartaAstralApp/1.0'}});const d=await r.json(),a=d.address||{};bCity=a.city||a.town||a.village||a.municipality||a.county||'';document.getElementById('dispCity').textContent=bCity+(a.country?', '+a.country:'')||'Desconocido';document.getElementById('fcity').value=bCity}
+    catch{document.getElementById('dispCity').textContent='—';bCity=''}
+  },400);
+}
+async function searchPlace(){
+  const q=document.getElementById('mapSearch').value.trim();if(!q)return;
+  try{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1&accept-language=es`,{headers:{'User-Agent':'CartaAstralApp/1.0'}});const res=await r.json();if(res.length>0){const x=res[0];const ll=L.latLng(parseFloat(x.lat),parseFloat(x.lon));map.setView(ll,14);updPoint(ll)}}catch{}
+}
+document.getElementById('mapSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();searchPlace()}});
+
+// Chart
+async function calcChart(){
+  const ld=document.getElementById('chartLoad'),rs=document.getElementById('chartRes');
+  ld.classList.remove('hidden');rs.classList.add('hidden');
+  const[y,mo,d]=document.getElementById('fdate').value.split('-').map(Number);
+  const[h,mi]=document.getElementById('ftime').value.split(':').map(Number);
+  const body={name:document.getElementById('fname').value.trim()||'Carta Astral',year:y,month:mo,day:d,hour:h,minute:mi,lat:bLat,lng:bLng,city:document.getElementById('fcity').value.trim()||document.getElementById('fplace')?.value.trim()||'',tz:document.getElementById('ftz').value};
+  try{
+    const r=await fetch('/api/calculate-chart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error((await r.json()).detail||'Error');
+    chartData=await r.json();renderChart(chartData);
+    gtag('event','chart_calculated',{sign:chartData.ascendant?.sign||''});
+  }catch(e){rs.innerHTML=`<p class="alert alert-err">Error: ${e.message}</p>`;rs.classList.remove('hidden')}
+  ld.classList.add('hidden');
+}
+
+function renderChart(c){
+  const el=document.getElementById('chartRes'),b=c.birth;
+  let h=`<div style="text-align:center;margin-bottom:1.5rem">
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.3rem">${c.name}</h2>
+    <p style="color:var(--muted);font-size:.85rem">${b.day}/${b.month}/${b.year} · ${String(b.hour).padStart(2,'0')}:${String(b.minute).padStart(2,'0')}h · ${b.city}</p></div>
+    <div style="display:flex;justify-content:center;gap:2.5rem;margin-bottom:1.5rem">
+      <div style="text-align:center;padding:1rem;background:#f9f5ff;border-radius:12px;min-width:140px">
+        <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Ascendente</div>
+        <div style="font-size:1.15rem;font-weight:700;color:var(--accent)">${c.ascendant.sign}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${c.ascendant.degree_dms}</div></div>
+      <div style="text-align:center;padding:1rem;background:#fef9ee;border-radius:12px;min-width:140px">
+        <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Medio Cielo</div>
+        <div style="font-size:1.15rem;font-weight:700;color:var(--gold)">${c.midheaven.sign}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${c.midheaven.degree_dms}</div></div></div>`;
+  // Planets
+  h+=`<h3>☉ Posiciones Planetarias</h3><table><thead><tr><th></th><th>Planeta</th><th>Signo</th><th>Grado</th><th>Casa</th><th>Elem.</th><th>Modal.</th></tr></thead><tbody>`;
+  for(const p of c.planets)h+=`<tr><td class="glyph">${p.glyph}</td><td>${p.name}</td><td>${p.sign}</td><td>${p.degree_dms}</td><td>${p.house}</td><td>${p.element}</td><td>${p.modality}</td></tr>`;
+  if(c.north_node)h+=`<tr><td class="glyph">☊</td><td>Nodo Norte</td><td>${c.north_node.sign}</td><td>${c.north_node.degree_dms}</td><td>—</td><td>—</td><td>—</td></tr>`;
+  if(c.chiron)h+=`<tr><td class="glyph">⚷</td><td>Quirón</td><td>${c.chiron.sign}</td><td>${c.chiron.degree_dms}</td><td>${c.chiron.house}</td><td>—</td><td>—</td></tr>`;
+  h+='</tbody></table>';
+  // Houses
+  h+=`<h3>🏠 Cúspides de las Casas</h3><table><thead><tr><th>Casa</th><th>Signo</th><th>Grado</th></tr></thead><tbody>`;
+  for(const x of c.houses)h+=`<tr><td>${x.number}</td><td>${x.sign}</td><td>${x.degree_dms}</td></tr>`;
+  h+='</tbody></table>';
+  // Aspects
+  const ac={'Conjunción':'asp-conj','Oposición':'asp-opos','Trígono':'asp-trig','Cuadratura':'asp-cuad','Sextil':'asp-sext','Quincuncio':'asp-quin'};
+  h+=`<h3>🔗 Aspectos Natales</h3><table><thead><tr><th>Planeta</th><th></th><th>Aspecto</th><th>Planeta</th><th>Orbe</th></tr></thead><tbody>`;
+  for(const a of c.aspects)h+=`<tr><td>${a.p1}</td><td class="glyph ${ac[a.aspect]||''}">${a.glyph}</td><td class="${ac[a.aspect]||''}">${a.aspect}</td><td>${a.p2}</td><td>${a.orb}°</td></tr>`;
+  h+='</tbody></table>';
+  // Elements
+  const ec={'Fuego':'fire','Tierra':'earth','Aire':'air','Agua':'water'};
+  h+=`<h3>🔥 Distribución Elemental</h3><div class="elem-bars">`;
+  for(const[e,n]of Object.entries(c.elements))h+=`<div class="ebar"><span class="lb">${e}</span><div class="br ${ec[e]}" style="width:${Math.max((n/10)*100,5)}%"></div><span class="ct">${n}</span></div>`;
+  h+='</div>';
+  // Modalities
+  const mc={'Cardinal':'fire','Fija':'water','Mutable':'air'};
+  h+=`<h3>⚡ Modalidades</h3><div class="elem-bars">`;
+  for(const[m,n]of Object.entries(c.modalities))h+=`<div class="ebar"><span class="lb">${m}</span><div class="br ${mc[m]||'air'}" style="width:${Math.max((n/10)*100,5)}%"></div><span class="ct">${n}</span></div>`;
+  h+='</div>';
+  h+=`<div class="acts" style="margin-top:1.5rem">
+    <button class="btn btn-s" onclick="dlJSON()">⬇ Descargar JSON</button>
+    <button class="btn btn-p" onclick="step=1;mode=null;updSteps();document.getElementById('pdfSec').classList.add('hidden');document.getElementById('formSec').classList.add('hidden');document.getElementById('optPdf').classList.remove('sel');document.getElementById('optMan').classList.remove('sel')">✨ Nueva carta</button></div>`;
+  el.innerHTML=h;el.classList.remove('hidden');
+}
+
+function dlJSON(){
+  if(!chartData)return;
+  const b=new Blob([JSON.stringify(chartData,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=`carta_astral_${chartData.name.replace(/\s+/g,'_').toLowerCase()}.json`;a.click();URL.revokeObjectURL(u);
+}
+
+updSteps();
+
+// Hide ad placeholders when AdSense loads a real ad
+setTimeout(()=>{
+  document.querySelectorAll('.adsbygoogle').forEach(ins=>{
+    if(ins.offsetHeight>0&&ins.dataset.adStatus==='filled'){
+      const ph=ins.parentElement.querySelector('.ad-ph');
+      if(ph)ph.style.display='none';
+      ins.style.display='block';
+    }
+  });
+},3000);
+</script>
+</body>
+</html>
