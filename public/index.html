@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carta Astral Gratis — Calcula tu mapa natal con hora exacta</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="description" content="Genera tu carta astral natal gratis con la hora exacta de tu partida de nacimiento. Cálculo preciso con Swiss Ephemeris: planetas, casas, ascendente y aspectos.">
   <meta name="keywords" content="carta astral, carta astral gratis, carta natal, carta natal gratis, mapa astral, mapa astral gratis, hacer carta astral, calcular carta astral, carta astral online, ascendente gratis, calcular ascendente, mi carta astral, carta astral por fecha de nacimiento, carta astral hora de nacimiento, casas astrales, carta astral gratis online, carta astral pdf, interpretar carta astral, signo ascendente calcular">
   <link rel="canonical" href="https://carta-astral-gratis.es/">
@@ -140,11 +141,18 @@
     .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
     .modal-ov.open{opacity:1;pointer-events:auto}
     .modal{background:var(--surface);border-radius:16px;padding:2rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+    .modal.modal-lg{max-width:740px}
     .modal h2{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem}
     .modal ol{padding-left:1.4rem;line-height:1.8;color:var(--text);font-size:.9rem}
     .modal ol a{color:var(--accent);font-weight:500}
     .modal .cls{float:right;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);line-height:1}
     .modal .cls:hover{color:var(--text)}
+    .interp-body h3{font-family:'Playfair Display',serif;font-size:1.15rem;margin:1.3rem 0 .5rem;color:var(--accent)}
+    .interp-body p{line-height:1.75;margin-bottom:.8rem;color:var(--text);font-size:.92rem}
+    .interp-body ul,.interp-body ol{padding-left:1.3rem;margin-bottom:.8rem;line-height:1.7;font-size:.92rem}
+    .interp-loading{text-align:center;padding:3rem 1rem}
+    .interp-loading .spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
     /* FOOTER */
     footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
@@ -199,6 +207,24 @@
       💡 Pide el certificado <em>literal</em> (no extracto) — contiene la hora exacta de nacimiento.
     </p>
     <div class="acts" style="margin-top:1.5rem"><button class="btn btn-p" onclick="closeModal()">Entendido</button></div>
+  </div>
+</div>
+
+<!-- Modal: Interpretación IA -->
+<div class="modal-ov" id="interpModal">
+  <div class="modal modal-lg">
+    <button class="cls" onclick="closeInterp()">&times;</button>
+    <h2>🔮 Tu Interpretación Personal</h2>
+    <div id="interpContent">
+      <div class="interp-loading">
+        <div class="spinner"></div>
+        <p style="color:var(--muted)">Analizando tu carta astral con inteligencia artificial...</p>
+        <p style="color:var(--muted);font-size:.8rem">Esto puede tardar unos segundos</p>
+      </div>
+    </div>
+    <div class="acts" style="margin-top:1.5rem;display:none" id="interpActions">
+      <button class="btn btn-p" onclick="closeInterp()">Cerrar</button>
+    </div>
   </div>
 </div>
 
@@ -367,6 +393,12 @@
         </p>
       </div>
 
+      <!-- Ad between casas and SEO -->
+      <div class="ad-h">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+
       <!-- SEO Block -->
       <div class="panel">
         <h2>¿Qué es una Carta Astral?</h2>
@@ -398,6 +430,12 @@
           (conjunción, oposición, trígono, cuadratura, sextil). El cálculo usa la Swiss Ephemeris,
           la misma librería astronómica que utilizan los astrólogos profesionales.
         </p>
+      </div>
+
+      <!-- Ad between how-to and FAQ -->
+      <div class="ad-h">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
       </div>
 
       <!-- FAQ -->
@@ -441,6 +479,12 @@
     <ins class="adsbygoogle" style="display:none" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="vertical" data-full-width-responsive="false"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </div></div>
+</div>
+
+<!-- Ad before footer -->
+<div class="ad-h" style="max-width:780px;margin:1rem auto">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
 </div>
 
 <footer>
@@ -591,6 +635,8 @@ function renderChart(c){
   if(c.north_node)h+=`<tr><td class="glyph">☊</td><td>Nodo Norte</td><td>${c.north_node.sign}</td><td>${c.north_node.degree_dms}</td><td>—</td><td>—</td><td>—</td></tr>`;
   if(c.chiron)h+=`<tr><td class="glyph">⚷</td><td>Quirón</td><td>${c.chiron.sign}</td><td>${c.chiron.degree_dms}</td><td>${c.chiron.house}</td><td>—</td><td>—</td></tr>`;
   h+='</tbody></table>';
+  // Ad between planets and houses
+  h+=`<div class="ad-h" style="margin:1.5rem 0"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="rectangle" data-full-width-responsive="true"></ins></div>`;
   // Houses
   h+=`<h3>🏠 Cúspides de las Casas</h3><table><thead><tr><th>Casa</th><th>Signo</th><th>Grado</th></tr></thead><tbody>`;
   for(const x of c.houses)h+=`<tr><td>${x.number}</td><td>${x.sign}</td><td>${x.degree_dms}</td></tr>`;
@@ -600,6 +646,8 @@ function renderChart(c){
   h+=`<h3>🔗 Aspectos Natales</h3><table><thead><tr><th>Planeta</th><th></th><th>Aspecto</th><th>Planeta</th><th>Orbe</th></tr></thead><tbody>`;
   for(const a of c.aspects)h+=`<tr><td>${a.p1}</td><td class="glyph ${ac[a.aspect]||''}">${a.glyph}</td><td class="${ac[a.aspect]||''}">${a.aspect}</td><td>${a.p2}</td><td>${a.orb}°</td></tr>`;
   h+='</tbody></table>';
+  // Ad between aspects and elements
+  h+=`<div class="ad-h" style="margin:1.5rem 0"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9368517395014039" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins></div>`;
   // Elements
   const ec={'Fuego':'fire','Tierra':'earth','Aire':'air','Agua':'water'};
   h+=`<h3>🔥 Distribución Elemental</h3><div class="elem-bars">`;
@@ -610,16 +658,51 @@ function renderChart(c){
   h+=`<h3>⚡ Modalidades</h3><div class="elem-bars">`;
   for(const[m,n]of Object.entries(c.modalities))h+=`<div class="ebar"><span class="lb">${m}</span><div class="br ${mc[m]||'air'}" style="width:${Math.max((n/10)*100,5)}%"></div><span class="ct">${n}</span></div>`;
   h+='</div>';
-  h+=`<div class="acts" style="margin-top:1.5rem">
-    <button class="btn btn-s" onclick="dlJSON()">⬇ Descargar JSON</button>
-    <button class="btn btn-p" onclick="step=1;mode=null;updSteps();document.getElementById('pdfSec').classList.add('hidden');document.getElementById('formSec').classList.add('hidden');document.getElementById('optPdf').classList.remove('sel');document.getElementById('optMan').classList.remove('sel')">✨ Nueva carta</button></div>`;
+  h+=`<div class="acts" style="margin-top:1.5rem;flex-direction:column;align-items:center;gap:1rem">
+    <button class="btn btn-p" id="btnInterpret" onclick="requestInterpretation()" style="width:100%;padding:1rem;font-size:1.05rem;background:var(--gradient);border-radius:14px;box-shadow:0 6px 20px rgba(124,58,237,.35)">🔮 ¿Qué significa todo esto?</button>
+    <button class="btn btn-s" onclick="step=1;mode=null;updSteps();document.getElementById('pdfSec').classList.add('hidden');document.getElementById('formSec').classList.add('hidden');document.getElementById('optPdf').classList.remove('sel');document.getElementById('optMan').classList.remove('sel')" style="font-size:.85rem">✨ Nueva carta</button></div>`;
   el.innerHTML=h;el.classList.remove('hidden');
+  // Activate dynamically injected ads
+  try{el.querySelectorAll('.adsbygoogle').forEach(()=>(adsbygoogle=window.adsbygoogle||[]).push({}))}catch(e){}
 }
 
 function dlJSON(){
   if(!chartData)return;
   const b=new Blob([JSON.stringify(chartData,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
   a.href=u;a.download=`carta_astral_${chartData.name.replace(/\s+/g,'_').toLowerCase()}.json`;a.click();URL.revokeObjectURL(u);
+}
+
+// Interpretation modal
+function openInterp(){document.getElementById('interpModal').classList.add('open')}
+function closeInterp(){document.getElementById('interpModal').classList.remove('open')}
+document.getElementById('interpModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeInterp()});
+
+async function requestInterpretation(){
+  const btn=document.getElementById('btnInterpret');
+  btn.disabled=true;btn.textContent='🔮 Leyendo las estrellas...';
+  const ic=document.getElementById('interpContent'),ia=document.getElementById('interpActions');
+  ic.innerHTML='<div class="interp-loading"><div class="spinner"></div><p style="color:var(--muted)">Leyendo las estrellas para ti...</p><p style="color:var(--muted);font-size:.8rem">Esto puede tardar unos segundos</p></div>';
+  ia.style.display='none';
+  openInterp();
+  const body={
+    name:document.getElementById('fname').value.trim()||'Carta Astral',
+    year:chartData.birth.year,month:chartData.birth.month,day:chartData.birth.day,
+    hour:chartData.birth.hour,minute:chartData.birth.minute,
+    lat:chartData.birth.lat,lng:chartData.birth.lng,
+    city:chartData.birth.city||'',tz:document.getElementById('ftz').value
+  };
+  try{
+    const r=await fetch('/api/interpret-chart',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(d.detail||'Error al generar interpretación')}
+    const data=await r.json();
+    ic.innerHTML='<div class="interp-body">'+data.interpretation+'</div>';
+    ia.style.display='';
+    gtag('event','interpretation_generated',{sign:chartData.ascendant?.sign||''});
+  }catch(e){
+    ic.innerHTML=`<div style="text-align:center;padding:2rem"><p class="alert alert-err">❌ ${e.message}</p><p style="color:var(--muted);font-size:.85rem;margin-top:.5rem">Inténtalo de nuevo en unos segundos.</p></div>`;
+    ia.style.display='';
+  }
+  btn.disabled=false;btn.textContent='🔮 ¿Qué significa todo esto?';
 }
 
 updSteps();
