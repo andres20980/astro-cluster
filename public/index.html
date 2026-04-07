@@ -588,7 +588,7 @@ function fillPdf(d){
   let ext=0,name='';
   if(d.name)name=d.name;if(d.first_surname)name+=' '+d.first_surname;if(d.second_surname)name+=' '+d.second_surname;
   if(name.trim())document.getElementById('fname').value=name.trim();
-  if(d.birth_place&&document.getElementById('fplace')){document.getElementById('fplace').value=d.birth_place;ext++}
+  if(d.birth_place||d.birthplace){const bp=d.birth_place||d.birthplace;if(document.getElementById('fplace')){document.getElementById('fplace').value=bp;ext++}}
   if(d.year&&d.month&&d.day){document.getElementById('fdate').value=`${d.year}-${String(d.month).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;ext++}
   if(d.hour!==null&&d.minute!==null){document.getElementById('ftime').value=`${String(d.hour).padStart(2,'0')}:${String(d.minute).padStart(2,'0')}`;ext++}
   if(d.sex){document.getElementById('fsex').value=d.sex;ext++}
