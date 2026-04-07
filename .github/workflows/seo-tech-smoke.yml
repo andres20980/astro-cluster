@@ -24,7 +24,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          SITE="https://carta-astral-f4ab9.web.app"
+          SITE="https://carta-astral-gratis.es"
 
           urls=(
             "$SITE/robots.txt"
