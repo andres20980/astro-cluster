@@ -2,15 +2,23 @@
 Interpretación de carta astral con Gemini (free tier).
 
 Usa la API REST directamente con httpx — sin SDK pesado.
+Incluye caché en memoria (24 h) para evitar llamadas repetidas.
 """
 
+import hashlib
 import os
 import json
+import time
 import httpx
 
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-2.5-flash"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+
+# --------------- caché en memoria ---------------
+_CACHE: dict[str, tuple[float, str]] = {}   # key → (timestamp, html)
+_CACHE_TTL = 86_400  # 24 horas
+_CACHE_MAX = 200     # entradas máximo (evita memory leak)
 
 SYSTEM_PROMPT = """\
 Eres un astrólogo profesional de primer nivel que redacta interpretaciones de cartas astrales natales.
@@ -128,6 +136,28 @@ async def interpret_chart(chart: dict, sex: str | None = None) -> str:
     if not GEMINI_KEY:
         raise RuntimeError("GEMINI_API_KEY no configurada")
 
+    # --- cache lookup ---
+    b = chart.get("birth", {})
+    cache_key = hashlib.sha256(json.dumps(
+        [b.get("year"), b.get("month"), b.get("day"),
+         b.get("hour"), b.get("minute"),
+         round(b.get("lat", 0), 2), round(b.get("lng", 0), 2),
+         chart.get("sex")],
+        sort_keys=True,
+    ).encode()).hexdigest()
+
+    now = time.monotonic()
+    if cache_key in _CACHE:
+        ts, html = _CACHE[cache_key]
+        if now - ts < _CACHE_TTL:
+            return html
+        del _CACHE[cache_key]
+
+    # evict oldest if full
+    if len(_CACHE) >= _CACHE_MAX:
+        oldest = min(_CACHE, key=lambda k: _CACHE[k][0])
+        del _CACHE[oldest]
+
     chart_text = _build_chart_summary(chart)
 
     payload = {
@@ -156,4 +186,6 @@ async def interpret_chart(chart: dict, sex: str | None = None) -> str:
         text = text[3:]
     if text.endswith("```"):
         text = text[:-3]
-    return text.strip()
+    result = text.strip()
+    _CACHE[cache_key] = (time.monotonic(), result)
+    return result

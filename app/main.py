@@ -4,13 +4,16 @@ API web para generación de cartas astrales natales.
 Endpoints:
   POST /api/parse-pdf       — Extrae datos de un certificado de nacimiento
   POST /api/calculate-chart — Calcula la carta astral
+  POST /api/interpret-chart — Interpreta la carta con IA (rate limited)
   GET  /                    — Sirve el frontend
 """
 
+import time
 import tempfile
+from collections import defaultdict
 from pathlib import Path
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -22,6 +25,25 @@ from app.interpreter import interpret_chart
 app = FastAPI(title="Carta Astral", version="1.0.0")
 
 STATIC_DIR = Path(__file__).parent / "static"
+
+# --------------- rate limiter (interpret endpoint) ---------------
+_RATE_WINDOW = 3600          # 1 hora
+_RATE_MAX_REQUESTS = 5       # máx por IP por ventana
+_rate_store: dict[str, list[float]] = defaultdict(list)
+
+
+def _check_rate_limit(ip: str) -> None:
+    """Lanza HTTPException 429 si se supera el límite."""
+    now = time.monotonic()
+    hits = _rate_store[ip]
+    # purge old
+    _rate_store[ip] = [t for t in hits if now - t < _RATE_WINDOW]
+    if len(_rate_store[ip]) >= _RATE_MAX_REQUESTS:
+        raise HTTPException(
+            429,
+            "Has alcanzado el límite de interpretaciones por hora. Inténtalo más tarde.",
+        )
+    _rate_store[ip].append(now)
 
 
 class ChartRequest(BaseModel):
@@ -90,8 +112,10 @@ async def api_calculate_chart(req: ChartRequest):
 
 
 @app.post("/api/interpret-chart")
-async def api_interpret_chart(req: ChartRequest):
+async def api_interpret_chart(req: ChartRequest, request: Request):
     """Calcula la carta y devuelve una interpretación con IA."""
+    client_ip = request.headers.get("x-forwarded-for", request.client.host if request.client else "unknown").split(",")[0].strip()
+    _check_rate_limit(client_ip)
     try:
         chart = calculate_chart(
             name=req.name,

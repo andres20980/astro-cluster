@@ -292,6 +292,74 @@ cmd_gsc_full_index() {
   echo "  3. Re-check indexing in 24-48h: ./manage-google.sh gsc-inspect"
 }
 
+# ── FinOps / Cost monitoring ─────────────────────────────────────────
+GCP_PROJECT="carta-astral-f4ab9"
+CLOUD_RUN_SERVICE="carta-astral-api"
+CLOUD_RUN_REGION="europe-west1"
+
+cmd_finops_cloud_run() {
+  echo "━━━ Cloud Run — Config actual ━━━"
+  gcloud run services describe "$CLOUD_RUN_SERVICE" \
+    --region="$CLOUD_RUN_REGION" --project="$GCP_PROJECT" \
+    --format="table(spec.template.spec.containers[0].resources.limits,spec.template.metadata.annotations)" 2>/dev/null || true
+
+  echo ""
+  echo "━━━ Cloud Run — Revisiones activas ━━━"
+  gcloud run revisions list --service="$CLOUD_RUN_SERVICE" \
+    --region="$CLOUD_RUN_REGION" --project="$GCP_PROJECT" \
+    --format="table(metadata.name,status.conditions[0].type,spec.containerConcurrency,metadata.annotations['autoscaling.knative.dev/maxScale'])" \
+    --limit=3 2>/dev/null || true
+
+  echo ""
+  echo "━━━ Cloud Run — Métricas últimas 24h ━━━"
+  local now end
+  now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  end=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
+  gcloud monitoring time-series list \
+    --project="$GCP_PROJECT" \
+    --filter="metric.type=\"run.googleapis.com/request_count\" AND resource.labels.service_name=\"$CLOUD_RUN_SERVICE\"" \
+    --interval-start="$end" --format=json 2>/dev/null | python3 -c "
+import sys,json
+data=json.load(sys.stdin)
+total=sum(int(p.get('value',{}).get('int64Value',0)) for ts in data for p in ts.get('points',[]))
+print(f'  Requests totales: {total}')
+" 2>/dev/null || echo "  (no hay datos de métricas aún)"
+}
+
+cmd_finops_billing() {
+  echo "━━━ Billing — Presupuestos activos ━━━"
+  local billing_account
+  billing_account=$(gcloud billing projects describe "$GCP_PROJECT" --format="value(billingAccountName)" 2>/dev/null)
+  if [[ -n "$billing_account" ]]; then
+    gcloud billing budgets list --billing-account="${billing_account##*/}" \
+      --format="table(displayName,amount.specifiedAmount.currencyCode,amount.specifiedAmount.units,budgetFilter.projects)" 2>/dev/null || true
+  else
+    echo "  No se encontró cuenta de facturación"
+  fi
+
+  echo ""
+  echo "━━━ Billing — Servicios habilitados (APIs de pago) ━━━"
+  gcloud services list --enabled --project="$GCP_PROJECT" \
+    --filter="name:(generativelanguage OR run OR cloudbuild)" \
+    --format="table(name,title)" 2>/dev/null || true
+}
+
+cmd_finops_summary() {
+  echo "╔══════════════════════════════════════╗"
+  echo "║   FinOps Dashboard — Free Tier       ║"
+  echo "╚══════════════════════════════════════╝"
+  echo ""
+  cmd_finops_cloud_run
+  echo ""
+  cmd_finops_billing
+  echo ""
+  echo "━━━ Free Tier Limits (recordatorio) ━━━"
+  echo "  Cloud Run:   180,000 vCPU-s/mes, 360,000 GiB-s/mes, 2M requests/mes"
+  echo "  Firebase:    10 GB hosting, 360 MB/día transfer"
+  echo "  Gemini Flash: 15 RPM / 1500 RPD / 1M tokens/min free tier"
+  echo "  GitHub Actions: 2000 min/mes (public repos)"
+}
+
 cmd_help() {
   cat <<EOF
 Usage: $(basename "$0") <command> [args]
@@ -319,6 +387,11 @@ Usage: $(basename "$0") <command> [args]
     gsc-ping-sitemap    Ping Google + Bing + IndexNow with sitemap
     gsc-full-index      Full indexing push (submit + ping + inspect)
 
+  FinOps:
+    finops              Full FinOps dashboard (Cloud Run + Billing)
+    finops-cloud-run    Cloud Run config, revisions & metrics
+    finops-billing      Budgets & enabled paid APIs
+
   help                This message
 EOF
 }
@@ -342,5 +415,8 @@ case "${1:-help}" in
   gsc-pages)            cmd_gsc_pages "${2:-28}" ;;
   gsc-ping-sitemap)     cmd_gsc_ping_sitemap ;;
   gsc-full-index)       cmd_gsc_full_index ;;
+  finops)               cmd_finops_summary ;;
+  finops-cloud-run)     cmd_finops_cloud_run ;;
+  finops-billing)       cmd_finops_billing ;;
   help|*)               cmd_help ;;
 esac
