@@ -26,9 +26,13 @@ jobs:
         env:
           GA4_PROPERTY: "properties/531527723"
           ADSENSE_ACCOUNT: "accounts/pub-9368517395014039"
+          GSC_SITE_URL: "sc-domain:carta-astral-gratis.es"
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
         run: |
-          # Generate scoped token from SA credentials using google-auth
+          # GA4 token from Service Account
           pip -q install google-auth
           TOKEN=$(python3 -c "
           import google.auth
@@ -37,6 +41,16 @@ jobs:
           creds.refresh(google.auth.transport.requests.Request())
           print(creds.token)
           ")
+
+          # OAuth token for GSC + AdSense (requires user credentials, not SA)
+          OAUTH_TOKEN=""
+          if [ -n "$GOOGLE_OAUTH_REFRESH_TOKEN" ] && [ -n "$GOOGLE_OAUTH_CLIENT_ID" ]; then
+            OAUTH_TOKEN=$(curl -s -X POST https://oauth2.googleapis.com/token \
+              -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
+              -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
+              -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
+              -d "grant_type=refresh_token" | python3 -c "import sys,json;print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
+          fi
 
           echo "## 📊 Weekly Report — $(date +%Y-%m-%d)" > /tmp/report.md
           echo "" >> /tmp/report.md
@@ -169,20 +183,91 @@ jobs:
           else: print('0')
           " 2>/dev/null || echo "0")
 
+          # Google Search Console — search performance (requires OAuth)
+          echo "### 🔎 Google Search Console (last 28 days)" >> /tmp/report.md
+          if [ -n "$OAUTH_TOKEN" ]; then
+            GSC_SITE_ENC=$(python3 -c "import urllib.parse;print(urllib.parse.quote('$GSC_SITE_URL',''))")
+            GSC_START=$(date -d '28 days ago' +%Y-%m-%d)
+            GSC_END=$(date -d '3 days ago' +%Y-%m-%d)
+
+            # Top queries
+            GSC_QUERIES=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+              -H "Content-Type: application/json" \
+              -X POST \
+              -d "{
+                \"startDate\": \"$GSC_START\",
+                \"endDate\": \"$GSC_END\",
+                \"dimensions\": [\"query\"],
+                \"rowLimit\": 15,
+                \"dataState\": \"all\"
+              }" \
+              "https://searchconsole.googleapis.com/webmasters/v3/sites/$GSC_SITE_ENC/searchAnalytics/query" 2>/dev/null || echo "{}")
+
+            GSC_HAS_DATA=$(echo "$GSC_QUERIES" | python3 -c "import sys,json;print(len(json.load(sys.stdin).get('rows',[])))" 2>/dev/null || echo "0")
+
+            if [ "$GSC_HAS_DATA" != "0" ]; then
+              echo "#### Top Search Queries" >> /tmp/report.md
+              echo "| Query | Clicks | Impressions | CTR | Position |" >> /tmp/report.md
+              echo "|-------|--------|-------------|-----|----------|" >> /tmp/report.md
+              echo "$GSC_QUERIES" | python3 -c "
+          import sys,json
+          data=json.load(sys.stdin)
+          for r in data.get('rows',[]):
+            q=r['keys'][0]
+            print(f'| {q} | {r[\"clicks\"]:.0f} | {r[\"impressions\"]:.0f} | {r[\"ctr\"]*100:.1f}% | {r[\"position\"]:.1f} |')
+          " >> /tmp/report.md 2>/dev/null
+
+              # Totals
+              GSC_TOTALS=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+                -H "Content-Type: application/json" \
+                -X POST \
+                -d "{\"startDate\": \"$GSC_START\", \"endDate\": \"$GSC_END\", \"dataState\": \"all\"}" \
+                "https://searchconsole.googleapis.com/webmasters/v3/sites/$GSC_SITE_ENC/searchAnalytics/query" 2>/dev/null || echo "{}")
+              echo "" >> /tmp/report.md
+              echo "$GSC_TOTALS" | python3 -c "
+          import sys,json
+          data=json.load(sys.stdin)
+          rows=data.get('rows',[])
+          if rows:
+            r=rows[0]
+            print(f'**Totals**: {r[\"clicks\"]:.0f} clicks, {r[\"impressions\"]:.0f} impressions, {r[\"ctr\"]*100:.1f}% CTR, avg pos {r[\"position\"]:.1f}')
+          " >> /tmp/report.md 2>/dev/null
+
+              # Top pages
+              GSC_PAGES=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+                -H "Content-Type: application/json" \
+                -X POST \
+                -d "{
+                  \"startDate\": \"$GSC_START\",
+                  \"endDate\": \"$GSC_END\",
+                  \"dimensions\": [\"page\"],
+                  \"rowLimit\": 10,
+                  \"dataState\": \"all\"
+                }" \
+                "https://searchconsole.googleapis.com/webmasters/v3/sites/$GSC_SITE_ENC/searchAnalytics/query" 2>/dev/null || echo "{}")
+              echo "" >> /tmp/report.md
+              echo "#### Top Pages" >> /tmp/report.md
+              echo "| Page | Clicks | Impressions | Position |" >> /tmp/report.md
+              echo "|------|--------|-------------|----------|" >> /tmp/report.md
+              echo "$GSC_PAGES" | python3 -c "
+          import sys,json
+          data=json.load(sys.stdin)
+          for r in data.get('rows',[]):
+            p=r['keys'][0].replace('https://carta-astral-gratis.es','')
+            print(f'| {p or \"/\"} | {r[\"clicks\"]:.0f} | {r[\"impressions\"]:.0f} | {r[\"position\"]:.1f} |')
+          " >> /tmp/report.md 2>/dev/null
+            else
+              echo "> No search data yet (site too new or no impressions)" >> /tmp/report.md
+            fi
+          else
+            echo "> GSC not available (add GOOGLE_OAUTH_* secrets)" >> /tmp/report.md
+          fi
+          echo "" >> /tmp/report.md
+
           # AdSense earnings (best-effort, may fail if not yet approved)
           echo "### 💰 AdSense Revenue (last 7 days)" >> /tmp/report.md
-          ADSENSE_TOKEN=$(python3 -c "
-          import google.auth
-          import google.auth.transport.requests
-          creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/adsense.readonly'])
-          creds.refresh(google.auth.transport.requests.Request())
-          print(creds.token)
-          " 2>/dev/null || echo "")
-
-          if [ -n "$ADSENSE_TOKEN" ]; then
-            START_DATE=$(date -d '7 days ago' +%Y-%m-%d)
-            END_DATE=$(date +%Y-%m-%d)
-            ADSENSE=$(curl -s -H "Authorization: Bearer $ADSENSE_TOKEN" \
+          if [ -n "$OAUTH_TOKEN" ]; then
+            ADSENSE=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
               "https://adsense.googleapis.com/v2/$ADSENSE_ACCOUNT/reports:generate?dateRange=LAST_7_DAYS&metrics=ESTIMATED_EARNINGS&metrics=PAGE_VIEWS&metrics=IMPRESSIONS&metrics=CLICKS" 2>/dev/null || echo "{}")
 
             AD_EARNINGS=$(echo "$ADSENSE" | python3 -c "
@@ -206,7 +291,7 @@ jobs:
             echo "|--------|-------|" >> /tmp/report.md
             echo "$AD_EARNINGS" >> /tmp/report.md
           else
-            echo "> AdSense API not accessible (pending approval or missing scope)" >> /tmp/report.md
+            echo "> AdSense/OAuth not configured (add GOOGLE_OAUTH_REFRESH_TOKEN secret)" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 

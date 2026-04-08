@@ -31,8 +31,8 @@
     "https://carta-natal.es/carta.php",
     "https://astro.cafeastrology.com/natal.php",
     "https://www.astro.com/cgi/ade.cgi?lang=s",
-    "https://www.horoscopo.com/carta-astral-gratis",
-    "https://www.elhoroscopodeldia.com/carta-astral/"
+    "https://www.horoscopo.com/carta-astral",
+    "https://astrosage.com/carta-astral.asp"
   ],
   "rulesByQuery": {
     "carta astral gratis": {

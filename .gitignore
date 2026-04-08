@@ -10,3 +10,6 @@ certificado*
 *.pdf
 output/
 carta-astral-*.md
+log.txt
+client_secret*.json
+

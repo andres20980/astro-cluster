@@ -32,11 +32,15 @@ jobs:
           projectId: carta-astral-f4ab9
           channelId: live
 
-      - name: "\U0001F4CA Lighthouse audit"
+      - name: "🔔 Ping Google Sitemap"
+        run: |
+          curl -sS "https://www.google.com/ping?sitemap=https://carta-astral-gratis.es/sitemap.xml" || true
+
+      - name: "📊 Lighthouse audit"
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            https://carta-astral-f4ab9.web.app/
+            https://carta-astral-gratis.es/
           uploadArtifacts: true
           temporaryPublicStorage: true
           configJson: |
