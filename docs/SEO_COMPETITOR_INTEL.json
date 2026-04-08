@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-04-08T06:59:08.761Z",
-  "runId": "1a630ad1",
+  "generatedAt": "2026-04-08T18:13:44.811Z",
+  "runId": "556ea17d",
   "keywordsContext": [
     "carta astral",
     "carta natal",
@@ -16,22 +16,22 @@
   "insights": {
     "crawledCount": 6,
     "successCount": 4,
-    "avgWordCount": 1781,
+    "avgWordCount": 1780,
     "faqSchemaAdoption": "0/4",
     "howToSchemaAdoption": "0/4",
     "breadcrumbAdoption": "0/4",
     "topKeywords": [
       {
         "keyword": "carta astral",
-        "totalMentions": 41
+        "totalMentions": 40
       },
       {
         "keyword": "carta natal",
-        "totalMentions": 23
+        "totalMentions": 21
       },
       {
         "keyword": "ascendente",
-        "totalMentions": 13
+        "totalMentions": 11
       },
       {
         "keyword": "hora de nacimiento",
@@ -43,7 +43,7 @@
       }
     ],
     "commonH2Patterns": [],
-    "recommendation": "Competidores tienen de media 1781 palabras. Asegúrate de que tu landing supera ese umbral."
+    "recommendation": "Competidores tienen de media 1780 palabras. Asegúrate de que tu landing supera ese umbral."
   },
   "results": [
     {
@@ -52,7 +52,7 @@
       "error": null,
       "analysis": {
         "url": "https://www.losarcanos.com/carta-astral.php",
-        "fetchedAt": "2026-04-08T06:58:52.812Z",
+        "fetchedAt": "2026-04-08T18:13:33.585Z",
         "title": "Carta Astral GRATIS - Astrologia",
         "description": "Carta Astral Gratis y en linea - Mi Carta Astral - Los Arcanos, Carta natal completa a solo unos clicks de distancia. Astrologia",
         "canonical": "https://www.losarcanos.com/carta-astral.php",
@@ -68,23 +68,23 @@
           "El Poder de las Estrellas en Tus Manos"
         ],
         "h2Count": 7,
-        "wordCount": 1650,
+        "wordCount": 1651,
         "schemaTypes": [],
         "hasFaqSchema": false,
         "hasHowToSchema": false,
         "hasBreadcrumb": false,
         "internalLinks": 0,
         "keywordFrequency": {
-          "carta astral": 37,
-          "carta natal": 14,
+          "carta astral": 36,
+          "carta natal": 12,
           "mapa astral": 0,
-          "ascendente": 7,
+          "ascendente": 5,
           "casas astrales": 0,
           "hora de nacimiento": 0,
           "gratis": 10,
           "calcular": 1,
           "signos": 2,
-          "planetas": 1
+          "planetas": 2
         }
       }
     },
@@ -94,7 +94,7 @@
       "error": null,
       "analysis": {
         "url": "https://carta-natal.es/carta.php",
-        "fetchedAt": "2026-04-08T06:58:54.901Z",
+        "fetchedAt": "2026-04-08T18:13:35.299Z",
         "title": "Carta natal :: Calcula tu carta astral online.",
         "description": "Cálculo de la carta natal online. Posición de planetas en signos y casas, aspectos planetarios, ascendente astrológico.",
         "canonical": null,
@@ -130,7 +130,7 @@
       "error": null,
       "analysis": {
         "url": "https://astro.cafeastrology.com/natal.php",
-        "fetchedAt": "2026-04-08T06:58:56.846Z",
+        "fetchedAt": "2026-04-08T18:13:37.358Z",
         "title": "Free Astrology Birth Chart Report",
         "description": "Cafe Astrology offers free astrology reports.",
         "canonical": null,
@@ -167,7 +167,7 @@
       "error": null,
       "analysis": {
         "url": "https://www.astro.com/cgi/ade.cgi?lang=s",
-        "fetchedAt": "2026-04-08T06:59:03.788Z",
+        "fetchedAt": "2026-04-08T18:13:39.777Z",
         "title": "Ingresar los datos de nacimiento",
         "description": "Esta es solamente una de las miles de páginas que ofrece el sitio web de Astrodienst. Obtenga su horóscopo gratuito y ¡mucho más! Astrodienst AG en Zürich, Suiza, es el mejor sitio mundial de Astrología que provee de horóscopos sin cargo, informes astrológicos profesionales e información general sobre Astrología.",
         "canonical": null,
@@ -179,7 +179,7 @@
           "Todo sobre la Astrología"
         ],
         "h2Count": 3,
-        "wordCount": 2802,
+        "wordCount": 2800,
         "schemaTypes": [],
         "hasFaqSchema": false,
         "hasHowToSchema": false,
@@ -200,13 +200,13 @@
       }
     },
     {
-      "url": "https://www.horoscopo.com/carta-astral-gratis",
+      "url": "https://www.horoscopo.com/carta-astral",
       "status": 404,
       "error": "http_404",
       "analysis": null
     },
     {
-      "url": "https://www.elhoroscopodeldia.com/carta-astral/",
+      "url": "https://astrosage.com/carta-astral.asp",
       "status": 404,
       "error": "http_404",
       "analysis": null
