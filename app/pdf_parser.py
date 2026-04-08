@@ -310,7 +310,7 @@ def _parse_nombre(text: str) -> str | None:
         name = re.sub(r"[\s.\xb7:_-]+$", "", name)
         return name.title() if name else None
 
-    # Formato antiguo: "los nombres de (6) María Jesús"
+    # Formato antiguo: "los nombres de (6) Nombre Compuesto"
     m = re.search(r"(?:los\s+)?nombres?\s+de\s*\(\d\)\s*([^\n]+)", text, re.IGNORECASE)
     if m:
         name = m.group(1).strip()
@@ -439,7 +439,7 @@ def _parse_lugar(text: str) -> str | None:
         lugar = re.sub(r"[\s.\xb7:_-]+$", "", lugar)
         return lugar if lugar else None
 
-    # Formato antiguo: "Registro Civil de Palomero"
+    # Formato antiguo: "Registro Civil de <localidad>"
     m = re.search(r"Registro\s+Civil\s+de\s+([A-ZÁÉÍÓÚÑa-záéíóúñ\s]+)", text)
     if m:
         return m.group(1).strip().title()
@@ -448,7 +448,7 @@ def _parse_lugar(text: str) -> str | None:
 
 
 def _parse_apellidos_from_name_line(full_name: str) -> tuple[str, str] | None:
-    """Intenta separar nombre + 2 apellidos de una línea tipo 'María Jesús Martín Garrón'."""
+    """Intenta separar nombre + 2 apellidos de una línea tipo 'Ana María López Pérez'."""
     parts = full_name.strip().split()
     if len(parts) >= 3:
         # Asume: último = 2º apellido, penúltimo = 1er apellido

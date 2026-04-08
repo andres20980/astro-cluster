@@ -26,11 +26,11 @@ Abrir http://localhost:8000
 
 ```bash
 python scripts/calcular_carta.py \
-  --name "Andrés" \
-  --date 1980-09-02 \
-  --time 06:40 \
-  --lat 41.4292 \
-  --lng 2.1435
+  --name "Ejemplo" \
+  --date 1990-06-15 \
+  --time 10:30 \
+  --lat 40.4168 \
+  --lng -3.7038
 ```
 
 ## Estructura
@@ -45,9 +45,6 @@ carta-astral/
 │       └── index.html       # Frontend (Leaflet maps + UI)
 ├── scripts/
 │   └── calcular_carta.py    # CLI standalone
-├── output/
-│   ├── carta_astral_andres_sanchez.md
-│   └── carta_astral_patricia_andaluz.md
 ├── requirements.txt
 └── README.md
 ```
@@ -62,5 +59,4 @@ carta-astral/
 
 ## Cartas generadas
 
-- [Andrés Sánchez Martín](output/carta_astral_andres_sanchez.md) — 2 sept 1980, Barcelona
-- [Patricia María Andaluz Barragán](output/carta_astral_patricia_andaluz.md) — 12 ago 1987, Barcelona
+Las cartas se generan bajo demanda a través de la web o el CLI. Los archivos de salida no se incluyen en el repositorio.

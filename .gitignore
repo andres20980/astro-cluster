@@ -7,3 +7,6 @@ __pycache__/
 .tmp/
 docs/SEO_AGENT_STATE.json
 certificado*
+*.pdf
+output/
+carta-astral-*.md
