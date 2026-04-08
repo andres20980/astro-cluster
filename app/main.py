@@ -31,12 +31,30 @@ _RATE_WINDOW = 3600          # 1 hora
 _RATE_MAX_REQUESTS = 5       # máx por IP por ventana
 _rate_store: dict[str, list[float]] = defaultdict(list)
 
+# global daily cap — hard stop to protect free tier
+_DAILY_CAP = 200
+_daily_count = 0
+_daily_reset: float = 0.0
+
 
 def _check_rate_limit(ip: str) -> None:
-    """Lanza HTTPException 429 si se supera el límite."""
+    """Lanza HTTPException 429 si se supera el límite por IP o el cap global diario."""
+    global _daily_count, _daily_reset
     now = time.monotonic()
+
+    # reset daily counter every 24h
+    if now - _daily_reset > 86_400:
+        _daily_count = 0
+        _daily_reset = now
+
+    if _daily_count >= _DAILY_CAP:
+        raise HTTPException(
+            429,
+            "Se ha alcanzado el límite diario de interpretaciones. Vuelve mañana.",
+        )
+
+    # per-IP check
     hits = _rate_store[ip]
-    # purge old
     _rate_store[ip] = [t for t in hits if now - t < _RATE_WINDOW]
     if len(_rate_store[ip]) >= _RATE_MAX_REQUESTS:
         raise HTTPException(
@@ -44,6 +62,7 @@ def _check_rate_limit(ip: str) -> None:
             "Has alcanzado el límite de interpretaciones por hora. Inténtalo más tarde.",
         )
     _rate_store[ip].append(now)
+    _daily_count += 1
 
 
 class ChartRequest(BaseModel):
@@ -81,17 +100,6 @@ async def parse_pdf(file: UploadFile = File(...)):
     # No devolver raw_text al cliente (salvo debug)
     raw = result.pop("raw_text", None)
     return result
-
-
-@app.post("/api/parse-pdf-debug")
-async def parse_pdf_debug(file: UploadFile = File(...)):
-    """Debug: devuelve el raw_text extraído del PDF."""
-    content = await file.read()
-    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=True) as tmp:
-        tmp.write(content)
-        tmp.flush()
-        result = parse_birth_certificate(tmp.name)
-    return {"raw_text": result.get("raw_text", ""), "ocr_used": result.get("ocr_used", False)}
 
 
 @app.post("/api/calculate-chart")

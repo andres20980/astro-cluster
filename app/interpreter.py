@@ -164,8 +164,8 @@ async def interpret_chart(chart: dict, sex: str | None = None) -> str:
         "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
         "contents": [{"parts": [{"text": f"Interpreta esta carta astral natal:\n\n{chart_text}"}]}],
         "generationConfig": {
-            "temperature": 0.8,
-            "maxOutputTokens": 16384,
+            "temperature": 0.7,
+            "maxOutputTokens": 10000,
         },
     }
 
