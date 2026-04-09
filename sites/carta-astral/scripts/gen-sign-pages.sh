@@ -133,6 +133,7 @@ $(IFS=','; for w in $weaknesses; do echo "      <li>${w## }</li>"; done)
 <footer>
   <p>© 2026 Carta Astral Gratis · Cálculo con Swiss Ephemeris · Sistema Placidus</p>
   <p style="margin-top:.3rem"><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/">Inicio</a></p>
+  <p style="margin-top:.5rem;font-size:.85rem">🔮 <a href="https://compatibilidad-signos.es" target="_blank" rel="noopener">Compatibilidad</a> · <a href="https://tarot-del-dia.es" target="_blank" rel="noopener">Tarot</a> · <a href="https://calcular-numerologia.es" target="_blank" rel="noopener">Numerología</a> · <a href="https://horoscopo-de-hoy.es" target="_blank" rel="noopener">Horóscopo</a></p>
 </footer>
 </body>
 </html>
@@ -206,6 +207,7 @@ cat > "$DIR/index.html" <<'HEREDOC'
 <footer>
   <p>© 2026 Carta Astral Gratis · Cálculo con Swiss Ephemeris · Sistema Placidus</p>
   <p style="margin-top:.3rem"><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/">Calcular carta astral</a></p>
+  <p style="margin-top:.5rem;font-size:.85rem">🔮 <a href="https://compatibilidad-signos.es" target="_blank" rel="noopener">Compatibilidad</a> · <a href="https://tarot-del-dia.es" target="_blank" rel="noopener">Tarot</a> · <a href="https://calcular-numerologia.es" target="_blank" rel="noopener">Numerología</a> · <a href="https://horoscopo-de-hoy.es" target="_blank" rel="noopener">Horóscopo</a></p>
 </footer>
 </body>
 </html>
