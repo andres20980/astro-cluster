@@ -1,0 +1,128 @@
+name: "🚀 Deploy All Sites"
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'sites/*/public/**'
+      - 'sites/*/firebase.json'
+      - 'shared/**'
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Site to deploy (blank = all changed)'
+        required: false
+        type: choice
+        options:
+          - all
+          - carta-astral
+          - compatibilidad-signos
+          - tarot-del-dia
+          - calcular-numerologia
+          - horoscopo-de-hoy
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - id: set-matrix
+        run: |
+          if [ "${{ inputs.site }}" = "all" ] || [ -z "${{ inputs.site }}" ]; then
+            # Detect which sites changed
+            CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null || echo "sites/")
+            SITES=()
+            for site in carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy; do
+              if echo "$CHANGED" | grep -q "sites/${site}/" || echo "$CHANGED" | grep -q "shared/"; then
+                SITES+=("$site")
+              fi
+            done
+            # If nothing detected (first push, etc.), deploy all
+            if [ ${#SITES[@]} -eq 0 ]; then
+              SITES=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+            fi
+          else
+            SITES=("${{ inputs.site }}")
+          fi
+          echo "matrix=$(printf '%s\n' "${SITES[@]}" | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        site: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "⚙️ Setup Node"
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: "🔥 Deploy ${{ matrix.site }}"
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SA_${{ matrix.site }} }}
+          projectId: ${{ matrix.site == 'carta-astral' && 'carta-astral-f4ab9' || matrix.site == 'compatibilidad-signos' && 'compat-signos-es' || matrix.site == 'tarot-del-dia' && 'tarot-del-dia-es' || matrix.site == 'calcular-numerologia' && 'calc-numerologia-es' || 'horoscopo-hoy-es' }}
+          channelId: live
+          entryPoint: sites/${{ matrix.site }}
+
+      - name: "🔔 Ping Sitemap"
+        run: |
+          declare -A DOMAINS=(
+            [carta-astral]="carta-astral-gratis.es"
+            [compatibilidad-signos]="compatibilidad-signos.es"
+            [tarot-del-dia]="tarot-del-dia.es"
+            [calcular-numerologia]="calcular-numerologia.es"
+            [horoscopo-de-hoy]="horoscopo-de-hoy.es"
+          )
+          DOMAIN="${DOMAINS[${{ matrix.site }}]}"
+          curl -sS "https://www.google.com/ping?sitemap=https://${DOMAIN}/sitemap.xml" || true
+
+  lighthouse:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "📊 Lighthouse (all sites)"
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            https://carta-astral-gratis.es/
+            https://compatibilidad-signos.es/
+            https://tarot-del-dia.es/
+            https://calcular-numerologia.es/
+            https://horoscopo-de-hoy.es/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configJson: |
+            {
+              "ci": {
+                "assert": {
+                  "assertions": {
+                    "categories:performance": ["warn", {"minScore": 0.7}],
+                    "categories:accessibility": ["warn", {"minScore": 0.8}],
+                    "categories:best-practices": ["warn", {"minScore": 0.8}],
+                    "categories:seo": ["error", {"minScore": 0.9}]
+                  }
+                }
+              }
+            }

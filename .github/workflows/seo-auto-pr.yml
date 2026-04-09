@@ -28,10 +28,11 @@ jobs:
       - name: "\U0001F9E0 Apply SEO optimizations"
         id: autopatch
         shell: bash
+        working-directory: sites/carta-astral
         run: |
           set -euo pipefail
           mkdir -p docs
-          node .github/scripts/seo-auto-pr.js > /tmp/seo-result.json
+          node ../../.github/scripts/seo-auto-pr.js > /tmp/seo-result.json
           changed=$(jq -r '.changedCount' /tmp/seo-result.json)
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
           cat /tmp/seo-result.json
@@ -42,6 +43,6 @@ jobs:
           set -euo pipefail
           git config user.name "SEO Bot"
           git config user.email "seo-bot@carta-astral-gratis.es"
-          git add -A
+          git add sites/carta-astral/
           git commit -m "feat(seo): auto-optimización $(date +%Y-%m-%d)"
           git push origin master

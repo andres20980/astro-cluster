@@ -1,0 +1,125 @@
+name: "🛡️ SEO Tech Smoke (All Sites)"
+
+on:
+  schedule:
+    - cron: '40 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: seo-tech-smoke
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  seo-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        include:
+          - site: carta-astral
+            domain: carta-astral-gratis.es
+          - site: compatibilidad-signos
+            domain: compatibilidad-signos.es
+          - site: tarot-del-dia
+            domain: tarot-del-dia.es
+          - site: calcular-numerologia
+            domain: calcular-numerologia.es
+          - site: horoscopo-de-hoy
+            domain: horoscopo-de-hoy.es
+      fail-fast: false
+    steps:
+      - name: "🔎 Check ${{ matrix.domain }}"
+        id: smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          SITE="https://${{ matrix.domain }}"
+          failures=0
+          report=""
+
+          for url in "$SITE/robots.txt" "$SITE/sitemap.xml" "$SITE/ads.txt" "$SITE/"; do
+            code=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 20 "$url" || echo "000")
+            if [[ "$code" == "200" ]]; then
+              report+="- ✅ ${url} -> ${code}"$'\n'
+            else
+              report+="- ❌ ${url} -> ${code}"$'\n'
+              failures=$((failures + 1))
+            fi
+          done
+
+          # Check robots.txt declares Sitemap
+          robots_content=$(curl -L -s --max-time 20 "$SITE/robots.txt" || true)
+          if echo "$robots_content" | grep -iq 'Sitemap:'; then
+            report+="- ✅ robots.txt declares Sitemap"$'\n'
+          else
+            report+="- ❌ robots.txt no Sitemap"$'\n'
+            failures=$((failures + 1))
+          fi
+
+          # Check ads.txt
+          ads_content=$(curl -L -s --max-time 20 "$SITE/ads.txt" || true)
+          if echo "$ads_content" | grep -q 'pub-9368517395014039'; then
+            report+="- ✅ ads.txt OK"$'\n'
+          else
+            report+="- ❌ ads.txt missing pub ID"$'\n'
+            failures=$((failures + 1))
+          fi
+
+          # Legal pages (AdSense requirement)
+          for page in "/privacy" "/terms"; do
+            code=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 20 "$SITE$page" || echo "000")
+            if [[ "$code" == "200" ]]; then
+              report+="- ✅ ${page} OK"$'\n'
+            else
+              report+="- ❌ ${page} MISSING — AdSense blocker!"$'\n'
+              failures=$((failures + 1))
+            fi
+          done
+
+          # SEO meta checks on index
+          html=$(curl -L -s --max-time 20 "$SITE/" || true)
+          if echo "$html" | grep -q '<title>'; then
+            report+="- ✅ <title> present"$'\n'
+          else
+            report+="- ❌ <title> missing"$'\n'
+            failures=$((failures + 1))
+          fi
+          if echo "$html" | grep -q 'meta name="description"'; then
+            report+="- ✅ meta description present"$'\n'
+          else
+            report+="- ❌ meta description missing"$'\n'
+            failures=$((failures + 1))
+          fi
+          if echo "$html" | grep -q 'rel="canonical"'; then
+            report+="- ✅ canonical present"$'\n'
+          else
+            report+="- ❌ canonical missing"$'\n'
+            failures=$((failures + 1))
+          fi
+          if echo "$html" | grep -q 'application/ld+json'; then
+            report+="- ✅ structured data present"$'\n'
+          else
+            report+="- ⚠️ no structured data"$'\n'
+          fi
+
+          echo "failures=$failures" >> "$GITHUB_OUTPUT"
+          echo "report<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$report" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: "📋 Create issue if failures"
+        if: steps.smoke.outputs.failures != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 SEO Smoke fail: ${{ matrix.domain }} (${new Date().toISOString().slice(0,10)})`,
+              body: `## SEO Tech Smoke — ${{ matrix.domain }}\n\n${{ steps.smoke.outputs.report }}\n\n**Failures**: ${{ steps.smoke.outputs.failures }}`,
+              labels: ['seo', 'automated']
+            });

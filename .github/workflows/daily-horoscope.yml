@@ -1,0 +1,36 @@
+name: "☀️ Daily Horoscope Regen"
+
+on:
+  schedule:
+    - cron: '0 5 * * *'    # 05:00 UTC = 07:00 Madrid
+  workflow_dispatch:
+
+concurrency:
+  group: daily-horoscope
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "🔄 Regenerate horoscope pages"
+        run: bash sites/horoscopo-de-hoy/scripts/gen-pages.sh
+
+      - name: "📤 Commit & push"
+        run: |
+          cd sites/horoscopo-de-hoy
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/
+          if git diff --cached --quiet; then
+            echo "No changes (same day content)"
+          else
+            git commit -m "chore(horoscopo): daily update $(date +%Y-%m-%d)"
+            git push origin master
+          fi
