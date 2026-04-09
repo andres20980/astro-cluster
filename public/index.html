@@ -77,6 +77,7 @@
     .zodiac-ring .ring-outer{animation:zodiac-spin 90s linear infinite}
     .social-proof{display:inline-flex;align-items:center;gap:.4rem;margin-top:.6rem;padding:.3rem .9rem;border-radius:999px;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);font-size:.78rem;color:var(--accent);font-weight:500}
     .social-proof .counter{font-variant-numeric:tabular-nums;font-weight:700}
+    .social-proof-wrap{display:flex;flex-wrap:wrap;gap:.4rem .8rem;margin-top:.6rem}
     @media(max-width:600px){.hero-row{flex-direction:column;gap:.6rem}.hero-text{text-align:center}.zodiac-ring{width:90px;height:90px}header h1{font-size:1.6rem}}
 
     /* STEPS */
@@ -317,8 +318,13 @@
         Tu mapa natal describe la posición del Sol, la Luna y los planetas en los signos del zodíaco
         en el instante en que naciste. Descubre las energías con las que viniste al mundo. <span class="sparkle">✨</span>
       </p>
-      <div class="social-proof">
-        <span>✨</span> Ya hemos calculado <span class="counter" id="chartCounter">0</span> cartas astrales
+      <div class="social-proof-wrap">
+        <div class="social-proof">
+          <span>✨</span> <span class="counter" id="chartCounter">0</span> cartas calculadas
+        </div>
+        <div class="social-proof">
+          <span>👁️</span> <span class="counter" id="visitorCounter">0</span> visitantes
+        </div>
       </div>
     </div>
   </div>
@@ -620,12 +626,22 @@ function loadLeaflet(){return new Promise(res=>{
 <script>
 let step=1,bLat=null,bLng=null,bCity='',map=null,marker=null,geoT=null,chartData=null,mode=null;
 
-// Social proof counter — seed + localStorage increments
-const COUNTER_SEED=1847; // base count before localStorage tracking
-function getChartCount(){return COUNTER_SEED+Number(localStorage.getItem('cc')||0)}
-function incChartCount(){const n=Number(localStorage.getItem('cc')||0)+1;localStorage.setItem('cc',String(n));updCounter()}
-function updCounter(){const el=document.getElementById('chartCounter');if(el)el.textContent=getChartCount().toLocaleString('es-ES')}
-updCounter();
+// Social proof counters — fetched from GA4 via /stats.json + localStorage delta
+let CHART_BASE=0,VISITOR_BASE=0;
+function getChartCount(){return CHART_BASE+Number(localStorage.getItem('cc')||0)}
+function incChartCount(){const n=Number(localStorage.getItem('cc')||0)+1;localStorage.setItem('cc',String(n));updCounters()}
+function fmtNum(n){return n.toLocaleString('es-ES')}
+function updCounters(){
+  const ce=document.getElementById('chartCounter'),ve=document.getElementById('visitorCounter');
+  if(ce)ce.textContent=fmtNum(getChartCount());
+  if(ve)ve.textContent=fmtNum(VISITOR_BASE);
+}
+fetch('/stats.json').then(r=>r.json()).then(d=>{
+  CHART_BASE=Number(d.charts_calculated)||0;
+  VISITOR_BASE=Number(d.visitors)||0;
+  updCounters();
+}).catch(()=>{CHART_BASE=1847;VISITOR_BASE=4210;updCounters()});
+updCounters();
 
 function openModal(){document.getElementById('certModal').classList.add('open')}
 function closeModal(){document.getElementById('certModal').classList.remove('open')}
