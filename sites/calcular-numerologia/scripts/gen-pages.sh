@@ -38,8 +38,7 @@ gen_head() {
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
   <script>if(location.hostname.endsWith('.web.app'))location.replace('https://${DOMAIN}'+location.pathname+location.search);</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4}"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4}');</script>
+$(ga4_head_snippet "$GA4")
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
@@ -280,11 +279,14 @@ echo "  ✓ numero-de-vida/index.html"
 # ══════════════════════════════════════════════════════════════
 echo "Generating index with calculator..."
 
+INDEX_TITLE="Calcular Numerología Gratis — Tu Número de Vida y Nombre"
+INDEX_DESC="Calculadora de numerología gratis. Descubre tu número de vida a partir de tu fecha de nacimiento y el significado numerológico de tu nombre."
+
 cat > "$PUBLIC/index.html" <<ENDIDX
 <!DOCTYPE html>
 <html lang="es">
 <head>
-$(gen_head "Calcular Numerología Gratis — Tu Número de Vida y Nombre" "Calculadora de numerología gratis. Descubre tu número de vida a partir de tu fecha de nacimiento y el significado numerológico de tu nombre." "/")
+$(gen_head "$INDEX_TITLE" "$INDEX_DESC" "/")
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"Calcular Numerología","url":"https://${DOMAIN}/","description":"Calculadora de numerología gratis online.","inLanguage":"es"}
   </script>

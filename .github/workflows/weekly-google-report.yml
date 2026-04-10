@@ -52,7 +52,7 @@ jobs:
               -d "grant_type=refresh_token" | python3 -c "import sys,json;print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
           fi
 
-          echo "## 📊 Weekly Report — $(date +%Y-%m-%d)" > /tmp/report.md
+          echo "## 📊 Weekly Cluster Report — $(date +%Y-%m-%d)" > /tmp/report.md
           echo "" >> /tmp/report.md
 
           # GA4 traffic
@@ -357,7 +357,7 @@ jobs:
               | python3 -c "import sys,json;r=json.load(sys.stdin);print(r.get('rows',[{}])[0].get('metricValues',[{}])[0].get('value','0'))" 2>/dev/null || echo "0")
           fi
 
-          # Write public stats JSON
+          # Write public stats JSON for the commercial carta-astral landing
           python3 -c "
           import json
           from datetime import datetime
@@ -366,10 +366,10 @@ jobs:
             'visitors': int('${TOTAL_VISITORS}' or 0),
             'updated': datetime.utcnow().strftime('%Y-%m-%dT%H:%MZ')
           }
-          with open('public/stats.json','w') as f: json.dump(stats, f)
+          with open('sites/carta-astral/public/stats.json','w') as f: json.dump(stats, f)
           "
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/GROWTH_MILESTONES.json public/stats.json
+          git add docs/GROWTH_MILESTONES.json sites/carta-astral/public/stats.json
           git diff --cached --quiet || git commit -m "chore: update growth milestone + public stats" && git push || true

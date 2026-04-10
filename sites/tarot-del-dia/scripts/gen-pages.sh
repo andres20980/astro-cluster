@@ -38,8 +38,7 @@ gen_head() {
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
   <script>if(location.hostname.endsWith('.web.app'))location.replace('https://${DOMAIN}'+location.pathname+location.search);</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4}"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4}');</script>
+$(ga4_head_snippet "$GA4")
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
@@ -286,13 +285,16 @@ for i in "${!MAJOR_SLUGS[@]}"; do
 done
 JS_CARDS+="]"
 
+INDEX_TITLE="Tarot del Día Gratis — Tirada de 3 Cartas Online"
+INDEX_DESC="Haz tu tarot del día gratis con una tirada online de 3 cartas. Descubre el mensaje del pasado, presente y futuro con interpretación inmediata."
+
 cat > "$PUBLIC/index.html" <<'ENDINDEX_START'
 <!DOCTYPE html>
 <html lang="es">
 <head>
 ENDINDEX_START
 
-gen_head "Tarot del Día Gratis — Tirada de 3 Cartas Online" "Tirada de tarot gratis del día. Elige 3 cartas y descubre su mensaje para el amor, trabajo y futuro. 22 Arcanos Mayores con interpretación completa." "/" >> "$PUBLIC/index.html"
+gen_head "$INDEX_TITLE" "$INDEX_DESC" "/" >> "$PUBLIC/index.html"
 
 cat >> "$PUBLIC/index.html" <<ENDINDEX
   <script type="application/ld+json">

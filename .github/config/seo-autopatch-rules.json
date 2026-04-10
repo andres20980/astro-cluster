@@ -95,5 +95,115 @@
       "description": "Descubre el significado de las 12 casas astrológicas: identidad, dinero, comunicación, hogar, amor, trabajo, pareja, transformación, viajes, éxito, amigos e inconsciente.",
       "h1": "Descubre tu Carta Astral"
     }
+  },
+  "sites": {
+    "compatibilidad-signos": {
+      "domain": "compatibilidad-signos.es",
+      "homeUrl": "https://compatibilidad-signos.es/",
+      "sitemapFile": "public/sitemap.xml",
+      "targetKeywords": [
+        {"query": "compatibilidad de signos", "priority": 1},
+        {"query": "compatibilidad signos", "priority": 1},
+        {"query": "compatibilidad amorosa signos", "priority": 2}
+      ],
+      "rulesByQuery": {
+        "compatibilidad de signos": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Compatibilidad de Signos Zodiacales — Calculadora Gratis",
+          "description": "Descubre la compatibilidad entre los 12 signos del zodíaco. 144 combinaciones analizadas: fortalezas, retos y porcentaje de afinidad. Herramienta gratuita."
+        },
+        "compatibilidad signos": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Compatibilidad de Signos Gratis — Calcula tu Afinidad Amorosa",
+          "description": "Calcula la compatibilidad de signos gratis y compara las 144 combinaciones del zodíaco con porcentaje, puntos fuertes, retos y consejos."
+        },
+        "compatibilidad amorosa signos": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Compatibilidad Amorosa de Signos — Porcentaje y Afinidad",
+          "description": "Consulta la compatibilidad amorosa de signos con afinidad, química elemental y claves para entender mejor cada combinación zodiacal."
+        }
+      }
+    },
+    "tarot-del-dia": {
+      "domain": "tarot-del-dia.es",
+      "homeUrl": "https://tarot-del-dia.es/",
+      "sitemapFile": "public/sitemap.xml",
+      "targetKeywords": [
+        {"query": "tarot del día", "priority": 1},
+        {"query": "tarot gratis", "priority": 2},
+        {"query": "tirada de tarot gratis", "priority": 2}
+      ],
+      "rulesByQuery": {
+        "tarot del día": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Tarot del Día Gratis — Tirada de 3 Cartas Online",
+          "description": "Haz tu tarot del día gratis con una tirada online de 3 cartas. Descubre el mensaje del pasado, presente y futuro con interpretación inmediata."
+        },
+        "tarot gratis": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Tarot Gratis Online — Tirada del Día con 3 Cartas",
+          "description": "Consulta tu tarot gratis online y elige 3 cartas para recibir una lectura rápida sobre amor, trabajo y energía del momento."
+        },
+        "tirada de tarot gratis": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Tirada de Tarot Gratis — Lectura Online del Día",
+          "description": "Haz una tirada de tarot gratis y descubre el significado de tus cartas con una lectura clara, inmediata y pensada para hoy."
+        }
+      }
+    },
+    "calcular-numerologia": {
+      "domain": "calcular-numerologia.es",
+      "homeUrl": "https://calcular-numerologia.es/",
+      "sitemapFile": "public/sitemap.xml",
+      "targetKeywords": [
+        {"query": "calcular numerología", "priority": 1},
+        {"query": "numerología gratis", "priority": 2},
+        {"query": "número de vida", "priority": 2}
+      ],
+      "rulesByQuery": {
+        "calcular numerología": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Calcular Numerología Gratis — Tu Número de Vida y Nombre",
+          "description": "Calculadora de numerología gratis. Descubre tu número de vida a partir de tu fecha de nacimiento y el significado numerológico de tu nombre."
+        },
+        "numerología gratis": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Numerología Gratis Online — Calcula tu Número de Vida",
+          "description": "Haz tu numerología gratis online y descubre tu número de vida, rasgos de personalidad, compatibilidad y claves de crecimiento personal."
+        },
+        "número de vida": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Número de Vida Gratis — Calculadora de Numerología",
+          "description": "Calcula tu número de vida gratis con tu fecha de nacimiento y entiende su significado en amor, trabajo, personalidad y propósito."
+        }
+      }
+    },
+    "horoscopo-de-hoy": {
+      "domain": "horoscopo-de-hoy.es",
+      "homeUrl": "https://horoscopo-de-hoy.es/",
+      "sitemapFile": "public/sitemap.xml",
+      "targetKeywords": [
+        {"query": "horóscopo de hoy", "priority": 1},
+        {"query": "horóscopo diario", "priority": 2},
+        {"query": "horóscopo gratis", "priority": 2}
+      ],
+      "rulesByQuery": {
+        "horóscopo de hoy": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Horóscopo de Hoy Gratis — ${TODAY_DISPLAY}",
+          "description": "Horóscopo de hoy gratis para los 12 signos del zodíaco. Predicciones diarias de amor, trabajo y salud. Actualizado el ${TODAY_DISPLAY}."
+        },
+        "horóscopo diario": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Horóscopo Diario Gratis — ${TODAY_DISPLAY}",
+          "description": "Consulta tu horóscopo diario gratis con predicciones actualizadas para amor, trabajo y salud en los 12 signos del zodíaco."
+        },
+        "horóscopo gratis": {
+          "file": "scripts/gen-pages.sh",
+          "title": "Horóscopo Gratis de Hoy — Predicciones por Signo",
+          "description": "Lee tu horóscopo gratis de hoy y revisa las predicciones diarias de amor, trabajo, salud, color y números de la suerte."
+        }
+      }
+    }
   }
 }

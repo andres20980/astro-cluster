@@ -124,8 +124,7 @@ gen_head() {
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
   <script>if(location.hostname.endsWith('.web.app'))location.replace('https://${DOMAIN}'+location.pathname+location.search);</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4}"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4}');</script>
+$(ga4_head_snippet "$GA4")
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">

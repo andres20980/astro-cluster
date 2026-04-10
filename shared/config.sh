@@ -5,13 +5,14 @@
 # — AdSense (same account for all sites)
 ADSENSE_PUB="ca-pub-9368517395014039"
 
-# — GA4 Measurement IDs (one per site — create in GA4 console)
+# — GA4 (single cluster-wide property + cross-domain linker)
+CLUSTER_GA4_ID="G-DEWMQ73FH5"
 declare -A GA4_IDS=(
-  [carta-astral]="G-DEWMQ73FH5"
-  [compatibilidad-signos]="G-JNP0S5GWK8"
-  [tarot-del-dia]="G-VH11KJD8YM"
-  [calcular-numerologia]="G-X8PJ20GZS2"
-  [horoscopo-de-hoy]="G-RLCE9Z17P1"
+  [carta-astral]="$CLUSTER_GA4_ID"
+  [compatibilidad-signos]="$CLUSTER_GA4_ID"
+  [tarot-del-dia]="$CLUSTER_GA4_ID"
+  [calcular-numerologia]="$CLUSTER_GA4_ID"
+  [horoscopo-de-hoy]="$CLUSTER_GA4_ID"
 )
 
 # — Domains
@@ -21,6 +22,14 @@ declare -A DOMAINS=(
   [tarot-del-dia]="tarot-del-dia.es"
   [calcular-numerologia]="calcular-numerologia.es"
   [horoscopo-de-hoy]="horoscopo-de-hoy.es"
+)
+
+declare -a TRACKING_DOMAINS=(
+  "carta-astral-gratis.es"
+  "compatibilidad-signos.es"
+  "tarot-del-dia.es"
+  "calcular-numerologia.es"
+  "horoscopo-de-hoy.es"
 )
 
 # — Shared brand
@@ -79,6 +88,21 @@ crosslink_footer() {
   done
   html+='</div>'
   echo "$html"
+}
+
+ga4_head_snippet() {
+  local measurement_id="$1"
+  local domains_js=""
+  local domain
+  for domain in "${TRACKING_DOMAINS[@]}"; do
+    domains_js+="'${domain}',"
+  done
+  domains_js="${domains_js%,}"
+
+  cat <<EOF
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${measurement_id}"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${measurement_id}',{linker:{domains:[${domains_js}]}});</script>
+EOF
 }
 
 ad_css() {

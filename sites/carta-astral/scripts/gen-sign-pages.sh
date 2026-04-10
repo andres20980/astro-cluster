@@ -3,7 +3,11 @@ set -euo pipefail
 # Generate 12 zodiac sign landing pages for long-tail SEO
 # Each page targets "carta astral [signo]" keywords
 
-DIR="$(cd "$(dirname "$0")/.." && pwd)/public/signos"
+SITE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT="$(cd "$SITE_DIR/../.." && pwd)"
+DIR="$SITE_DIR/public/signos"
+source "$REPO_ROOT/shared/config.sh"
+GA4="${GA4_IDS[carta-astral]}"
 mkdir -p "$DIR"
 
 declare -A SIGNS=(
@@ -43,10 +47,9 @@ for slug in aries tauro geminis cancer leo virgo libra escorpio sagitario capric
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <!-- GA4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DEWMQ73FH5');</script>
+$(ga4_head_snippet "$GA4")
   <!-- AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Article","headline":"Carta Astral ${name} ${glyph}","description":"${name} en la carta astral: significado, fechas, elemento y cómo influye en tu mapa natal.","author":{"@type":"Organization","name":"Carta Astral Gratis"},"publisher":{"@type":"Organization","name":"Carta Astral Gratis","url":"https://carta-astral-gratis.es/"},"mainEntityOfPage":"https://carta-astral-gratis.es/signos/${slug}","inLanguage":"es"}
   </script>
@@ -142,7 +145,7 @@ HEREDOC
 done
 
 # Generate index page for /signos/
-cat > "$DIR/index.html" <<'HEREDOC'
+cat > "$DIR/index.html" <<HEREDOC
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -155,9 +158,8 @@ cat > "$DIR/index.html" <<'HEREDOC'
   <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-DEWMQ73FH5');</script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039" crossorigin="anonymous"></script>
+$(ga4_head_snippet "$GA4")
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://carta-astral-gratis.es/"},{"@type":"ListItem","position":2,"name":"Signos del Zodíaco","item":"https://carta-astral-gratis.es/signos/"}]}
   </script>

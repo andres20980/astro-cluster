@@ -23,9 +23,11 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 ## Monetización
 
 - Publisher AdSense compartido: `ca-pub-9368517395014039`
+- Measurement ID GA4 compartido para todo el cluster: `G-DEWMQ73FH5`
 - Todos los sitios publican `ads.txt` con ese publisher.
 - Todos los sitios incluyen huecos premium y landing `/publicidad` para venta directa.
 - La venta directa convive con AdSense y tiene prioridad comercial sobre inventario remanente.
+- El tracking GA4 se hace con linker cross-domain para mantener la sesión al saltar entre herramientas.
 
 ## Desarrollo local
 
@@ -72,7 +74,7 @@ astro-cluster/
 - `deploy-all-sites.yml`: despliega solo los sitios afectados por cambios reales en `sites/*` o `shared/`. En `workflow_dispatch` permite desplegar un site o todos.
 - `seo-smoke-all.yml`: comprueba `robots.txt`, `sitemap.xml`, `ads.txt`, páginas legales, `/publicidad`, canonical, meta description, structured data, `noindex` y script AdSense.
 - `daily-horoscope.yml`: regenera y publica `horoscopo-de-hoy`.
-- `seo-auto-pr.yml`: aplica mejoras SEO automáticas sobre `carta-astral`.
+- `seo-auto-pr.yml`: aplica mejoras SEO automáticas de forma rotatoria sobre un site del cluster por ejecución.
 - `seo-competitor-intel.yml`: captura señales de competidores.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense.
 
@@ -80,7 +82,7 @@ astro-cluster/
 
 - Sitios estáticos, sin backend persistente, para mantener coste bajo y despliegue simple.
 - Workflows pensados para GitHub free tier: menos ejecuciones inútiles, checks compactos y despliegues selectivos.
-- Shared config para mantener consistencia de tracking, branding, crosslinking y monetización.
+- Shared config para mantener consistencia de tracking, cross-domain analytics, branding, crosslinking y monetización.
 
 ## DNS
 

@@ -1,9 +1,22 @@
-name: "\U0001F680 SEO Auto Deploy"
+name: "🚀 SEO Auto Deploy"
 
 on:
   schedule:
-    - cron: '35 7 * * 2'
+    - cron: '20 6 * * *'
   workflow_dispatch:
+    inputs:
+      site:
+        description: 'Site to optimize (auto = rotating cluster schedule)'
+        required: false
+        default: auto
+        type: choice
+        options:
+          - auto
+          - carta-astral
+          - compatibilidad-signos
+          - tarot-del-dia
+          - calcular-numerologia
+          - horoscopo-de-hoy
 
 concurrency:
   group: seo-auto-pr
@@ -17,32 +30,60 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: "\U0001F4E5 Checkout"
+      - name: "📥 Checkout"
         uses: actions/checkout@v6
 
-      - name: "\u2699\uFE0F Setup Node"
+      - name: "⚙️ Setup Node"
         uses: actions/setup-node@v6
         with:
           node-version: '22'
 
-      - name: "\U0001F9E0 Apply SEO optimizations"
+      - name: "🧭 Select site"
+        id: select
+        shell: bash
+        run: |
+          sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
+            site="${{ inputs.site }}"
+          else
+            idx=$(( (10#$(date -u +%j) - 1) % ${#sites[@]} ))
+            site="${sites[$idx]}"
+          fi
+
+          echo "site=$site" >> "$GITHUB_OUTPUT"
+          echo "Selected site: $site"
+
+      - name: "🧠 Apply SEO optimizations"
         id: autopatch
         shell: bash
-        working-directory: sites/carta-astral
+        env:
+          SITE_KEY: ${{ steps.select.outputs.site }}
+          SEO_AUTO_PR_MAX_CHANGES: '1'
         run: |
           set -euo pipefail
+          pushd "sites/${SITE_KEY}" >/dev/null
           mkdir -p docs
           node ../../.github/scripts/seo-auto-pr.js > /tmp/seo-result.json
           changed=$(jq -r '.changedCount' /tmp/seo-result.json)
+
+          if [ "$changed" != "0" ] && [ -f scripts/gen-pages.sh ]; then
+            bash scripts/gen-pages.sh
+          fi
+
+          popd >/dev/null
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
           cat /tmp/seo-result.json
 
-      - name: "\U0001F4E4 Push to master"
+      - name: "📤 Push to master"
         if: steps.autopatch.outputs.changed != '0'
+        shell: bash
+        env:
+          SITE_KEY: ${{ steps.select.outputs.site }}
         run: |
           set -euo pipefail
           git config user.name "SEO Bot"
           git config user.email "seo-bot@carta-astral-gratis.es"
-          git add sites/carta-astral/
-          git commit -m "feat(seo): auto-optimización $(date +%Y-%m-%d)"
+          git add "sites/${SITE_KEY}/"
+          git commit -m "feat(seo): auto-optimización ${SITE_KEY} $(date +%Y-%m-%d)"
           git push origin master

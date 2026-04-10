@@ -112,8 +112,7 @@ gen_head() {
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
   <script>if(location.hostname.endsWith('.web.app'))location.replace('https://${DOMAIN}'+location.pathname+location.search);</script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA4}"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4}');</script>
+$(ga4_head_snippet "$GA4")
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
@@ -309,11 +308,14 @@ echo "  ✓ ${PAGE_COUNT} sign pages"
 # ══════════════════════════════════════════════════════════════
 echo "Generating index..."
 
+INDEX_TITLE="Horóscopo de Hoy Gratis — ${TODAY_DISPLAY}"
+INDEX_DESC="Horóscopo de hoy gratis para los 12 signos del zodíaco. Predicciones diarias de amor, trabajo y salud. Actualizado el ${TODAY_DISPLAY}."
+
 cat > "$PUBLIC/index.html" <<ENDINDEX
 <!DOCTYPE html>
 <html lang="es">
 <head>
-$(gen_head "Horóscopo de Hoy Gratis — ${TODAY_DISPLAY}" "Horóscopo de hoy gratis para los 12 signos del zodíaco. Predicciones diarias de amor, trabajo y salud. Actualizado el ${TODAY_DISPLAY}." "/")
+$(gen_head "$INDEX_TITLE" "$INDEX_DESC" "/")
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"Horóscopo de Hoy","url":"https://${DOMAIN}/","description":"Horóscopo diario gratis para los 12 signos del zodíaco.","inLanguage":"es"}
   </script>

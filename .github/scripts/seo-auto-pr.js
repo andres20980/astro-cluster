@@ -1,88 +1,165 @@
 #!/usr/bin/env node
-/**
- * SEO Auto-PR script for carta-astral-gratis.es
- * Adapted from licitago — applies top SEO recommendations to index.html
- * and updates sitemap lastmod.
- */
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = process.cwd();
-const RECS_PATH = path.join(ROOT, 'docs', 'SEO_AGENT_RECOMMENDATIONS.json');
-const RULES_PATH = path.join(ROOT, '.github', 'config', 'seo-autopatch-rules.json');
-const STATE_PATH = path.join(ROOT, 'docs', 'SEO_AGENT_STATE.json');
-const SITEMAP_PATH = path.join(ROOT, 'public', 'sitemap.xml');
-const MAX_CHANGES = Number(process.env.SEO_AUTO_PR_MAX_CHANGES || 2);
+const SITE_ROOT = process.cwd();
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const SITE_KEY = process.env.SITE_KEY || 'carta-astral';
+const RECS_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_RECOMMENDATIONS.json');
+const RULES_PATH = path.join(REPO_ROOT, '.github', 'config', 'seo-autopatch-rules.json');
+const STATE_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_STATE.json');
+const MAX_CHANGES = Number(process.env.SEO_AUTO_PR_MAX_CHANGES || 1);
 
 function readJson(fp, fallback) {
-  try { return JSON.parse(fs.readFileSync(fp, 'utf8')); } catch { return fallback; }
+  try {
+    return JSON.parse(fs.readFileSync(fp, 'utf8'));
+  } catch {
+    return fallback;
+  }
 }
 
-function replaceTag(content, regex, replacement) {
+function writeJson(fp, data) {
+  fs.mkdirSync(path.dirname(fp), { recursive: true });
+  fs.writeFileSync(fp, JSON.stringify(data, null, 2) + '\n', 'utf8');
+}
+
+function replaceWithFunction(content, regex, replacementFactory) {
   if (!regex.test(content)) return { next: content, changed: false };
-  const next = content.replace(regex, replacement);
+  regex.lastIndex = 0;
+  const next = content.replace(regex, (...args) => replacementFactory(...args));
   return { next, changed: next !== content };
 }
 
-function updateSitemapLastmod(dateStr) {
-  if (!fs.existsSync(SITEMAP_PATH)) return false;
-  let sitemap = fs.readFileSync(SITEMAP_PATH, 'utf8');
-  const regex = /(<loc>https:\/\/carta-astral-gratis\.es\/<\/loc>\s*<lastmod>)[^<]*(<\/lastmod>)/;
-  if (regex.test(sitemap)) {
-    sitemap = sitemap.replace(regex, `$1${dateStr}$2`);
-    fs.writeFileSync(SITEMAP_PATH, sitemap, 'utf8');
-    return true;
-  }
-  return false;
-}
-
-function optimizeFile(rule) {
-  const fp = path.join(ROOT, rule.file);
-  if (!fs.existsSync(fp)) return { file: rule.file, changed: false, reason: 'file_missing' };
-
-  let content = fs.readFileSync(fp, 'utf8');
+function replaceTitleAndDescription(content, rule) {
+  let next = content;
   let changed = false;
-  const nowDate = new Date().toISOString().slice(0, 10);
 
-  const titleRes = replaceTag(content, /<title>[^<]*<\/title>/, `<title>${rule.title}</title>`);
-  content = titleRes.next; changed = changed || titleRes.changed;
+  const titleRes = replaceWithFunction(next, /<title>[^<]*<\/title>/, () => `<title>${rule.title}</title>`);
+  next = titleRes.next;
+  changed = changed || titleRes.changed;
 
   const descTag = `<meta name="description" content="${rule.description}">`;
-  const descRes = replaceTag(content, /<meta name="description" content="[^"]*">/, descTag);
-  content = descRes.next; changed = changed || descRes.changed;
+  const descRes = replaceWithFunction(
+    next,
+    /<meta name="description" content="[^"]*">/,
+    () => descTag
+  );
+  next = descRes.next;
+  changed = changed || descRes.changed;
 
-  if (changed) {
-    fs.writeFileSync(fp, content, 'utf8');
-    updateSitemapLastmod(nowDate);
+  return { next, changed };
+}
+
+function replaceGeneratorIndexMeta(content, rule) {
+  let next = content;
+  let changed = false;
+
+  const titleRes = replaceWithFunction(
+    next,
+    /^INDEX_TITLE=".*"$/m,
+    () => `INDEX_TITLE="${rule.title}"`
+  );
+  next = titleRes.next;
+  changed = changed || titleRes.changed;
+
+  const descRes = replaceWithFunction(
+    next,
+    /^INDEX_DESC=".*"$/m,
+    () => `INDEX_DESC="${rule.description}"`
+  );
+  next = descRes.next;
+  changed = changed || descRes.changed;
+
+  return { next, changed };
+}
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function updateSitemapLastmod(siteConfig, dateStr) {
+  if (!siteConfig.sitemapFile || !siteConfig.homeUrl) return false;
+  const sitemapPath = path.join(SITE_ROOT, siteConfig.sitemapFile);
+  if (!fs.existsSync(sitemapPath)) return false;
+
+  let sitemap = fs.readFileSync(sitemapPath, 'utf8');
+  const loc = escapeRegex(siteConfig.homeUrl);
+  const regex = new RegExp(`(<loc>${loc}<\\/loc>\\s*<lastmod>)[^<]*(<\\/lastmod>)`);
+  if (!regex.test(sitemap)) return false;
+
+  sitemap = sitemap.replace(regex, `$1${dateStr}$2`);
+  fs.writeFileSync(sitemapPath, sitemap, 'utf8');
+  return true;
+}
+
+function optimizeFile(siteConfig, rule) {
+  const fp = path.join(SITE_ROOT, rule.file);
+  if (!fs.existsSync(fp)) {
+    return { file: rule.file, changed: false, reason: 'file_missing' };
   }
 
-  return { file: rule.file, changed, reason: changed ? 'optimized' : 'already_ok' };
+  const original = fs.readFileSync(fp, 'utf8');
+  let result;
+
+  if (fp.endsWith('.html')) {
+    result = replaceTitleAndDescription(original, rule);
+  } else if (fp.endsWith('.sh')) {
+    result = replaceGeneratorIndexMeta(original, rule);
+  } else {
+    return { file: rule.file, changed: false, reason: 'unsupported_file' };
+  }
+
+  if (!result.changed) {
+    return { file: rule.file, changed: false, reason: 'already_ok' };
+  }
+
+  fs.writeFileSync(fp, result.next, 'utf8');
+  updateSitemapLastmod(siteConfig, new Date().toISOString().slice(0, 10));
+  return { file: rule.file, changed: true, reason: 'optimized' };
+}
+
+function pickRecommendations(siteConfig, state, payload) {
+  const rules = siteConfig.rulesByQuery || {};
+
+  if (payload && Array.isArray(payload.topRecommendations) && payload.topRecommendations.length > 0) {
+    return payload.topRecommendations;
+  }
+
+  const keywords = (siteConfig.targetKeywords || [])
+    .filter((keyword) => rules[keyword.query])
+    .sort((a, b) => (a.priority || 99) - (b.priority || 99));
+
+  if (keywords.length === 0) return [];
+
+  const lastIdx = keywords.findIndex((keyword) => keyword.query === state.lastQuery);
+  const startIdx = (lastIdx + 1) % keywords.length;
+  const rotated = keywords.slice(startIdx).concat(keywords.slice(0, startIdx));
+  return rotated.slice(0, MAX_CHANGES).map((keyword) => ({ query: keyword.query }));
+}
+
+function getSiteConfig(rulesData) {
+  if (rulesData.sites && rulesData.sites[SITE_KEY]) {
+    return rulesData.sites[SITE_KEY];
+  }
+
+  return {
+    domain: 'carta-astral-gratis.es',
+    sitemapFile: 'public/sitemap.xml',
+    homeUrl: 'https://carta-astral-gratis.es/',
+    targetKeywords: rulesData.targetKeywords || [],
+    rulesByQuery: rulesData.rulesByQuery || {},
+  };
 }
 
 function main() {
-  const rulesData = readJson(RULES_PATH, { rulesByQuery: {}, targetKeywords: [] });
-  const rules = rulesData.rulesByQuery || {};
-  const state = readJson(STATE_PATH, { lastRun: null, lastQuery: null, actions: {} });
-
-  // Build recommendations from targetKeywords (rotating through them each week)
-  // If SEO_AGENT_RECOMMENDATIONS.json exists, prefer it; otherwise auto-generate
-  let recs;
+  const rulesData = readJson(RULES_PATH, {});
+  const siteConfig = getSiteConfig(rulesData);
+  const rules = siteConfig.rulesByQuery || {};
+  const state = readJson(STATE_PATH, { site: SITE_KEY, lastRun: null, lastQuery: null, results: [] });
   const payload = readJson(RECS_PATH, null);
-  if (payload && Array.isArray(payload.topRecommendations) && payload.topRecommendations.length > 0) {
-    recs = payload.topRecommendations;
-  } else {
-    // Auto-rotate through keywords sorted by priority
-    const keywords = (rulesData.targetKeywords || [])
-      .filter(k => rules[k.query])
-      .sort((a, b) => (a.priority || 99) - (b.priority || 99));
-    // Pick the next keyword after last applied one
-    const lastIdx = keywords.findIndex(k => k.query === state.lastQuery);
-    const startIdx = (lastIdx + 1) % Math.max(keywords.length, 1);
-    recs = keywords.slice(startIdx, startIdx + MAX_CHANGES).map(k => ({ query: k.query }));
-    if (recs.length === 0 && keywords.length > 0) {
-      recs = keywords.slice(0, MAX_CHANGES).map(k => ({ query: k.query }));
-    }
-  }
+  const recs = pickRecommendations(siteConfig, state, payload);
 
   const runAt = new Date().toISOString();
   const results = [];
@@ -91,22 +168,31 @@ function main() {
 
   for (const rec of recs) {
     if (applied >= MAX_CHANGES) break;
-    const key = (rec.query || '').trim().toLowerCase();
+    const key = String(rec.query || '').trim().toLowerCase();
     const rule = rules[key];
     if (!rule) continue;
-    const res = optimizeFile(rule);
-    results.push(res);
-    if (res.changed) { applied++; lastQuery = key; }
+
+    const res = optimizeFile(siteConfig, rule);
+    results.push({ query: key, ...res });
+    if (res.changed) {
+      applied += 1;
+      lastQuery = key;
+    }
   }
 
-  state.lastRun = runAt;
-  state.lastQuery = lastQuery;
-  state.results = results;
-  fs.mkdirSync(path.dirname(STATE_PATH), { recursive: true });
-  fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2), 'utf8');
+  writeJson(STATE_PATH, {
+    site: SITE_KEY,
+    lastRun: runAt,
+    lastQuery,
+    results,
+  });
 
-  const output = { changedCount: results.filter(r => r.changed).length, totalChecked: results.length, runAt };
-  console.log(JSON.stringify(output));
+  console.log(JSON.stringify({
+    site: SITE_KEY,
+    changedCount: results.filter((result) => result.changed).length,
+    totalChecked: results.length,
+    runAt,
+  }));
 }
 
 main();
