@@ -170,21 +170,40 @@ jobs:
           curl -sS "https://www.google.com/ping?sitemap=https://${DOMAIN}/sitemap.xml" || true
 
   lighthouse:
-    needs: deploy
+    needs:
+      - detect-changes
+      - deploy
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    strategy:
+      matrix:
+        site: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      fail-fast: false
     steps:
       - uses: actions/checkout@v6
+
+      - name: "🧭 Resolve site URL"
+        id: config
+        shell: bash
+        run: |
+          case "${{ matrix.site }}" in
+            carta-astral) domain="carta-astral-gratis.es" ;;
+            compatibilidad-signos) domain="compatibilidad-signos.es" ;;
+            tarot-del-dia) domain="tarot-del-dia.es" ;;
+            calcular-numerologia) domain="calcular-numerologia.es" ;;
+            horoscopo-de-hoy) domain="horoscopo-de-hoy.es" ;;
+            *)
+              echo "Unknown site: ${{ matrix.site }}" >&2
+              exit 1
+              ;;
+          esac
+          echo "url=https://${domain}/" >> "$GITHUB_OUTPUT"
 
       - name: "📊 Lighthouse (all sites)"
         uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
-            https://carta-astral-gratis.es/
-            https://compatibilidad-signos.es/
-            https://tarot-del-dia.es/
-            https://calcular-numerologia.es/
-            https://horoscopo-de-hoy.es/
+            ${{ steps.config.outputs.url }}
           uploadArtifacts: true
           temporaryPublicStorage: true
           configJson: |

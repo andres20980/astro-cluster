@@ -92,12 +92,12 @@ jobs:
           fi
 
           # Legal pages (AdSense requirement)
-          for page in "/privacy" "/terms"; do
+          for page in "/privacy" "/terms" "/publicidad"; do
             code=$(http_code "$SITE$page")
             if [[ "$code" == "200" ]]; then
               report+="- ✅ ${page} OK"$'\n'
             else
-              report+="- ❌ ${page} MISSING — AdSense blocker!"$'\n'
+              report+="- ❌ ${page} MISSING"$'\n'
               failures=$((failures + 1))
             fi
           done
@@ -121,10 +121,10 @@ jobs:
               failures=$((failures + 1))
             fi
 
-            if echo "$html" | grep -Eiq "<link[^>]+rel=['\"]canonical['\"][^>]*href=['\"]https?://|<link[^>]+href=['\"]https?://[^'\"]+['\"][^>]*rel=['\"]canonical['\"]"; then
-              report+="- ✅ canonical present"$'\n'
+            if echo "$html" | grep -Eiq "<link[^>]+rel=['\"]canonical['\"][^>]*href=['\"]https://${{ matrix.domain }}(/|['\"])|<link[^>]+href=['\"]https://${{ matrix.domain }}(/|['\"])[^>]*rel=['\"]canonical['\"]"; then
+              report+="- ✅ canonical points to primary domain"$'\n'
             else
-              report+="- ❌ canonical missing"$'\n'
+              report+="- ❌ canonical missing or wrong host"$'\n'
               failures=$((failures + 1))
             fi
 
@@ -132,6 +132,20 @@ jobs:
               report+="- ✅ structured data present"$'\n'
             else
               report+="- ⚠️ no structured data"$'\n'
+            fi
+
+            if echo "$html" | grep -Eiq "pagead2\.googlesyndication\.com/pagead/js/adsbygoogle\.js\?client=ca-pub-9368517395014039"; then
+              report+="- ✅ AdSense script present on homepage"$'\n'
+            else
+              report+="- ❌ AdSense script missing on homepage"$'\n'
+              failures=$((failures + 1))
+            fi
+
+            if echo "$html" | grep -Eiq "<meta[^>]+name=['\"]robots['\"][^>]*content=['\"][^'\"]*noindex|<meta[^>]+content=['\"][^'\"]*noindex[^'\"]*['\"][^>]*name=['\"]robots['\"]"; then
+              report+="- ❌ homepage contains noindex"$'\n'
+              failures=$((failures + 1))
+            else
+              report+="- ✅ homepage not marked noindex"$'\n'
             fi
           else
             report+="- ⚠️ skipped SEO meta checks because homepage returned ${home_code}"$'\n'
