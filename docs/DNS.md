@@ -1,120 +1,135 @@
-# DNS — Astro Cluster
+# DNS - Astro Cluster
 
-Todos los dominios están en **Piensa Solutions** (ns97/ns98.piensasolutions.com).
+Referencia de DNS para los dominios del cluster en Piensa Solutions.
 
-## Registros comunes a TODOS los dominios
+Fuente operativa:
+- configuración objetivo del repo
+- snapshot manual de Piensa Solutions compartido en `log.txt`
+
+Fecha de referencia: `2026-04-10`
+
+## Nameservers
+
+Todos los dominios usan:
+
+- `ns97.piensasolutions.com`
+- `ns98.piensasolutions.com`
+
+## Registros comunes
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
 
-> La IP `199.36.158.100` es la de Firebase Hosting global.
-> ImprovMX se usa para reenvío de email del dominio.
+Notas:
+- `199.36.158.100` es la IP global de Firebase Hosting.
+- ImprovMX se usa para forwarding de correo.
 
----
-
-## 1. carta-astral-gratis.es
+## carta-astral-gratis.es
 
 Firebase project: `carta-astral-f4ab9`
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| CNAME | www | `carta-astral-f4ab9.web.app` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
-| TXT | @ | `google-site-verification=x02IbSeXH-i8nm_h0nEA_iFzvdSa6jdOoILtcyXFsa8` | 3600 |
-| TXT | _acme-challenge | `RPkgsG_f6LmpdscQrkyvxKY4o1eHijCDbcoWnjgdr_s` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `carta-astral-f4ab9.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `google-site-verification=x02IbSeXH-i8nm_h0nEA_iFzvdSa6jdOoILtcyXFsa8` | `3600` |
+| `TXT` | `_acme-challenge` | `RPkgsG_f6LmpdscQrkyvxKY4o1eHijCDbcoWnjgdr_s` | `3600` |
 
-**Estado: ✅ Configurado y funcionando**
+Estado documentado:
+- DNS base configurado en Piensa
+- Search Console verificado
 
----
-
-## 2. compatibilidad-signos.es
+## compatibilidad-signos.es
 
 Firebase project: `compat-signos-es`
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| CNAME | www | `compat-signos-es.web.app` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
-| TXT | @ | `hosting-site=compat-signos-es` | 3600 |
-| TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | `ae0XwtyMP3f8cx_unWdHbb17KLvfvzPihaZOyyA33Uk` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `compat-signos-es.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `hosting-site=compat-signos-es` | `3600` |
+| `TXT` | `_acme-challenge` | `ae0XwtyMP3f8cx_unWdHbb17KLvfvzPihaZOyyA33Uk` | `3600` |
 
-**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
+Opcional:
+- `TXT @ = google-site-verification=...` cuando se verifique en Search Console
 
----
+Estado documentado:
+- DNS base configurado en Piensa
 
-## 3. tarot-del-dia.es
+## tarot-del-dia.es
 
 Firebase project: `tarot-del-dia-es`
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| CNAME | www | `tarot-del-dia-es.web.app` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
-| TXT | @ | `hosting-site=tarot-del-dia-es` | 3600 |
-| TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | `ULH29pUoJ6T8LCti3oCYT3zUveH6Df8Xes_vaDmtWlA` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `tarot-del-dia-es.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `hosting-site=tarot-del-dia-es` | `3600` |
+| `TXT` | `_acme-challenge` | `ULH29pUoJ6T8LCti3oCYT3zUveH6Df8Xes_vaDmtWlA` | `3600` |
 
-**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
+Opcional:
+- `TXT @ = google-site-verification=...` cuando se verifique en Search Console
 
----
+Estado documentado:
+- DNS base configurado en Piensa
 
-## 4. calcular-numerologia.es
+## calcular-numerologia.es
 
 Firebase project: `calc-numerologia-es`
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| CNAME | www | `calc-numerologia-es.web.app` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
-| TXT | @ | `hosting-site=calc-numerologia-es` | 3600 |
-| TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | `hY5QfB1UDJHyiHmXMyjeMtQP3BlEOxBzGTK05ijkgRQ` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `calc-numerologia-es.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `hosting-site=calc-numerologia-es` | `3600` |
+| `TXT` | `_acme-challenge` | `hY5QfB1UDJHyiHmXMyjeMtQP3BlEOxBzGTK05ijkgRQ` | `3600` |
 
-**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
+Opcional:
+- `TXT @ = google-site-verification=...` cuando se verifique en Search Console
 
----
+Estado documentado:
+- DNS base configurado en Piensa
 
-## 5. horoscopo-de-hoy.es
+## horoscopo-de-hoy.es
 
 Firebase project: `horoscopo-hoy-es`
 
 | Tipo | Nombre | Valor | TTL |
-|------|--------|-------|-----|
-| A | @ | `199.36.158.100` | 3600 |
-| CNAME | www | `horoscopo-hoy-es.web.app` | 3600 |
-| MX | @ | `10 mx1.improvmx.com` | 3600 |
-| MX | @ | `20 mx2.improvmx.com` | 3600 |
-| TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
-| TXT | @ | `hosting-site=horoscopo-hoy-es` | 3600 |
-| TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | `EjFvRk9FSIxsE_6r9wgBAiiddpqZrB22AYnxkO23LuM` | 3600 |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `horoscopo-hoy-es.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `hosting-site=horoscopo-hoy-es` | `3600` |
+| `TXT` | `_acme-challenge` | `EjFvRk9FSIxsE_6r9wgBAiiddpqZrB22AYnxkO23LuM` | `3600` |
 
-**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
+Opcional:
+- `TXT @ = google-site-verification=...` cuando se verifique en Search Console
 
----
+Estado documentado:
+- DNS base configurado en Piensa
 
-## Pasos para cada dominio nuevo
+## Buenas prácticas operativas
 
-1. **Firebase Console** → Hosting → Agregar dominio personalizado → te da el valor de `_acme-challenge`
-2. **Piensa Solutions** → DNS → Añadir registros (A, CNAME www, TXT _acme-challenge)
-3. **ImprovMX** → Añadir dominio → Copiar registros MX + SPF
-4. **Google Search Console** → Añadir propiedad → Verificación por TXT → Copiar valor `google-site-verification`
-5. Esperar propagación DNS (hasta 48h, normalmente <1h)
-6. Actualizar este documento con los valores reales
+1. Mantén `A @`, `CNAME www`, `TXT _acme-challenge` y `TXT hosting-site` alineados con Firebase Hosting.
+2. Si Firebase pide un reto adicional para `www`, añade el `TXT _acme-challenge.www` exacto que muestre la consola. No inventes ni reutilices valores.
+3. Usa `google-site-verification` solo cuando vayas a verificar el dominio en Search Console.
+4. No mezcles varios `hosting-site=...` en un mismo dominio.
+5. Tras cambios DNS, valida por fuera con `dig` y por aplicación con `https://dominio/ads.txt`, `https://dominio/sitemap.xml` y `https://dominio/publicidad`.

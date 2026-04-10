@@ -1,62 +1,87 @@
-# carta-astral
+# Astro Cluster
 
-Generador de cartas astrales natales con cálculos astronómicos de precisión (Swiss Ephemeris).
+Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerología y horóscopo, desplegados en Firebase Hosting.
 
-## App Web
+## Sitios
 
-Aplicación web que permite subir un certificado de nacimiento (PDF del Registro Civil español),
-marcar el punto exacto de nacimiento en un mapa, y generar la carta astral natal completa.
+| Site key | Dominio | Firebase project |
+|---|---|---|
+| `carta-astral` | `carta-astral-gratis.es` | `carta-astral-f4ab9` |
+| `compatibilidad-signos` | `compatibilidad-signos.es` | `compat-signos-es` |
+| `tarot-del-dia` | `tarot-del-dia.es` | `tarot-del-dia-es` |
+| `calcular-numerologia` | `calcular-numerologia.es` | `calc-numerologia-es` |
+| `horoscopo-de-hoy` | `horoscopo-de-hoy.es` | `horoscopo-hoy-es` |
 
-### Ejecutar
+## Qué hay en el repo
+
+- `sites/*/scripts/gen-pages.sh`: genera HTML estático, `ads.txt`, `robots.txt`, `sitemap.xml` y páginas legales.
+- `sites/*/public/`: salida estática lista para deploy.
+- `shared/config.sh`: configuración compartida de dominios, GA4, AdSense, crosslinks y media kits.
+- `deploy.sh`: deploy manual a Firebase Hosting.
+- `.github/workflows/`: automatización de deploy, smoke SEO, daily regen y reporting.
+
+## Monetización
+
+- Publisher AdSense compartido: `ca-pub-9368517395014039`
+- Todos los sitios publican `ads.txt` con ese publisher.
+- Todos los sitios incluyen huecos premium y landing `/publicidad` para venta directa.
+- La venta directa convive con AdSense y tiene prioridad comercial sobre inventario remanente.
+
+## Desarrollo local
+
+Generar un sitio:
 
 ```bash
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+bash sites/compatibilidad-signos/scripts/gen-pages.sh
 ```
 
-Abrir http://localhost:8000
-
-### Flujo
-
-1. **Subir certificado PDF** — extrae automáticamente nombre, fecha y hora de nacimiento
-2. **Marcar lugar en mapa** — clic en el punto exacto (hospital, clínica, domicilio)
-3. **Generar carta** — calcula posiciones, casas, aspectos, elementos y modalidades
-
-## CLI
+Desplegar un sitio:
 
 ```bash
-python scripts/calcular_carta.py \
-  --name "Ejemplo" \
-  --date 1990-06-15 \
-  --time 10:30 \
-  --lat 40.4168 \
-  --lng -3.7038
+./deploy.sh compatibilidad-signos
+```
+
+Desplegar todos:
+
+```bash
+./deploy.sh
 ```
 
 ## Estructura
 
+```text
+astro-cluster/
+├── .github/
+│   ├── scripts/
+│   └── workflows/
+├── docs/
+│   └── DNS.md
+├── shared/
+│   └── config.sh
+├── sites/
+│   ├── carta-astral/
+│   ├── compatibilidad-signos/
+│   ├── tarot-del-dia/
+│   ├── calcular-numerologia/
+│   └── horoscopo-de-hoy/
+└── deploy.sh
 ```
-carta-astral/
-├── app/
-│   ├── main.py              # API FastAPI
-│   ├── pdf_parser.py        # Parser de certificados de nacimiento
-│   ├── chart_engine.py      # Motor de cálculo (Kerykeion/Swiss Ephemeris)
-│   └── static/
-│       └── index.html       # Frontend (Leaflet maps + UI)
-├── scripts/
-│   └── calcular_carta.py    # CLI standalone
-├── requirements.txt
-└── README.md
-```
 
-## Metodología
+## Automatización
 
-- **Motor**: Swiss Ephemeris (alta precisión)
-- **Sistema de casas**: Placidus
-- **Zodíaco**: Tropical
-- **Orbes**: Conjunción/Oposición 8°, Trígono/Cuadratura 7-8°, Sextil 6°, Quincuncio 3°
-- **Puntos calculados**: 10 planetas + Quirón + Nodo Norte + 12 casas + aspectos mayores
+- `deploy-all-sites.yml`: despliega solo los sitios afectados por cambios reales en `sites/*` o `shared/`. En `workflow_dispatch` permite desplegar un site o todos.
+- `seo-smoke-all.yml`: comprueba `robots.txt`, `sitemap.xml`, `ads.txt`, páginas legales, `/publicidad`, canonical, meta description, structured data, `noindex` y script AdSense.
+- `daily-horoscope.yml`: regenera y publica `horoscopo-de-hoy`.
+- `seo-auto-pr.yml`: aplica mejoras SEO automáticas sobre `carta-astral`.
+- `seo-competitor-intel.yml`: captura señales de competidores.
+- `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense.
 
-## Cartas generadas
+## Principios operativos
 
-Las cartas se generan bajo demanda a través de la web o el CLI. Los archivos de salida no se incluyen en el repositorio.
+- Sitios estáticos, sin backend persistente, para mantener coste bajo y despliegue simple.
+- Workflows pensados para GitHub free tier: menos ejecuciones inútiles, checks compactos y despliegues selectivos.
+- Shared config para mantener consistencia de tracking, branding, crosslinking y monetización.
+
+## DNS
+
+La referencia operativa está en [docs/DNS.md](/home/asanchez/Code/github-andres20980/astro-cluster/docs/DNS.md).
