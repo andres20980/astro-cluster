@@ -45,10 +45,11 @@ Firebase project: `compat-signos-es`
 | MX | @ | `10 mx1.improvmx.com` | 3600 |
 | MX | @ | `20 mx2.improvmx.com` | 3600 |
 | TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
+| TXT | @ | `hosting-site=compat-signos-es` | 3600 |
 | TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | *(pendiente — Firebase genera al conectar dominio)* | 3600 |
+| TXT | _acme-challenge | `ae0XwtyMP3f8cx_unWdHbb17KLvfvzPihaZOyyA33Uk` | 3600 |
 
-**Estado: ⏳ Pendiente de configurar**
+**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
 
 ---
 
@@ -63,10 +64,11 @@ Firebase project: `tarot-del-dia-es`
 | MX | @ | `10 mx1.improvmx.com` | 3600 |
 | MX | @ | `20 mx2.improvmx.com` | 3600 |
 | TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
+| TXT | @ | `hosting-site=tarot-del-dia-es` | 3600 |
 | TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | *(pendiente — Firebase genera al conectar dominio)* | 3600 |
+| TXT | _acme-challenge | `ULH29pUoJ6T8LCti3oCYT3zUveH6Df8Xes_vaDmtWlA` | 3600 |
 
-**Estado: ⏳ Pendiente de configurar**
+**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
 
 ---
 
@@ -81,10 +83,11 @@ Firebase project: `calc-numerologia-es`
 | MX | @ | `10 mx1.improvmx.com` | 3600 |
 | MX | @ | `20 mx2.improvmx.com` | 3600 |
 | TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
+| TXT | @ | `hosting-site=calc-numerologia-es` | 3600 |
 | TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | *(pendiente — Firebase genera al conectar dominio)* | 3600 |
+| TXT | _acme-challenge | `hY5QfB1UDJHyiHmXMyjeMtQP3BlEOxBzGTK05ijkgRQ` | 3600 |
 
-**Estado: ⏳ Pendiente de configurar**
+**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
 
 ---
 
@@ -99,10 +102,11 @@ Firebase project: `horoscopo-hoy-es`
 | MX | @ | `10 mx1.improvmx.com` | 3600 |
 | MX | @ | `20 mx2.improvmx.com` | 3600 |
 | TXT | @ | `v=spf1 include:spf.improvmx.com ~all` | 3600 |
+| TXT | @ | `hosting-site=horoscopo-hoy-es` | 3600 |
 | TXT | @ | *(google-site-verification — pendiente de Search Console)* | 3600 |
-| TXT | _acme-challenge | *(pendiente — Firebase genera al conectar dominio)* | 3600 |
+| TXT | _acme-challenge | `EjFvRk9FSIxsE_6r9wgBAiiddpqZrB22AYnxkO23LuM` | 3600 |
 
-**Estado: ⏳ Pendiente de configurar**
+**Estado: ⏳ Pendiente de configurar DNS en Piensa Solutions**
 
 ---
 

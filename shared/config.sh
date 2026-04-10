@@ -8,10 +8,10 @@ ADSENSE_PUB="ca-pub-9368517395014039"
 # — GA4 Measurement IDs (one per site — create in GA4 console)
 declare -A GA4_IDS=(
   [carta-astral]="G-DEWMQ73FH5"
-  [compatibilidad-signos]="G-XXXXXXXXXX"
-  [tarot-del-dia]="G-XXXXXXXXXX"
-  [calcular-numerologia]="G-XXXXXXXXXX"
-  [horoscopo-de-hoy]="G-XXXXXXXXXX"
+  [compatibilidad-signos]="G-JNP0S5GWK8"
+  [tarot-del-dia]="G-VH11KJD8YM"
+  [calcular-numerologia]="G-X8PJ20GZS2"
+  [horoscopo-de-hoy]="G-RLCE9Z17P1"
 )
 
 # — Domains
