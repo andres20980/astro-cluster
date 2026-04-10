@@ -11,8 +11,9 @@ certificado*
 output/
 carta-astral-*.md
 log.txt
+firebase-debug.log
+.codex
 client_secret*.json
 sites/*/public/
 !sites/carta-astral/public/
 !sites/horoscopo-de-hoy/public/
-
