@@ -72,6 +72,22 @@
       .ad-label{font-size:.98rem}
       .ad-copy{font-size:.78rem}
     }
+    .cluster-journey{margin:1.6rem 0;padding:1.35rem;border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,#fff 0%,#f9f5ff 52%,#fef9ee 100%);box-shadow:var(--shadow)}
+    .cluster-journey .cluster-kicker{display:inline-flex;align-items:center;gap:.45rem;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+    .cluster-journey h2{margin-bottom:.45rem}
+    .cluster-journey p{color:var(--muted);font-size:.9rem;line-height:1.7}
+    .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin-top:1rem}
+    .cluster-card{display:block;padding:1rem 1rem 1.05rem;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.92);text-decoration:none;color:var(--text);box-shadow:0 8px 20px rgba(124,58,237,.08);transition:transform .18s,border-color .18s,box-shadow .18s}
+    .cluster-card:hover{transform:translateY(-2px);border-color:rgba(124,58,237,.28);box-shadow:0 14px 28px rgba(124,58,237,.13)}
+    .cluster-card .cluster-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:.2rem}
+    .cluster-card .cluster-title{display:block;font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.28rem}
+    .cluster-card .cluster-copy{display:block;font-size:.82rem;line-height:1.58;color:var(--muted)}
+    .cluster-card .cluster-cta{display:inline-block;margin-top:.65rem;font-size:.8rem;font-weight:700;color:var(--accent)}
+    .cluster-journey .cluster-note{margin-top:.8rem;font-size:.78rem;color:var(--muted)}
+    @media(max-width:600px){
+      .cluster-journey{padding:1.1rem}
+      .cluster-grid{grid-template-columns:1fr}
+    }
 
     .sign-hero{text-align:center;padding:1.5rem 0}
     .sign-hero .glyph{font-size:3.5rem;display:block;margin-bottom:.3rem}
@@ -160,6 +176,31 @@
     <p>Descubre la afinidad de Piscis con los otros 11 signos.</p>
     <a href="https://compatibilidad-signos.es/">Ver compatibilidad →</a>
   </div>
+
+<section class="cluster-journey">
+  <div class="cluster-kicker">✦ Suite esoterica conectada</div>
+  <h2>Siguiente mejor paso dentro del cluster</h2>
+  <p>Si el usuario ya ha mostrado intencion en esta herramienta, el siguiente enlace debe profundizar o ampliar el problema, no distraer.</p>
+  <div class="cluster-grid">
+    <a class="cluster-card" href="https://carta-astral-gratis.es/">
+  <span class="cluster-label">Personalizacion</span>
+  <span class="cluster-title">Carta Astral Gratis</span>
+  <span class="cluster-copy">El horoscopo diario es general; la carta natal convierte esa curiosidad en analisis personal y de alto valor.</span>
+  <span class="cluster-cta">Calcular ahora -></span>
+</a><a class="cluster-card" href="https://compatibilidad-signos.es/">
+  <span class="cluster-label">Relaciones</span>
+  <span class="cluster-title">Compatibilidad de Signos</span>
+  <span class="cluster-copy">Muy buena continuacion cuando el usuario viene por amor o quiere entender mejor una relacion concreta.</span>
+  <span class="cluster-cta">Ver compatibilidad -></span>
+</a><a class="cluster-card" href="https://tarot-del-dia.es/">
+  <span class="cluster-label">Consulta breve</span>
+  <span class="cluster-title">Tarot del Dia</span>
+  <span class="cluster-copy">El tarot encaja cuando el usuario quiere una señal inmediata despues de leer su prediccion del dia.</span>
+  <span class="cluster-cta">Abrir tirada -></span>
+</a>
+  </div>
+  <p class="cluster-note">Objetivo cluster-first: mas profundidad de sesion, mas paginas vistas por usuario y mas oportunidades de monetizacion directa y remanente.</p>
+</section>
 
 <footer>
   <p>© 2026 Horóscopo de Hoy — Actualizado diariamente</p>

@@ -16,6 +16,7 @@ DOMAIN="${DOMAINS[$SITE_KEY]}"
 GA4="${GA4_IDS[$SITE_KEY]}"
 TODAY=$(date +%Y-%m-%d)
 AD_CSS="$(ad_css)"
+CLUSTER_CSS="$(cluster_css)"
 TODAY_DISPLAY=$(date +"%d de %B de %Y" | sed 's/January/enero/;s/February/febrero/;s/March/marzo/;s/April/abril/;s/May/mayo/;s/June/junio/;s/July/julio/;s/August/agosto/;s/September/septiembre/;s/October/octubre/;s/November/noviembre/;s/December/diciembre/')
 DOW=$(date +%u)  # 1=Mon..7=Sun
 
@@ -148,6 +149,7 @@ COMMON_CSS="
     footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
     footer a{color:var(--accent);text-decoration:none}
 ${AD_CSS}
+${CLUSTER_CSS}
 "
 
 gen_footer() {
@@ -288,6 +290,8 @@ $(ad_block "🌙" "Patrocina un signo o el trafico diario del sitio" "Ideal para
     <a href="https://compatibilidad-signos.es/">Ver compatibilidad →</a>
   </div>
 
+$(cluster_recirculation_block "$SITE_KEY")
+
 $(gen_footer)
 </div>
 </body>
@@ -370,6 +374,8 @@ $(ad_block "⭐" "Publicidad premium en una audiencia que vuelve cada dia" "Tu m
   </div>
 
 $(ad_block "✨" "Patrocina una ubicacion de alto recuerdo" "El patrocinio directo gana valor frente a AdSense cuando el mensaje y el contexto estan alineados." "Ver media kit ->")
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>

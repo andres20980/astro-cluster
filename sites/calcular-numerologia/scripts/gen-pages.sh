@@ -14,6 +14,7 @@ DOMAIN="${DOMAINS[$SITE_KEY]}"
 GA4="${GA4_IDS[$SITE_KEY]}"
 TODAY=$(date +%Y-%m-%d)
 AD_CSS="$(ad_css)"
+CLUSTER_CSS="$(cluster_css)"
 
 mkdir -p "$PUBLIC/numero-de-vida"
 
@@ -68,6 +69,7 @@ COMMON_CSS="
     footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
     footer a{color:var(--accent);text-decoration:none}
 ${AD_CSS}
+${CLUSTER_CSS}
 "
 
 gen_footer() {
@@ -213,6 +215,8 @@ $(ad_block "✨" "Patrocina un calculo con alta intencion educativa" "Inventario
     <a href="/">Calcular gratis →</a>
   </div>
 
+$(cluster_recirculation_block "$SITE_KEY")
+
 $(gen_footer)
 </div>
 </body>
@@ -264,6 +268,8 @@ $(ad_block "🔢" "Publicidad premium para un publico de autoconocimiento" "Rese
     <p>Solo necesitas tu fecha de nacimiento.</p>
     <a href="/">Calcular gratis →</a>
   </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>
@@ -372,6 +378,8 @@ $(ad_block "✨" "Publicidad directa mejor que remanente" "Mas control, mejor co
     <h2>Numerología y astrología</h2>
     <p>La numerología y la <a href="https://carta-astral-gratis.es/">carta astral</a> son sistemas complementarios. Mientras la astrología analiza la posición de los planetas en el momento de tu nacimiento, la numerología estudia la vibración de los números asociados. Juntas, ofrecen un retrato más completo de tu personalidad y potencial.</p>
   </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>

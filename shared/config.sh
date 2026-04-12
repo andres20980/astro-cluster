@@ -176,6 +176,96 @@ footer_publicidad_line() {
   echo "<p style=\"margin-top:.6rem\"><a href=\"/publicidad\" class=\"ad-link\">✦ Quiero anunciarme en ${name}: ver espacios y tarifas</a></p>"
 }
 
+cluster_css() {
+  cat <<'EOF'
+    .cluster-journey{margin:1.6rem 0;padding:1.35rem;border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,#fff 0%,#f9f5ff 52%,#fef9ee 100%);box-shadow:var(--shadow)}
+    .cluster-journey .cluster-kicker{display:inline-flex;align-items:center;gap:.45rem;font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+    .cluster-journey h2{margin-bottom:.45rem}
+    .cluster-journey p{color:var(--muted);font-size:.9rem;line-height:1.7}
+    .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.9rem;margin-top:1rem}
+    .cluster-card{display:block;padding:1rem 1rem 1.05rem;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.92);text-decoration:none;color:var(--text);box-shadow:0 8px 20px rgba(124,58,237,.08);transition:transform .18s,border-color .18s,box-shadow .18s}
+    .cluster-card:hover{transform:translateY(-2px);border-color:rgba(124,58,237,.28);box-shadow:0 14px 28px rgba(124,58,237,.13)}
+    .cluster-card .cluster-label{display:block;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:.2rem}
+    .cluster-card .cluster-title{display:block;font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.28rem}
+    .cluster-card .cluster-copy{display:block;font-size:.82rem;line-height:1.58;color:var(--muted)}
+    .cluster-card .cluster-cta{display:inline-block;margin-top:.65rem;font-size:.8rem;font-weight:700;color:var(--accent)}
+    .cluster-journey .cluster-note{margin-top:.8rem;font-size:.78rem;color:var(--muted)}
+    @media(max-width:600px){
+      .cluster-journey{padding:1.1rem}
+      .cluster-grid{grid-template-columns:1fr}
+    }
+EOF
+}
+
+cluster_card() {
+  local site_key="$1"
+  local label="$2"
+  local title="$3"
+  local copy="$4"
+  local cta="$5"
+  local domain="${DOMAINS[$site_key]}"
+  cat <<EOF
+<a class="cluster-card" href="https://${domain}/">
+  <span class="cluster-label">${label}</span>
+  <span class="cluster-title">${title}</span>
+  <span class="cluster-copy">${copy}</span>
+  <span class="cluster-cta">${cta}</span>
+</a>
+EOF
+}
+
+cluster_recirculation_block() {
+  local current="$1"
+  local heading="Siguiente mejor paso dentro del cluster"
+  local intro="Si el usuario ya ha mostrado intencion en esta herramienta, el siguiente enlace debe profundizar o ampliar el problema, no distraer."
+  local cards=""
+
+  case "$current" in
+    carta-astral)
+      cards+=$(cluster_card "compatibilidad-signos" "Relaciones" "Compatibilidad de Signos" "Usa tu carta natal como punto de partida y contrasta la afinidad entre dos signos con una landing concreta y muy enlazable." "Ver combinaciones ->")
+      cards+=$(cluster_card "tarot-del-dia" "Decision inmediata" "Tarot del Dia" "Cuando el usuario busca una respuesta rapida despues de la carta, la tirada de 3 cartas captura esa intencion y prolonga la sesion." "Hacer una tirada ->")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Recurrencia diaria" "Horoscopo de Hoy" "Convierte una visita puntual en habito diario con un producto ligero y recurrente por signo." "Leer el horoscopo ->")
+      ;;
+    compatibilidad-signos)
+      cards+=$(cluster_card "carta-astral" "Profundizar" "Carta Astral Gratis" "Si la compatibilidad interesa de verdad, el siguiente paso natural es ver Venus, Luna, Marte y ascendente con fecha, hora y lugar exactos." "Calcular carta astral ->")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horoscopo de Hoy" "Despues de leer una combinacion, el horoscopo diario mantiene al usuario activo y genera recurrencia sobre amor, trabajo y salud." "Ver predicciones ->")
+      cards+=$(cluster_card "tarot-del-dia" "Respuesta rapida" "Tarot del Dia" "Ideal para usuarios con duda emocional inmediata: cambia de comparativa racional a lectura breve con contexto simbolico." "Tirar las cartas ->")
+      ;;
+    tarot-del-dia)
+      cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "La tirada resuelve el momento; la carta astral da contexto estructural sobre personalidad, ciclos y relaciones." "Ir a mi carta ->")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Rutina" "Horoscopo de Hoy" "Excelente transicion para convertir una consulta puntual en un habito diario de lectura esoterica." "Leer mi signo ->")
+      cards+=$(cluster_card "compatibilidad-signos" "Amor y pareja" "Compatibilidad de Signos" "Cuando la tirada habla de relaciones, el usuario suele querer validar la afinidad con una persona concreta." "Comparar signos ->")
+      ;;
+    calcular-numerologia)
+      cards+=$(cluster_card "carta-astral" "Perfil completo" "Carta Astral Gratis" "La numerologia aporta patron; la carta natal completa el mapa con planetas, casas y ascendente." "Completar analisis ->")
+      cards+=$(cluster_card "compatibilidad-signos" "Vinculos" "Compatibilidad de Signos" "Si el numero de vida despierta interes relacional, la compatibilidad zodiacal es la siguiente capa de comparacion." "Explorar afinidad ->")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Recurrencia" "Horoscopo de Hoy" "Despues del calculo, ofrece un contenido ligero y diario para mantener vivo el retorno al cluster." "Ver hoy ->")
+      ;;
+    horoscopo-de-hoy)
+      cards+=$(cluster_card "carta-astral" "Personalizacion" "Carta Astral Gratis" "El horoscopo diario es general; la carta natal convierte esa curiosidad en analisis personal y de alto valor." "Calcular ahora ->")
+      cards+=$(cluster_card "compatibilidad-signos" "Relaciones" "Compatibilidad de Signos" "Muy buena continuacion cuando el usuario viene por amor o quiere entender mejor una relacion concreta." "Ver compatibilidad ->")
+      cards+=$(cluster_card "tarot-del-dia" "Consulta breve" "Tarot del Dia" "El tarot encaja cuando el usuario quiere una señal inmediata despues de leer su prediccion del dia." "Abrir tirada ->")
+      ;;
+    *)
+      cards+=$(cluster_card "carta-astral" "Cluster" "Carta Astral Gratis" "Herramienta principal del cluster para convertir interes general en analisis completo." "Abrir ->")
+      cards+=$(cluster_card "compatibilidad-signos" "Cluster" "Compatibilidad de Signos" "Landing long-tail para mantener profundidad de navegacion." "Abrir ->")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Cluster" "Horoscopo de Hoy" "Contenido recurrente para capturar retorno diario." "Abrir ->")
+      ;;
+  esac
+
+  cat <<EOF
+<section class="cluster-journey">
+  <div class="cluster-kicker">✦ Suite esoterica conectada</div>
+  <h2>${heading}</h2>
+  <p>${intro}</p>
+  <div class="cluster-grid">
+    ${cards}
+  </div>
+  <p class="cluster-note">Objetivo cluster-first: mas profundidad de sesion, mas paginas vistas por usuario y mas oportunidades de monetizacion directa y remanente.</p>
+</section>
+EOF
+}
+
 gen_publicidad_page() {
   local current="$1"
   local public_dir="$2"

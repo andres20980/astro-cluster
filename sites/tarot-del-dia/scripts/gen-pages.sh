@@ -14,6 +14,7 @@ DOMAIN="${DOMAINS[$SITE_KEY]}"
 GA4="${GA4_IDS[$SITE_KEY]}"
 TODAY=$(date +%Y-%m-%d)
 AD_CSS="$(ad_css)"
+CLUSTER_CSS="$(cluster_css)"
 
 mkdir -p "$PUBLIC/arcanos-mayores" "$PUBLIC/arcanos-menores"
 
@@ -68,6 +69,7 @@ COMMON_CSS="
     footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
     footer a{color:var(--accent);text-decoration:none}
 ${AD_CSS}
+${CLUSTER_CSS}
 "
 
 gen_footer() {
@@ -210,6 +212,8 @@ $(ad_block "🃏" "Patrocina una lectura de alta atencion" "Ubicacion premium en
     <a href="/">Tirada gratis →</a>
   </div>
 
+$(cluster_recirculation_block "$SITE_KEY")
+
 $(gen_footer)
 </div>
 </body>
@@ -262,6 +266,8 @@ $(ad_block "🃏" "Publicidad premium para un publico espiritual" "Ideal para ma
     <p>Descubre qué te dicen los Arcanos Mayores hoy.</p>
     <a href="/">Tirada gratis →</a>
   </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>
@@ -379,6 +385,8 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
   </div>
 
 $(ad_block "✨" "Patrocina un inventario de alta afinidad" "Directo mejor que remanente: mas control, mas recuerdo de marca y mayor contexto editorial." "Ver media kit ->")
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>

@@ -14,6 +14,7 @@ DOMAIN="${DOMAINS[$SITE_KEY]}"
 GA4="${GA4_IDS[$SITE_KEY]}"
 TODAY=$(date +%Y-%m-%d)
 AD_CSS="$(ad_css)"
+CLUSTER_CSS="$(cluster_css)"
 
 mkdir -p "$PUBLIC"
 
@@ -163,6 +164,7 @@ COMMON_CSS="
     footer{text-align:center;padding:2rem 1rem;font-size:.75rem;color:var(--muted);border-top:1px solid var(--border);margin-top:2rem}
     footer a{color:var(--accent);text-decoration:none}
 ${AD_CSS}
+${CLUSTER_CSS}
 "
 
 # ── Cross-links ──────────────────────────────────────────────
@@ -284,6 +286,8 @@ $(ad_block "✦" "Patrocina una de las combinaciones mas buscadas" "Ideal para m
     <h2>Otras compatibilidades de ${n1}</h2>
     <p style="display:flex;flex-wrap:wrap;gap:.4rem">$(for s in "${SLUGS[@]}"; do [[ "$s" == "$s2" ]] && continue; printf '<a href="/%s-%s" style="padding:.25rem .6rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--accent);font-size:.8rem">%s %s</a>' "$s1" "$s" "${GLYPH[$s]}" "${NAME[$s]}"; done)</p>
   </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>
@@ -415,6 +419,8 @@ $(ad_block "🔮" "Patrocina trafico SEO de alta intencion" "Tu marca puede apar
     <h2>¿La compatibilidad de signos determina una relación?</h2>
     <p>El signo solar es solo una parte de tu carta astral. La verdadera compatibilidad amorosa depende de la interacción entre las cartas natales completas de ambas personas: la posición de Venus (cómo amas), Marte (cómo deseas), la Luna (tus emociones) y el ascendente (cómo te perciben). Nuestra herramienta gratuita de <a href="https://carta-astral-gratis.es/">carta astral</a> te permite calcular todos estos factores.</p>
   </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
 
 $(gen_footer)
 </div>

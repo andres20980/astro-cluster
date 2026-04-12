@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "updated": "2026-04-10",
+  "updated": "2026-04-12",
   "goal": "Operar el cluster como una suite unica de herramientas esotericas con medicion y monetizacion unificadas",
   "milestones": [
     {
       "id": "M1",
       "name": "Base comun",
       "target_weekly_sessions": 300,
-      "status": "in-progress",
+      "status": "achieved",
       "actions": [
         "GA4 unificado para todo el cluster",
         "Ads.txt y AdSense consistentes en las 5 herramientas",
@@ -19,6 +19,32 @@
         "organic_share_min": 0.4,
         "bounce_rate_max": 0.78,
         "avg_duration_min_s": 25
+      },
+      "auto": {
+        "completed_actions": 4,
+        "total_actions": 4,
+        "actions": [
+          {
+            "label": "GA4 unificado para todo el cluster",
+            "done": true,
+            "evidence": "GA4 cluster + linker cross-domain en 5/5 sites"
+          },
+          {
+            "label": "Ads.txt y AdSense consistentes en las 5 herramientas",
+            "done": true,
+            "evidence": "Publisher compartido y ads.txt generado para 5/5 sites"
+          },
+          {
+            "label": "Smoke SEO y deploy selectivo activos",
+            "done": true,
+            "evidence": "Smoke cluster + deploy selectivo detectados en workflows"
+          },
+          {
+            "label": "Autoparcheo SEO rotatorio por site",
+            "done": true,
+            "evidence": "Workflow diario con rotacion de site y autopatch limitado"
+          }
+        ]
       }
     },
     {
@@ -37,6 +63,32 @@
         "organic_share_min": 0.5,
         "bounce_rate_max": 0.72,
         "avg_duration_min_s": 40
+      },
+      "auto": {
+        "completed_actions": 4,
+        "total_actions": 4,
+        "actions": [
+          {
+            "label": "Verificar las 5 propiedades de GSC por DNS",
+            "done": true,
+            "evidence": "Propiedades GSC verificadas: 5/5"
+          },
+          {
+            "label": "Extender reporting GSC por dominio dentro del informe semanal",
+            "done": true,
+            "evidence": "Informe semanal agrega GSC por dominio"
+          },
+          {
+            "label": "Ampliar landings long-tail por cada herramienta",
+            "done": true,
+            "evidence": "227 paginas HTML publicas en el cluster"
+          },
+          {
+            "label": "Refinar interlinking interno por intencion",
+            "done": true,
+            "evidence": "Bloques de recirculacion presentes en 5/5 sites"
+          }
+        ]
       }
     },
     {
@@ -55,6 +107,32 @@
         "organic_share_min": 0.6,
         "bounce_rate_max": 0.68,
         "est_monthly_revenue_eur": 100
+      },
+      "auto": {
+        "completed_actions": 4,
+        "total_actions": 4,
+        "actions": [
+          {
+            "label": "Vender banners directos desde /publicidad con inventario premium",
+            "done": true,
+            "evidence": "/publicidad disponible en 5/5 sites"
+          },
+          {
+            "label": "Mantener AdSense como remanente",
+            "done": true,
+            "evidence": "Publisher de AdSense compartido a nivel cluster"
+          },
+          {
+            "label": "Definir slots reservados para venta directa por site",
+            "done": true,
+            "evidence": "Slots premium detectados en 5/5 sites"
+          },
+          {
+            "label": "Crear paginas comerciales y media kit cluster",
+            "done": true,
+            "evidence": "Media kits individuales activos y consistentes"
+          }
+        ]
       }
     },
     {
@@ -73,14 +151,56 @@
         "organic_share_min": 0.65,
         "bounce_rate_max": 0.62,
         "est_monthly_revenue_eur": 500
+      },
+      "auto": {
+        "completed_actions": 3,
+        "total_actions": 4,
+        "actions": [
+          {
+            "label": "Construir mas herramientas complementarias dentro del cluster",
+            "done": true,
+            "evidence": "5 herramientas activas en el cluster"
+          },
+          {
+            "label": "Ampliar comparativas y contenidos evergreen con E-E-A-T",
+            "done": true,
+            "evidence": "227 paginas + FAQ/Breadcrumb presentes en todos los sites"
+          },
+          {
+            "label": "Abrir afiliacion y patrocinios recurrentes",
+            "done": false,
+            "evidence": "Aun sin circuito recurrente de afiliacion confirmado en repo"
+          },
+          {
+            "label": "Optimizar RPM combinando banner directo y remanente",
+            "done": true,
+            "evidence": "Inventario directo + remanente disponible a nivel de producto"
+          }
+        ]
       }
     }
   ],
   "revenue_benchmarks_spain_esoteric": {
-    "adsense_cpm_eur": {"low": 0.5, "mid": 1.0, "high": 1.5},
-    "moneytizer_cpm_eur": {"low": 1.5, "mid": 2.25, "high": 3.0},
-    "affiliate_tarot_per_lead_eur": {"low": 10, "mid": 20, "high": 30},
-    "direct_lead_sale_eur": {"low": 15, "mid": 25, "high": 40}
+    "adsense_cpm_eur": {
+      "low": 0.5,
+      "mid": 1,
+      "high": 1.5
+    },
+    "moneytizer_cpm_eur": {
+      "low": 1.5,
+      "mid": 2.25,
+      "high": 3
+    },
+    "affiliate_tarot_per_lead_eur": {
+      "low": 10,
+      "mid": 20,
+      "high": 30
+    },
+    "direct_lead_sale_eur": {
+      "low": 15,
+      "mid": 25,
+      "high": 40
+    }
   },
   "seo_targets": {
     "primary_keywords": [
@@ -98,6 +218,49 @@
       "carta natal gratis"
     ],
     "content_word_target": 1800,
-    "schema_advantage": ["FAQPage", "BreadcrumbList", "WebSite", "Article"]
+    "schema_advantage": [
+      "FAQPage",
+      "BreadcrumbList",
+      "WebSite",
+      "Article"
+    ]
+  },
+  "auto": {
+    "last_eval": "2026-04-12",
+    "current_stage_id": "M1",
+    "next_stage_id": "M2",
+    "weekly_metrics": {
+      "sessions": 420,
+      "users": 300,
+      "views": 980,
+      "organic_sessions": 260,
+      "organic_share": 0.619,
+      "bounce_rate": 0.51,
+      "avg_duration_s": 52,
+      "chart_calculated": 48,
+      "interpretation_generated": 22
+    },
+    "capability_signals": {
+      "ga4_unified": true,
+      "deploy_selective": true,
+      "seo_smoke_cluster": true,
+      "seo_autopatch_rotatory": true,
+      "gsc_cluster_reporting": true,
+      "gsc_sitemap_submit": true,
+      "gsc_verified_site_count": 5,
+      "cluster_media_kits": true,
+      "cluster_recirculation": true,
+      "premium_slots_by_site": true,
+      "total_html_pages": 227,
+      "long_tail_coverage": true,
+      "eeat_schema_coverage": true
+    },
+    "site_page_counts": {
+      "carta-astral": 18,
+      "compatibilidad-signos": 149,
+      "tarot-del-dia": 28,
+      "calcular-numerologia": 15,
+      "horoscopo-de-hoy": 17
+    }
   }
 }

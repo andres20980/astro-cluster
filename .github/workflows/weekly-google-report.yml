@@ -184,6 +184,22 @@ jobs:
           else: print('0')
           " 2>/dev/null || echo "0")
 
+          GSC_VERIFIED_SITE_COUNT=0
+          if [ -n "$OAUTH_TOKEN" ]; then
+            GSC_SITES_API=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+              "https://searchconsole.googleapis.com/webmasters/v3/sites" 2>/dev/null || echo "{}")
+            GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "
+import json, os, sys
+cluster = {entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}
+data = json.load(sys.stdin)
+count = 0
+for entry in data.get('siteEntry', []):
+    if entry.get('siteUrl') in cluster and entry.get('permissionLevel') == 'siteOwner':
+        count += 1
+print(count)
+" 2>/dev/null || echo "0")
+          fi
+
           # Google Search Console — search performance (requires OAuth)
           echo "### 🔎 Google Search Console (last 28 days)" >> /tmp/report.md
           if [ -n "$OAUTH_TOKEN" ]; then
@@ -236,6 +252,7 @@ jobs:
           ORGANIC_SESSIONS=$ORGANIC_SESSIONS \
           CHART_CALCULATED=$CHART_CALC \
           INTERPRETATION_GENERATED=$INTERP_GEN \
+          GSC_VERIFIED_SITE_COUNT=$GSC_VERIFIED_SITE_COUNT \
           node .github/scripts/growth-milestone-check.js >> /tmp/report.md
 
           cat /tmp/report.md
