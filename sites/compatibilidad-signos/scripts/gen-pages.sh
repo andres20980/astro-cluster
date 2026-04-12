@@ -332,7 +332,7 @@ cat > "$PUBLIC/index.html" <<ENDINDEX
 <head>
 $(gen_head "$INDEX_TITLE" "$INDEX_DESC" "/")
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"Compatibilidad de Signos","url":"https://${DOMAIN}/","description":"${INDEX_DESC}","inLanguage":"es","potentialAction":{"@type":"SearchAction","target":"https://${DOMAIN}/{search_term}","query-input":"required name=search_term"}}
+  {"@context":"https://schema.org","@type":"WebSite","name":"Compatibilidad de Signos","url":"https://${DOMAIN}/","description":"${INDEX_DESC}","inLanguage":"es"}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se calcula la compatibilidad entre signos?","acceptedAnswer":{"@type":"Answer","text":"La compatibilidad se basa en el elemento (Fuego, Tierra, Aire, Agua), la modalidad (Cardinal, Fijo, Mutable) y los planetas regentes de cada signo. Se analizan las sinergias y tensiones naturales entre estos factores."}},{"@type":"Question","name":"¿Qué signos son más compatibles entre sí?","acceptedAnswer":{"@type":"Answer","text":"Los signos del mismo elemento suelen tener alta compatibilidad (Fuego con Fuego, Tierra con Tierra). También los elementos complementarios: Fuego con Aire, y Tierra con Agua."}}]}

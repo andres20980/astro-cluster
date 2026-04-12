@@ -34,6 +34,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: "🧱 Verificar URLs internas generadas"
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_dir="sites/${{ matrix.site }}"
+          script_path="$site_dir/scripts/gen-pages.sh"
+          if [ -f "$script_path" ]; then
+            bash "$script_path" >/tmp/${{ matrix.site }}-build.log
+          fi
+          python3 .github/scripts/check_internal_urls.py "$site_dir/public" "${{ matrix.domain }}"
+
       - name: "🔎 Check ${{ matrix.domain }}"
         id: smoke
         shell: bash
