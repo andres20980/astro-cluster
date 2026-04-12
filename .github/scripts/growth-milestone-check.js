@@ -317,30 +317,30 @@ function main() {
   const kpis = current.kpis || {};
   const kpiResults = [];
   if (kpis.organic_share_min !== undefined) {
-    kpiResults.push(evalKpi('Organic share', organicShare, kpis.organic_share_min, 'gte'));
+    kpiResults.push(evalKpi('Tráfico orgánico', organicShare, kpis.organic_share_min, 'gte'));
   }
   if (kpis.bounce_rate_max !== undefined) {
-    kpiResults.push(evalKpi('Bounce rate', bounce, kpis.bounce_rate_max, 'lte'));
+    kpiResults.push(evalKpi('Porcentaje de rebote', bounce, kpis.bounce_rate_max, 'lte'));
   }
   if (kpis.avg_duration_min_s !== undefined) {
-    kpiResults.push(evalKpi('Avg duration', `${duration.toFixed(0)}s`, `${kpis.avg_duration_min_s}s`, 'gte'));
+    kpiResults.push(evalKpi('Duración media', `${duration.toFixed(0)}s`, `${kpis.avg_duration_min_s}s`, 'gte'));
   }
   if (kpis.chart_calculated_min !== undefined) {
-    kpiResults.push(evalKpi('Charts calc.', chartCalc, kpis.chart_calculated_min, 'gte'));
+    kpiResults.push(evalKpi('Cartas calculadas', chartCalc, kpis.chart_calculated_min, 'gte'));
   }
   if (kpis.interpretation_generated_min !== undefined) {
-    kpiResults.push(evalKpi('Interp. gen.', interpGen, kpis.interpretation_generated_min, 'gte'));
+    kpiResults.push(evalKpi('Interpretaciones generadas', interpGen, kpis.interpretation_generated_min, 'gte'));
   }
 
   const capabilityRows = [
     ['GA4 unificado', signals.ga4Unified],
     ['Deploy selectivo', signals.deploySelective],
-    ['Smoke SEO cluster', signals.seoSmokeCluster],
+    ['Smoke SEO del cluster', signals.seoSmokeCluster],
     ['Autopatch rotatorio', signals.seoAutopatchRotatory],
-    ['Reporting GSC cluster', signals.gscClusterReporting],
-    ['Submit sitemap por API', signals.gscSitemapSubmit],
+    ['Reporting GSC por cluster', signals.gscClusterReporting],
+    ['Envío de sitemap por API', signals.gscSitemapSubmit],
     ['Media kit /publicidad', signals.clusterMediaKits],
-    ['Recirculacion interna por intencion', signals.clusterRecirculation && signals.clusterSuiteEntrypoint],
+    ['Recirculación interna por intención', signals.clusterRecirculation && signals.clusterSuiteEntrypoint],
     ['Slots premium por site', signals.premiumSlotsBySite],
     ['Cobertura long-tail', signals.longTailCoverage],
   ];
@@ -350,36 +350,36 @@ function main() {
     : [];
 
   const lines = [
-    '### 🚀 Growth Milestone Progress',
+    '### 🚀 Progreso de hitos de crecimiento',
     '',
-    '| | Status |',
-    '|---|---|',
-    `| Current stage | **${current.id}: ${current.name}** |`,
-    `| Next milestone | **${next.id}: ${next.name}** (${next.target_weekly_sessions} sessions/week) |`,
-    `| Progress | \`${progressBar(progress)}\` ${progress.toFixed(1)}% |`,
-    `| Weekly sessions | **${sessions}** |`,
-    `| Monetization | ${current.monetization} |`,
-    `| Est. monthly rev. | ~€${estRevenue} (${cpm}€ CPM) |`,
+    '| | Estado |',
+    '|---|--------|',
+    `| Etapa actual | **${current.id}: ${current.name}** |`,
+    `| Siguiente hito | **${next.id}: ${next.name}** (${next.target_weekly_sessions} sesiones/semana) |`,
+    `| Progreso | \`${progressBar(progress)}\` ${progress.toFixed(1)}% |`,
+    `| Sesiones semanales | **${sessions}** |`,
+    `| Monetización | ${current.monetization} |`,
+    `| Ingreso mensual estimado | ~€${estRevenue} (${cpm}€ CPM) |`,
     '',
-    '#### Cluster Capability Signals',
-    '| Signal | Status |',
-    '|--------|--------|',
+    '#### Señales de capacidad del cluster',
+    '| Señal | Estado |',
+    '|-------|--------|',
     ...capabilityRows.map(([label, ok]) => `| ${label} | ${ok ? '✅' : '⚠️'} |`),
-    `| Paginas HTML publicas | ${signals.totalHtmlPages} |`,
-    `| GSC properties verified | ${gscVerifiedSiteCount}/${signals.siteCount} |`,
+    `| Páginas HTML públicas | ${signals.totalHtmlPages} |`,
+    `| Propiedades GSC verificadas | ${gscVerifiedSiteCount}/${signals.siteCount} |`,
     '',
   ];
 
   if (kpiResults.length > 0) {
-    lines.push('#### KPI Health');
-    lines.push('| KPI | Current | Target | Status |');
-    lines.push('|-----|---------|--------|--------|');
+    lines.push('#### Salud de KPIs');
+    lines.push('| KPI | Actual | Objetivo | Estado |');
+    lines.push('|-----|--------|----------|--------|');
     lines.push(...kpiResults);
     lines.push('');
   }
 
   if (nextActions.length > 0) {
-    lines.push(`#### 📋 Next Actions (${next.id}: ${next.name})`);
+    lines.push(`#### 📋 Siguientes acciones (${next.id}: ${next.name})`);
     for (const action of nextActions) {
       lines.push(`- [${action.done ? 'x' : ' '}] ${action.label} — ${action.evidence}`);
     }

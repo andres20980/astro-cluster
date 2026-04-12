@@ -89,9 +89,9 @@ for site_key, domain, site_url in sites:
 site_reports.sort(key=lambda item: item["clicks"], reverse=True)
 cluster_ctr = (cluster["clicks"] / cluster["impressions"]) if cluster["impressions"] else 0.0
 
-print("#### Cluster Totals")
-print("| Site | Clicks | Impressions | CTR | Position |")
-print("|------|--------|-------------|-----|----------|")
+print("#### Totales del cluster")
+print("| Dominio | Clics | Impresiones | CTR | Posición |")
+print("|---------|-------|-------------|-----|----------|")
 for report in site_reports:
     print(
         f"| {report['domain']} | {report['clicks']:.0f} | {report['impressions']:.0f} | "
@@ -106,15 +106,15 @@ for report in site_reports:
     print()
     print(f"#### {report['domain']}")
     if report["impressions"] <= 0 and not report["queries"] and not report["pages"]:
-        print("> No search data yet")
+        print("> Aún no hay datos de búsqueda")
         continue
     print(
-        f"**Totals**: {report['clicks']:.0f} clicks, {report['impressions']:.0f} impressions, "
-        f"{report['ctr'] * 100:.1f}% CTR, avg pos {report['position']:.1f}"
+        f"**Totales**: {report['clicks']:.0f} clics, {report['impressions']:.0f} impresiones, "
+        f"{report['ctr'] * 100:.1f}% de CTR, posición media {report['position']:.1f}"
     )
     print()
-    print("| Query | Clicks | Impressions | CTR | Position |")
-    print("|-------|--------|-------------|-----|----------|")
+    print("| Consulta | Clics | Impresiones | CTR | Posición |")
+    print("|----------|-------|-------------|-----|----------|")
     if report["queries"]:
         for row in report["queries"]:
             query = safe_text(row["keys"][0])
@@ -123,11 +123,11 @@ for report in site_reports:
                 f"{row.get('ctr', 0) * 100:.1f}% | {row.get('position', 0):.1f} |"
             )
     else:
-        print("| No data yet | 0 | 0 | 0.0% | - |")
+        print("| Sin datos aún | 0 | 0 | 0.0% | - |")
 
     print()
-    print("| Page | Clicks | Impressions | Position |")
-    print("|------|--------|-------------|----------|")
+    print("| Página | Clics | Impresiones | Posición |")
+    print("|--------|-------|-------------|----------|")
     if report["pages"]:
         base = f"https://{report['domain']}"
         for row in report["pages"]:
@@ -137,4 +137,4 @@ for report in site_reports:
                 f"{row.get('position', 0):.1f} |"
             )
     else:
-        print("| No data yet | 0 | 0 | - |")
+        print("| Sin datos aún | 0 | 0 | - |")

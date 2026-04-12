@@ -1,0 +1,119 @@
+name: "🔎 Vigilancia de Indexación GSC"
+
+on:
+  schedule:
+    - cron: '15 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🔐 Obtener token OAuth"
+        id: oauth
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          token_json=$(curl -sS https://oauth2.googleapis.com/token \
+            -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
+            -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
+            -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
+            -d "grant_type=refresh_token")
+
+          access_token=$(echo "$token_json" | jq -r '.access_token // empty')
+          if [ -z "$access_token" ]; then
+            echo "$token_json"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "missing=false" >> "$GITHUB_OUTPUT"
+          {
+            echo "token<<EOF"
+            echo "$access_token"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: "🔎 Inspeccionar homepages del cluster"
+        if: steps.oauth.outputs.missing == 'false'
+        env:
+          OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          GSC_SITES_JSON: >-
+            [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
+        run: |
+          python3 .github/scripts/gsc_index_watch.py > /tmp/gsc-index-watch.md
+          cat /tmp/gsc-index-watch.md
+
+      - name: "📝 Sincronizar issue de indexación"
+        uses: actions/github-script@v8
+        env:
+          REPORT_PATH: /tmp/gsc-index-watch.md
+          MISSING_OAUTH: ${{ steps.oauth.outputs.missing }}
+        with:
+          script: |
+            const fs = require('fs');
+            const titlePrefix = '🔎 Vigilancia de indexación GSC';
+            const today = new Date().toISOString().slice(0, 10);
+            const body = process.env.MISSING_OAUTH === 'true'
+              ? 'No se pudo ejecutar la vigilancia de indexación porque faltan los secretos GOOGLE_OAUTH_* necesarios para Search Console.'
+              : fs.readFileSync(process.env.REPORT_PATH, 'utf8');
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'seo',
+              per_page: 100
+            });
+
+            const matching = issues.filter(issue => issue.title.startsWith(titlePrefix));
+            const title = `${titlePrefix} — ${today}`;
+
+            if (matching.length > 0) {
+              const primary = matching[0];
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: primary.number,
+                title,
+                body
+              });
+
+              for (const duplicate of matching.slice(1)) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  body: `Sustituido por #${primary.number}. Mantenemos un único issue canónico de vigilancia de indexación.`
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  state: 'closed'
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['seo']
+              });
+            }

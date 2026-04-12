@@ -1,4 +1,4 @@
-name: "📊 Weekly Google Report"
+name: "📊 Informe Semanal de Google"
 
 on:
   schedule:
@@ -53,11 +53,11 @@ jobs:
               -d "grant_type=refresh_token" | python3 -c "import sys,json;print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
           fi
 
-          echo "## 📊 Weekly Cluster Report — $(date +%Y-%m-%d)" > /tmp/report.md
+          echo "## 📊 Informe semanal del cluster — $(date +%Y-%m-%d)" > /tmp/report.md
           echo "" >> /tmp/report.md
 
           # GA4 traffic
-          echo "### 🔍 GA4 Traffic (last 7 days)" >> /tmp/report.md
+          echo "### 🔍 Tráfico de GA4 (últimos 7 días)" >> /tmp/report.md
           TRAFFIC=$(curl -s -H "Authorization: Bearer $TOKEN" \
             -H "Content-Type: application/json" \
             -X POST \
@@ -76,7 +76,7 @@ jobs:
           # Debug: log error if API failed
           GA4_ERR=$(echo "$TRAFFIC" | python3 -c "import sys,json;d=json.load(sys.stdin);e=d.get('error');print(e.get('message','') if e else '')" 2>/dev/null || echo "")
           if [ -n "$GA4_ERR" ]; then
-            echo "> **API Error**: $GA4_ERR" >> /tmp/report.md
+            echo "> **Error de API**: $GA4_ERR" >> /tmp/report.md
             echo "" >> /tmp/report.md
           fi
 
@@ -86,17 +86,17 @@ jobs:
           DURATION=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);v=r.get('rows',[{}])[0].get('metricValues',[{}])[3].get('value','0');print(f'{float(v):.1f}s')" 2>/dev/null || echo "N/A")
           BOUNCE=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);v=r.get('rows',[{}])[0].get('metricValues',[{}])[4].get('value','0');print(f'{float(v)*100:.1f}%')" 2>/dev/null || echo "N/A")
 
-          echo "| Metric | Value |" >> /tmp/report.md
-          echo "|--------|-------|" >> /tmp/report.md
-          echo "| Sessions | $SESSIONS |" >> /tmp/report.md
-          echo "| Users | $USERS |" >> /tmp/report.md
-          echo "| Page Views | $VIEWS |" >> /tmp/report.md
-          echo "| Avg Duration | $DURATION |" >> /tmp/report.md
-          echo "| Bounce Rate | $BOUNCE |" >> /tmp/report.md
+          echo "| Métrica | Valor |" >> /tmp/report.md
+          echo "|---------|-------|" >> /tmp/report.md
+          echo "| Sesiones | $SESSIONS |" >> /tmp/report.md
+          echo "| Usuarios | $USERS |" >> /tmp/report.md
+          echo "| Páginas vistas | $VIEWS |" >> /tmp/report.md
+          echo "| Duración media | $DURATION |" >> /tmp/report.md
+          echo "| Rebote | $BOUNCE |" >> /tmp/report.md
           echo "" >> /tmp/report.md
 
           # GA4 key events
-          echo "### 🎯 Conversions (last 7 days)" >> /tmp/report.md
+          echo "### 🎯 Conversiones (últimos 7 días)" >> /tmp/report.md
           EVENTS=$(curl -s -H "Authorization: Bearer $TOKEN" \
             -H "Content-Type: application/json" \
             -X POST \
@@ -116,8 +116,8 @@ jobs:
             }' \
             "https://analyticsdata.googleapis.com/v1beta/$GA4_PROPERTY:runReport")
 
-          echo "| Event | Count |" >> /tmp/report.md
-          echo "|-------|-------|" >> /tmp/report.md
+          echo "| Evento | Total |" >> /tmp/report.md
+          echo "|--------|-------|" >> /tmp/report.md
           echo "$EVENTS" | python3 -c "
           import sys,json
           r=json.load(sys.stdin)
@@ -125,11 +125,11 @@ jobs:
             name=row['dimensionValues'][0]['value']
             count=row['metricValues'][0]['value']
             print(f'| {name} | {count} |')
-          " >> /tmp/report.md 2>/dev/null || echo "| No data yet | — |" >> /tmp/report.md
+          " >> /tmp/report.md 2>/dev/null || echo "| Sin datos aún | — |" >> /tmp/report.md
           echo "" >> /tmp/report.md
 
           # GA4 traffic sources
-          echo "### 📈 Traffic Sources" >> /tmp/report.md
+          echo "### 📈 Fuentes de tráfico" >> /tmp/report.md
           SOURCES=$(curl -s -H "Authorization: Bearer $TOKEN" \
             -H "Content-Type: application/json" \
             -X POST \
@@ -142,8 +142,8 @@ jobs:
             }' \
             "https://analyticsdata.googleapis.com/v1beta/$GA4_PROPERTY:runReport")
 
-          echo "| Channel | Sessions | Users |" >> /tmp/report.md
-          echo "|---------|----------|-------|" >> /tmp/report.md
+          echo "| Canal | Sesiones | Usuarios |" >> /tmp/report.md
+          echo "|-------|----------|----------|" >> /tmp/report.md
           echo "$SOURCES" | python3 -c "
           import sys,json
           r=json.load(sys.stdin)
@@ -152,7 +152,7 @@ jobs:
             s=row['metricValues'][0]['value']
             u=row['metricValues'][1]['value']
             print(f'| {ch} | {s} | {u} |')
-          " >> /tmp/report.md 2>/dev/null || echo "| No data yet | — | — |" >> /tmp/report.md
+          " >> /tmp/report.md 2>/dev/null || echo "| Sin datos aún | — | — |" >> /tmp/report.md
           echo "" >> /tmp/report.md
 
           # Extract organic sessions for milestone check
@@ -192,19 +192,19 @@ jobs:
           fi
 
           # Google Search Console — search performance (requires OAuth)
-          echo "### 🔎 Google Search Console (last 28 days)" >> /tmp/report.md
+          echo "### 🔎 Google Search Console (últimos 28 días)" >> /tmp/report.md
           if [ -n "$OAUTH_TOKEN" ]; then
             GSC_START=$(date -d '28 days ago' +%Y-%m-%d)
             GSC_END=$(date -d '3 days ago' +%Y-%m-%d)
             OAUTH_TOKEN="$OAUTH_TOKEN" GSC_START="$GSC_START" GSC_END="$GSC_END" GSC_SITES_JSON="$GSC_SITES_JSON" \
               python3 .github/scripts/weekly_gsc_report.py >> /tmp/report.md
           else
-            echo "> GSC not available (add GOOGLE_OAUTH_* secrets)" >> /tmp/report.md
+            echo "> GSC no disponible (faltan los secretos GOOGLE_OAUTH_*)" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
           # AdSense earnings (best-effort, may fail if not yet approved)
-          echo "### 💰 AdSense Revenue (last 7 days)" >> /tmp/report.md
+          echo "### 💰 Ingresos de AdSense (últimos 7 días)" >> /tmp/report.md
           if [ -n "$OAUTH_TOKEN" ]; then
             ADSENSE=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
               "https://adsense.googleapis.com/v2/$ADSENSE_ACCOUNT/reports:generate?dateRange=LAST_7_DAYS&metrics=ESTIMATED_EARNINGS&metrics=PAGE_VIEWS&metrics=IMPRESSIONS&metrics=CLICKS" 2>/dev/null || echo "{}")
@@ -219,18 +219,18 @@ jobs:
               views=cells[1].get('value','0') if len(cells)>1 else '0'
               impr=cells[2].get('value','0') if len(cells)>2 else '0'
               clicks=cells[3].get('value','0') if len(cells)>3 else '0'
-              print(f'| Earnings | €{float(earn)/1000000:.2f} |')
-              print(f'| Page Views | {views} |')
-              print(f'| Impressions | {impr} |')
-              print(f'| Clicks | {clicks} |')
+              print(f'| Ingresos | €{float(earn)/1000000:.2f} |')
+              print(f'| Páginas vistas | {views} |')
+              print(f'| Impresiones | {impr} |')
+              print(f'| Clics | {clicks} |')
             else:
-              print('| Status | No earnings data yet |')
-            " 2>/dev/null || echo "| Status | API not available |")
-            echo "| Metric | Value |" >> /tmp/report.md
-            echo "|--------|-------|" >> /tmp/report.md
+              print('| Estado | Sin datos de ingresos aún |')
+            " 2>/dev/null || echo "| Estado | API no disponible |")
+            echo "| Métrica | Valor |" >> /tmp/report.md
+            echo "|---------|-------|" >> /tmp/report.md
             echo "$AD_EARNINGS" >> /tmp/report.md
           else
-            echo "> AdSense/OAuth not configured (add GOOGLE_OAUTH_REFRESH_TOKEN secret)" >> /tmp/report.md
+            echo "> AdSense/OAuth no configurado (falta GOOGLE_OAUTH_REFRESH_TOKEN)" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
@@ -252,7 +252,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const titlePrefix = '📊 Weekly Cluster Report';
+            const titlePrefix = '📊 Informe semanal del cluster';
             const today = new Date().toISOString().slice(0, 10);
             const fs = require('fs');
             const body = fs.readFileSync('/tmp/report.md', 'utf8');
@@ -282,7 +282,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: duplicate.number,
-                  body: `Superseded by #${primary.number}. Keeping one canonical weekly report issue.`
+                  body: `Sustituido por #${primary.number}. Mantenemos un único issue canónico para el informe semanal.`
                 });
                 await github.rest.issues.update({
                   owner: context.repo.owner,
