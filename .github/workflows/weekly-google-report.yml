@@ -188,16 +188,7 @@ jobs:
           if [ -n "$OAUTH_TOKEN" ]; then
             GSC_SITES_API=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
               "https://searchconsole.googleapis.com/webmasters/v3/sites" 2>/dev/null || echo "{}")
-            GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "
-import json, os, sys
-cluster = {entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}
-data = json.load(sys.stdin)
-count = 0
-for entry in data.get('siteEntry', []):
-    if entry.get('siteUrl') in cluster and entry.get('permissionLevel') == 'siteOwner':
-        count += 1
-print(count)
-" 2>/dev/null || echo "0")
+            GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "import json, os, sys; cluster={entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}; data=json.load(sys.stdin); print(sum(1 for entry in data.get('siteEntry', []) if entry.get('siteUrl') in cluster and entry.get('permissionLevel') == 'siteOwner'))" 2>/dev/null || echo "0")
           fi
 
           # Google Search Console — search performance (requires OAuth)
