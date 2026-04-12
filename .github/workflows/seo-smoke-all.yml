@@ -39,10 +39,6 @@ jobs:
         run: |
           set -euo pipefail
           site_dir="sites/${{ matrix.site }}"
-          script_path="$site_dir/scripts/gen-pages.sh"
-          if [ -f "$script_path" ]; then
-            bash "$script_path" >/tmp/${{ matrix.site }}-build.log
-          fi
           python3 .github/scripts/check_internal_urls.py "$site_dir/public" "${{ matrix.domain }}"
 
       - name: "🔎 Check ${{ matrix.domain }}"
@@ -203,9 +199,9 @@ jobs:
         with:
           script: |
             const domain = '${{ matrix.domain }}';
-            const titlePrefix = `🚨 SEO Smoke fail: ${domain}`;
+            const titlePrefix = `🚨 Falla de smoke SEO: ${domain}`;
             const title = titlePrefix;
-            const body = `## SEO Tech Smoke — ${domain}\n\n${{ steps.smoke.outputs.report }}\n\n**Failures**: ${{ steps.smoke.outputs.failures }}`;
+            const body = `## Smoke técnico SEO — ${domain}\n\n${{ steps.smoke.outputs.report }}\n\n**Fallos**: ${{ steps.smoke.outputs.failures }}`;
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -242,7 +238,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: duplicate.number,
-                  body: `Superseded by #${matching[0].number}. Keeping one canonical SEO smoke issue per domain.`
+                  body: `Sustituido por #${matching[0].number}. Mantenemos un único issue canónico de smoke SEO por dominio.`
                 });
                 await github.rest.issues.update({
                   owner: context.repo.owner,
@@ -257,7 +253,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: `SEO smoke passed on ${new Date().toISOString().slice(0, 10)}. Closing this automated report.`
+                  body: `El smoke SEO pasó el ${new Date().toISOString().slice(0, 10)}. Cerramos este informe automático.`
                 });
                 await github.rest.issues.update({
                   owner: context.repo.owner,

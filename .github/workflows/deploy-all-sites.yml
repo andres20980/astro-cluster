@@ -162,6 +162,14 @@ jobs:
             exit 1
           fi
 
+      - name: "🧱 Check generated internal URLs"
+        shell: bash
+        env:
+          DOMAIN: ${{ steps.config.outputs.domain }}
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/check_internal_urls.py "sites/${{ matrix.site }}/public" "$DOMAIN"
+
       - name: "🔥 Deploy ${{ matrix.site }}"
         shell: bash
         env:
