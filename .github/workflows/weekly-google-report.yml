@@ -234,6 +234,21 @@ jobs:
           fi
           echo "" >> /tmp/report.md
 
+          # AdSense site readiness for the cluster
+          if [ -n "$OAUTH_TOKEN" ]; then
+            OAUTH_TOKEN="$OAUTH_TOKEN" \
+            ADSENSE_ACCOUNT="$ADSENSE_ACCOUNT" \
+            EXPECTED_DOMAINS_JSON='["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]' \
+            ADSENSE_INCLUDE_RAW_JSON=0 \
+            ADSENSE_HEADING_LEVEL="###" \
+            ADSENSE_REPORT_TITLE="Estado de sitios en AdSense" \
+            python3 .github/scripts/adsense_site_watch.py >> /tmp/report.md
+          else
+            echo "### Estado de sitios en AdSense" >> /tmp/report.md
+            echo "> AdSense no disponible porque falta OAuth de usuario. El refresh token debe incluir el scope \`https://www.googleapis.com/auth/adsense.readonly\`." >> /tmp/report.md
+          fi
+          echo "" >> /tmp/report.md
+
           # Growth milestone check
           BOUNCE_RAW=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);print(r.get('rows',[{}])[0].get('metricValues',[{}])[4].get('value','0'))" 2>/dev/null || echo "0")
           DURATION_RAW=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);print(r.get('rows',[{}])[0].get('metricValues',[{}])[3].get('value','0'))" 2>/dev/null || echo "0")

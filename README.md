@@ -37,6 +37,13 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 - El cluster se gestiona por dominio en GSC y de forma unificada en Analytics.
 - `sites/carta-astral/scripts/manage-google.sh` ya admite `--site <site-key|dominio>` y operaciones GSC para todo el cluster.
 
+## OAuth de Google
+
+- Los workflows del cluster reutilizan `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` y `GOOGLE_OAUTH_REFRESH_TOKEN`.
+- Para GSC, el refresh token debe incluir `https://www.googleapis.com/auth/webmasters` y `https://www.googleapis.com/auth/siteverification`.
+- Para AdSense, ese mismo refresh token debe incluir además `https://www.googleapis.com/auth/adsense.readonly`.
+- Si el refresh token no tiene esos scopes, los workflows seguirán generando issues canónicos explicando el bloqueo exacto.
+
 ## Desarrollo local
 
 Generar un sitio:
@@ -85,6 +92,8 @@ astro-cluster/
 - `seo-auto-pr.yml`: aplica mejoras SEO automáticas de forma rotatoria sobre un site del cluster por ejecución.
 - `seo-competitor-intel.yml`: captura señales de competidores.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense, con bloque agregado del cluster y detalle por dominio.
+- `gsc-index-watch.yml`: mantiene un issue canónico con el estado de indexación de las home del cluster.
+- `adsense-site-watch.yml`: mantiene un issue canónico con el estado de los sitios del cluster en la API de AdSense y sus alertas activas.
 
 ## Principios operativos
 
