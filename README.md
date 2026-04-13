@@ -92,8 +92,8 @@ astro-cluster/
 - `deploy-all-sites.yml`: despliega solo los sitios afectados por cambios reales en `sites/*` o `shared/`, y tras cada deploy envía el sitemap a GSC con la API oficial.
 - `seo-smoke-all.yml`: comprueba `robots.txt`, `sitemap.xml`, `ads.txt`, páginas legales, `/publicidad`, canonical, meta description, `H1`, structured data, `noindex`, script AdSense y accesibilidad de `www`.
 - `daily-horoscope.yml`: regenera y publica `horoscopo-de-hoy`.
-- `seo-auto-pr.yml`: aplica mejoras SEO automáticas de forma rotatoria sobre un site del cluster por ejecución.
-- `seo-competitor-intel.yml`: captura señales de competidores.
+- `seo-auto-pr.yml`: aplica mejoras SEO automáticas de forma rotatoria sobre un site del cluster por ejecución y prioriza intents validados por competitor intel cuando existe señal útil.
+- `seo-competitor-intel.yml`: captura señales de competidores de forma rotatoria para un site del cluster por ejecución, para no disparar coste en GitHub Actions.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense, con bloque agregado del cluster y detalle por dominio.
 - `ga4-admin-sync.yml`: sincroniza mensualmente o bajo demanda las custom dimensions y key events de GA4 contra los manifiestos del repo.
 - `gsc-index-watch.yml`: mantiene un issue canónico con el estado de indexación de las home del cluster.

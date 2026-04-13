@@ -101,6 +101,19 @@
       "domain": "compatibilidad-signos.es",
       "homeUrl": "https://compatibilidad-signos.es/",
       "sitemapFile": "public/sitemap.xml",
+      "keywordContext": [
+        "compatibilidad de signos",
+        "compatibilidad signos",
+        "compatibilidad amorosa signos",
+        "signos compatibles",
+        "pareja zodiacal",
+        "afinidad zodiacal"
+      ],
+      "competitors": [
+        "https://www.horoscopo.com/",
+        "https://www.univision.com/horoscopos",
+        "https://www.losarcanos.com/"
+      ],
       "targetKeywords": [
         {"query": "compatibilidad de signos", "priority": 1},
         {"query": "compatibilidad signos", "priority": 1},
@@ -128,6 +141,19 @@
       "domain": "tarot-del-dia.es",
       "homeUrl": "https://tarot-del-dia.es/",
       "sitemapFile": "public/sitemap.xml",
+      "keywordContext": [
+        "tarot del día",
+        "tarot gratis",
+        "tirada de tarot gratis",
+        "tirada de 3 cartas",
+        "lectura de tarot",
+        "carta del día"
+      ],
+      "competitors": [
+        "https://www.univision.com/horoscopos/tarot",
+        "https://www.horoscopo.com/",
+        "https://www.losarcanos.com/"
+      ],
       "targetKeywords": [
         {"query": "tarot del día", "priority": 1},
         {"query": "tarot gratis", "priority": 2},
@@ -155,6 +181,19 @@
       "domain": "calcular-numerologia.es",
       "homeUrl": "https://calcular-numerologia.es/",
       "sitemapFile": "public/sitemap.xml",
+      "keywordContext": [
+        "calcular numerología",
+        "numerología gratis",
+        "número de vida",
+        "fecha de nacimiento",
+        "significado numerológico",
+        "nombre y numerología"
+      ],
+      "competitors": [
+        "https://numerologia.top/",
+        "https://www.univision.com/horoscopos",
+        "https://www.losarcanos.com/"
+      ],
       "targetKeywords": [
         {"query": "calcular numerología", "priority": 1},
         {"query": "numerología gratis", "priority": 2},
@@ -182,6 +221,19 @@
       "domain": "horoscopo-de-hoy.es",
       "homeUrl": "https://horoscopo-de-hoy.es/",
       "sitemapFile": "public/sitemap.xml",
+      "keywordContext": [
+        "horóscopo de hoy",
+        "horóscopo diario",
+        "horóscopo gratis",
+        "predicciones del día",
+        "amor trabajo salud",
+        "signos del zodíaco"
+      ],
+      "competitors": [
+        "https://www.horoscopo.com/",
+        "https://www.univision.com/horoscopos",
+        "https://www.losarcanos.com/"
+      ],
       "targetKeywords": [
         {"query": "horóscopo de hoy", "priority": 1},
         {"query": "horóscopo diario", "priority": 2},

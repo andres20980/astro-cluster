@@ -8,6 +8,7 @@ const SITE_ROOT = process.cwd();
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
 const SITE_KEY = process.env.SITE_KEY || 'carta-astral';
 const RECS_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_RECOMMENDATIONS.json');
+const COMPETITOR_INTEL_PATH = path.join(SITE_ROOT, 'docs', 'SEO_COMPETITOR_INTEL.json');
 const RULES_PATH = path.join(REPO_ROOT, '.github', 'config', 'seo-autopatch-rules.json');
 const STATE_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_STATE.json');
 const MAX_CHANGES = Number(process.env.SEO_AUTO_PR_MAX_CHANGES || 1);
@@ -79,6 +80,66 @@ function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function normalizeText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function tokenize(value) {
+  return normalizeText(value)
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 2);
+}
+
+function scoreKeywordByCompetitorIntel(keyword, competitorIntel) {
+  const query = String(keyword.query || '').trim();
+  const normalizedQuery = normalizeText(query);
+  const queryTokens = tokenize(query);
+  const insights = competitorIntel && competitorIntel.insights ? competitorIntel.insights : null;
+
+  if (!insights || queryTokens.length === 0) {
+    return {
+      score: (keyword.priority || 99) * 100,
+      matchedSignals: [],
+    };
+  }
+
+  const topKeywords = (insights.topKeywords || []).map((item) => normalizeText(item.keyword));
+  const contextKeywords = (competitorIntel.keywordsContext || []).map((item) => normalizeText(item));
+  const h2Patterns = (insights.commonH2Patterns || []).map((item) => normalizeText(item.text));
+  const matchedSignals = [];
+  let score = (keyword.priority || 99) * 100;
+
+  if (topKeywords.includes(normalizedQuery)) {
+    score -= 60;
+    matchedSignals.push('top_keyword_exact');
+  } else if (contextKeywords.includes(normalizedQuery)) {
+    score -= 35;
+    matchedSignals.push('context_keyword_exact');
+  }
+
+  let overlapHits = 0;
+  const signalPools = [...topKeywords, ...contextKeywords, ...h2Patterns];
+  for (const signal of signalPools) {
+    const signalTokens = tokenize(signal);
+    const overlap = queryTokens.filter((token) => signalTokens.includes(token)).length;
+    if (overlap > 0) {
+      overlapHits = Math.max(overlapHits, overlap);
+    }
+  }
+
+  if (overlapHits > 0) {
+    score -= overlapHits * 10;
+    matchedSignals.push(`token_overlap_${overlapHits}`);
+  }
+
+  return { score, matchedSignals };
+}
+
 function updateSitemapLastmod(siteConfig, dateStr) {
   if (!siteConfig.sitemapFile || !siteConfig.homeUrl) return false;
   const sitemapPath = path.join(SITE_ROOT, siteConfig.sitemapFile);
@@ -120,7 +181,7 @@ function optimizeFile(siteConfig, rule) {
   return { file: rule.file, changed: true, reason: 'optimized' };
 }
 
-function pickRecommendations(siteConfig, state, payload) {
+function pickRecommendations(siteConfig, state, payload, competitorIntel) {
   const rules = siteConfig.rulesByQuery || {};
 
   if (payload && Array.isArray(payload.topRecommendations) && payload.topRecommendations.length > 0) {
@@ -129,14 +190,28 @@ function pickRecommendations(siteConfig, state, payload) {
 
   const keywords = (siteConfig.targetKeywords || [])
     .filter((keyword) => rules[keyword.query])
-    .sort((a, b) => (a.priority || 99) - (b.priority || 99));
+    .map((keyword) => {
+      const competitorScore = scoreKeywordByCompetitorIntel(keyword, competitorIntel);
+      return {
+        ...keyword,
+        competitorScore: competitorScore.score,
+        matchedSignals: competitorScore.matchedSignals,
+      };
+    })
+    .sort((a, b) => {
+      if (a.competitorScore !== b.competitorScore) return a.competitorScore - b.competitorScore;
+      return (a.priority || 99) - (b.priority || 99);
+    });
 
   if (keywords.length === 0) return [];
 
   const lastIdx = keywords.findIndex((keyword) => keyword.query === state.lastQuery);
   const startIdx = (lastIdx + 1) % keywords.length;
   const rotated = keywords.slice(startIdx).concat(keywords.slice(0, startIdx));
-  return rotated.slice(0, MAX_CHANGES).map((keyword) => ({ query: keyword.query }));
+  return rotated.slice(0, MAX_CHANGES).map((keyword) => ({
+    query: keyword.query,
+    matchedSignals: keyword.matchedSignals || [],
+  }));
 }
 
 function getSiteConfig(rulesData) {
@@ -159,7 +234,8 @@ function main() {
   const rules = siteConfig.rulesByQuery || {};
   const state = readJson(STATE_PATH, { site: SITE_KEY, lastRun: null, lastQuery: null, results: [] });
   const payload = readJson(RECS_PATH, null);
-  const recs = pickRecommendations(siteConfig, state, payload);
+  const competitorIntel = readJson(COMPETITOR_INTEL_PATH, null);
+  const recs = pickRecommendations(siteConfig, state, payload, competitorIntel);
 
   const runAt = new Date().toISOString();
   const results = [];
@@ -173,7 +249,7 @@ function main() {
     if (!rule) continue;
 
     const res = optimizeFile(siteConfig, rule);
-    results.push({ query: key, ...res });
+    results.push({ query: key, matchedSignals: rec.matchedSignals || [], ...res });
     if (res.changed) {
       applied += 1;
       lastQuery = key;
@@ -191,6 +267,7 @@ function main() {
     site: SITE_KEY,
     changedCount: results.filter((result) => result.changed).length,
     totalChecked: results.length,
+    competitorIntelLoaded: Boolean(competitorIntel && competitorIntel.insights),
     runAt,
   }));
 }

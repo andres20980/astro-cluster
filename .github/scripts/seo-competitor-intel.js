@@ -3,7 +3,7 @@
 /**
  * seo-competitor-intel.js
  *
- * Crawlea páginas de competidores para "carta astral gratis" y keywords afines.
+ * Crawlea páginas de competidores para un site del cluster y keywords afines.
  * Extrae title, description, H1s, H2s, conteo de palabras, FAQ/HowTo schema y estructura.
  * Guarda resultados en docs/SEO_COMPETITOR_INTEL.json para que el learning-loop los use.
  *
@@ -16,9 +16,11 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const ROOT = process.cwd();
-const OUTPUT_PATH = path.join(ROOT, 'docs', 'SEO_COMPETITOR_INTEL.json');
-const RULES_PATH = path.join(ROOT, '.github', 'config', 'seo-autopatch-rules.json');
+const REPO_ROOT = path.resolve(__dirname, '..', '..');
+const RULES_PATH = path.join(REPO_ROOT, '.github', 'config', 'seo-autopatch-rules.json');
+const SITE_KEY = process.env.SITE_KEY || 'carta-astral';
+const SITE_ROOT = path.join(REPO_ROOT, 'sites', SITE_KEY);
+const OUTPUT_PATH = path.join(SITE_ROOT, 'docs', 'SEO_COMPETITOR_INTEL.json');
 
 const DEFAULT_COMPETITOR_URLS = [
   'https://www.losarcanos.com/carta-astral.php',
@@ -28,7 +30,7 @@ const DEFAULT_COMPETITOR_URLS = [
   'https://www.horoscopo.com/carta-astral',
 ];
 
-const KEYWORDS_CONTEXT = [
+const DEFAULT_KEYWORDS_CONTEXT = [
   'carta astral',
   'carta natal',
   'mapa astral',
@@ -41,7 +43,33 @@ const KEYWORDS_CONTEXT = [
   'planetas',
 ];
 
-function loadCompetitorUrls() {
+function readJson(fp, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(fp, 'utf8'));
+  } catch (_) {
+    return fallback;
+  }
+}
+
+function loadSiteConfig() {
+  const rules = readJson(RULES_PATH, {});
+
+  if (rules.sites && rules.sites[SITE_KEY]) {
+    return rules.sites[SITE_KEY];
+  }
+
+  return {
+    domain: 'carta-astral-gratis.es',
+    competitors: Array.isArray(rules.competitors) ? rules.competitors : DEFAULT_COMPETITOR_URLS,
+    keywordContext: Array.isArray(rules.keywordContext) ? rules.keywordContext : DEFAULT_KEYWORDS_CONTEXT,
+    targetKeywords: Array.isArray(rules.targetKeywords) ? rules.targetKeywords : [],
+  };
+}
+
+function loadCompetitorUrls(siteConfig) {
+  if (Array.isArray(siteConfig.competitors) && siteConfig.competitors.length > 0) {
+    return siteConfig.competitors;
+  }
   try {
     const rules = JSON.parse(fs.readFileSync(RULES_PATH, 'utf8'));
     if (Array.isArray(rules.competitors) && rules.competitors.length > 0) {
@@ -49,6 +77,18 @@ function loadCompetitorUrls() {
     }
   } catch (_) {}
   return DEFAULT_COMPETITOR_URLS;
+}
+
+function loadKeywordsContext(siteConfig) {
+  if (Array.isArray(siteConfig.keywordContext) && siteConfig.keywordContext.length > 0) {
+    return siteConfig.keywordContext;
+  }
+
+  const targetKeywords = (siteConfig.targetKeywords || [])
+    .map((item) => String(item.query || '').trim())
+    .filter(Boolean);
+
+  return targetKeywords.length > 0 ? targetKeywords : DEFAULT_KEYWORDS_CONTEXT;
 }
 
 function fetchUrl(rawUrl, timeoutMs = 10000) {
@@ -156,7 +196,7 @@ function countKeywordPresence(html, keywords) {
   return result;
 }
 
-function analyzeHtml(url, html) {
+function analyzeHtml(url, html, keywordsContext) {
   const title = extractTag(html, /<title[^>]*>([^<]+)<\/title>/i);
   const description = extractTag(html, /<meta\s+name="description"\s+content="([^"]+)"/i)
     || extractTag(html, /<meta\s+content="([^"]+)"\s+name="description"/i);
@@ -165,7 +205,7 @@ function analyzeHtml(url, html) {
   const h2s = extractAllMatches(html, /<h2[^>]*>(.*?)<\/h2>/i);
   const wordCount = countWords(html);
   const schemaTypes = detectStructuredDataTypes(html);
-  const keywordFrequency = countKeywordPresence(html, KEYWORDS_CONTEXT);
+  const keywordFrequency = countKeywordPresence(html, keywordsContext);
 
   return {
     url,
@@ -187,7 +227,7 @@ function analyzeHtml(url, html) {
   };
 }
 
-function buildSeoInsights(results) {
+function buildSeoInsights(results, keywordsContext) {
   const successful = results.filter((r) => r.status === 200 && r.analysis);
   if (successful.length === 0) return null;
 
@@ -199,7 +239,7 @@ function buildSeoInsights(results) {
   const breadcrumbAdopters = successful.filter((r) => r.analysis.hasBreadcrumb).length;
 
   const keywordTotals = {};
-  for (const kw of KEYWORDS_CONTEXT) {
+  for (const kw of keywordsContext) {
     keywordTotals[kw] = successful.reduce((sum, r) => sum + (r.analysis.keywordFrequency[kw] || 0), 0);
   }
   const topKeywords = Object.entries(keywordTotals)
@@ -235,8 +275,10 @@ function buildSeoInsights(results) {
 }
 
 async function main() {
-  const urls = loadCompetitorUrls();
-  console.log(`🔍 Crawleando ${urls.length} URLs de competidores...`);
+  const siteConfig = loadSiteConfig();
+  const urls = loadCompetitorUrls(siteConfig);
+  const keywordsContext = loadKeywordsContext(siteConfig);
+  console.log(`🔍 Crawleando ${urls.length} URLs de competidores para ${SITE_KEY}...`);
 
   const results = [];
   for (const url of urls) {
@@ -247,7 +289,7 @@ async function main() {
         process.stdout.write(`✗ (${error || status})\n`);
         results.push({url, finalUrl, status, error, analysis: null});
       } else {
-        const analysis = analyzeHtml(finalUrl, html);
+        const analysis = analyzeHtml(finalUrl, html, keywordsContext);
         process.stdout.write(`✓ (${analysis.wordCount}w, ${analysis.h2Count} H2s)\n`);
         results.push({url, finalUrl, status, error: null, analysis});
       }
@@ -258,13 +300,15 @@ async function main() {
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }
 
-  const insights = buildSeoInsights(results);
+  const insights = buildSeoInsights(results, keywordsContext);
   const outputId = crypto.randomBytes(4).toString('hex');
 
   const output = {
+    site: SITE_KEY,
+    domain: siteConfig.domain || null,
     generatedAt: new Date().toISOString(),
     runId: outputId,
-    keywordsContext: KEYWORDS_CONTEXT,
+    keywordsContext,
     insights,
     results: results.map((r) => ({url: r.url, status: r.status, error: r.error, analysis: r.analysis})),
   };
