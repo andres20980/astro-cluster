@@ -1,10 +1,11 @@
 {
   "site": "carta-astral",
-  "lastRun": "2026-04-11T06:40:37.579Z",
-  "lastQuery": "carta astral gratis",
+  "lastRun": "2026-04-13T11:54:35.579Z",
+  "lastQuery": "carta astral",
   "results": [
     {
-      "query": "carta astral gratis",
+      "query": "carta astral",
+      "matchedSignals": [],
       "file": "public/index.html",
       "changed": true,
       "reason": "optimized"
