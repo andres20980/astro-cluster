@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-04-13T11:52:33Z",
+  "site": "calcular-numerologia",
+  "domain": "calcular-numerologia.es",
+  "range": {
+    "start": "7daysAgo",
+    "end": "today"
+  },
+  "homepage": {
+    "path": "/",
+    "views": 26.0,
+    "bounceRate": 0.9230769230769231,
+    "averageSessionDuration": 1.801112
+  },
+  "weakHomepageEngagement": true,
+  "pages": [
+    {
+      "path": "/",
+      "views": 26.0,
+      "bounceRate": 0.9230769230769231,
+      "averageSessionDuration": 1.801112
+    }
+  ]
+}

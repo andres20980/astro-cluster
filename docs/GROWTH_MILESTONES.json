@@ -31,7 +31,7 @@
         "avg_duration_min_s": 25
       },
       "auto": {
-        "completed_actions": 3,
+        "completed_actions": 2,
         "total_actions": 4,
         "actions": [
           {
@@ -51,7 +51,7 @@
           },
           {
             "label": "Autoparcheo SEO rotatorio por site",
-            "done": true,
+            "done": false,
             "evidence": "Workflow diario con rotacion de site y autopatch limitado"
           }
         ]
@@ -247,7 +247,7 @@
     "weekly_metrics": {
       "sessions": 232,
       "users": 216,
-      "views": 298,
+      "views": 299,
       "organic_sessions": 0,
       "organic_share": 0,
       "bounce_rate": 0.8966,
@@ -259,7 +259,7 @@
       "ga4_unified": true,
       "deploy_selective": true,
       "seo_smoke_cluster": true,
-      "seo_autopatch_rotatory": true,
+      "seo_autopatch_rotatory": false,
       "gsc_cluster_reporting": true,
       "gsc_sitemap_submit": true,
       "gsc_verified_site_count": 5,
