@@ -245,13 +245,13 @@
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
-      "sessions": 219,
-      "users": 205,
-      "views": 284,
+      "sessions": 232,
+      "users": 216,
+      "views": 298,
       "organic_sessions": 0,
       "organic_share": 0,
-      "bounce_rate": 0.8904,
-      "avg_duration_s": 96.2,
+      "bounce_rate": 0.8966,
+      "avg_duration_s": 90.9,
       "chart_calculated": 17,
       "interpretation_generated": 13
     },
