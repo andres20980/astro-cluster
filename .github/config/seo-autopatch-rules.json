@@ -36,6 +36,7 @@
   ],
   "rulesByQuery": {
     "carta astral gratis": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Carta Astral Gratis — Calcula tu mapa natal con hora exacta",
       "description": "Genera tu carta astral gratis con la hora exacta de nacimiento. Cálculo preciso con Swiss Ephemeris: planetas, casas, ascendente y aspectos. Online sin registro.",
@@ -51,6 +52,7 @@
       "h1": "Descubre tu Carta Astral"
     },
     "carta astral": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Carta Astral Gratis Online — Calcular con hora y lugar exacto de nacimiento",
       "description": "Carta astral gratis online con cálculo astronómico preciso. Introduce tu fecha, hora y lugar de nacimiento. Planetas en signos y casas, ascendente y aspectos natales.",
@@ -66,48 +68,56 @@
       "h1": "Descubre tu Carta Astral"
     },
     "carta natal gratis": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Carta Natal Gratis — Tu mapa astral con cálculo astronómico preciso",
       "description": "Calcula tu carta natal gratis con hora exacta. Sube tu certificado de nacimiento o introduce los datos manualmente. Planetas, casas, ascendente y medio cielo.",
       "h1": "Descubre tu Carta Astral"
     },
     "mapa astral gratis": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Mapa Astral Gratis Online — Calcula tu carta natal con hora exacta",
       "description": "Genera tu mapa astral gratis online. Cálculo con Swiss Ephemeris: posición de planetas en signos y casas, ascendente, medio cielo y aspectos natales.",
       "h1": "Descubre tu Carta Astral"
     },
     "hacer carta astral": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Hacer Carta Astral Gratis — Calcula tu mapa natal online",
       "description": "Hacer tu carta astral gratis es fácil: introduce fecha, hora y lugar de nacimiento. Obtendrás planetas, casas, ascendente y aspectos al instante. Sin registro.",
       "h1": "Descubre tu Carta Astral"
     },
     "calcular carta astral": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Calcular Carta Astral Gratis — Hora exacta y lugar de nacimiento",
       "description": "Calcula tu carta astral gratis con fecha, hora y lugar exacto de nacimiento. Sube tu certificado o introduce los datos. Cálculo astronómico Swiss Ephemeris.",
       "h1": "Descubre tu Carta Astral"
     },
     "ascendente gratis": {
+      "templateFamily": "sign_profiles",
       "file": "public/index.html",
       "title": "Calcula tu Ascendente Gratis — Carta Astral con hora exacta",
       "description": "Descubre tu ascendente gratis con la hora exacta de nacimiento. Cálculo astronómico preciso con Swiss Ephemeris y sistema de casas Placidus.",
       "h1": "Descubre tu Carta Astral"
     },
     "calcular ascendente": {
+      "templateFamily": "sign_profiles",
       "file": "public/index.html",
       "title": "Calcular Ascendente Gratis — Hora de nacimiento y carta natal",
       "description": "Calcula tu ascendente astrológico gratis con la hora exacta de nacimiento. También obtendrás tu carta natal completa: planetas, casas y aspectos.",
       "h1": "Descubre tu Carta Astral"
     },
     "carta astral por fecha de nacimiento": {
+      "templateFamily": "home",
       "file": "public/index.html",
       "title": "Carta Astral por Fecha de Nacimiento — Gratis y con hora exacta",
       "description": "Obtén tu carta astral gratis por fecha de nacimiento. Necesitas fecha, hora y lugar exacto. Sube tu certificado de nacimiento o introdúcelos manualmente.",
       "h1": "Descubre tu Carta Astral"
     },
     "casas astrales significado": {
+      "templateFamily": "sign_profiles",
       "file": "public/index.html",
       "title": "Las 12 Casas Astrales y su Significado — Carta Astral Gratis",
       "description": "Descubre el significado de las 12 casas astrológicas: identidad, dinero, comunicación, hogar, amor, trabajo, pareja, transformación, viajes, éxito, amigos e inconsciente.",
@@ -139,6 +149,7 @@
       ],
       "rulesByQuery": {
         "compatibilidad de signos": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Compatibilidad de Signos Zodiacales — Calculadora Gratis",
@@ -148,6 +159,7 @@
           }
         },
         "compatibilidad signos": {
+          "templateFamily": "pair_pages",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Compatibilidad de Signos Gratis — Calcula tu Afinidad Amorosa",
@@ -157,6 +169,7 @@
           }
         },
         "compatibilidad amorosa signos": {
+          "templateFamily": "pair_pages",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Compatibilidad Amorosa de Signos — Porcentaje y Afinidad",
@@ -187,10 +200,12 @@
       "targetKeywords": [
         {"query": "tarot del día", "priority": 1},
         {"query": "tarot gratis", "priority": 2},
-        {"query": "tirada de tarot gratis", "priority": 2}
+        {"query": "tirada de tarot gratis", "priority": 2},
+        {"query": "arcanos mayores tarot", "priority": 3}
       ],
       "rulesByQuery": {
         "tarot del día": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Tarot del Día Gratis — Tirada de 3 Cartas Online",
@@ -200,6 +215,7 @@
           }
         },
         "tarot gratis": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Tarot Gratis Online — Tirada del Día con 3 Cartas",
@@ -209,12 +225,23 @@
           }
         },
         "tirada de tarot gratis": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Tirada de Tarot Gratis — Lectura Online del Día",
             "INDEX_DESC": "Haz una tirada de tarot gratis y descubre el significado de tus cartas con una lectura clara, inmediata y pensada para hoy.",
             "MAJOR_TITLE_TEMPLATE": "{{name}} ({{num}}) — Interpretación de la Carta en una Tirada de Tarot",
             "MAJOR_DESC_TEMPLATE": "Lee la interpretación de {{name}} en una tirada de tarot: Arcano {{num}}, mensaje al derecho ({{upright}}) e invertido ({{reversed}})."
+          }
+        },
+        "arcanos mayores tarot": {
+          "templateFamily": "major_arcana",
+          "file": "scripts/gen-pages.sh",
+          "shellVariables": {
+            "INDEX_TITLE": "Tarot del Día Gratis — Tirada de 3 Cartas Online",
+            "INDEX_DESC": "Haz tu tarot del día gratis con una tirada online de 3 cartas. Descubre el mensaje del pasado, presente y futuro con interpretación inmediata.",
+            "MAJOR_TITLE_TEMPLATE": "{{name}} ({{num}}) — Arcano Mayor del Tarot y Significado",
+            "MAJOR_DESC_TEMPLATE": "Consulta {{name}}, Arcano Mayor {{num}} del tarot. Significado al derecho ({{upright}}), invertido ({{reversed}}) y mensaje esencial de la carta."
           }
         }
       }
@@ -243,6 +270,7 @@
       ],
       "rulesByQuery": {
         "calcular numerología": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Calcular Numerología Gratis — Tu Número de Vida y Nombre",
@@ -252,6 +280,7 @@
           }
         },
         "numerología gratis": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Numerología Gratis Online — Calcula tu Número de Vida",
@@ -261,6 +290,7 @@
           }
         },
         "número de vida": {
+          "templateFamily": "number_pages",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Número de Vida Gratis — Calculadora de Numerología",
@@ -295,6 +325,7 @@
       ],
       "rulesByQuery": {
         "horóscopo de hoy": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Horóscopo de Hoy Gratis — ${TODAY_DISPLAY}",
@@ -304,6 +335,7 @@
           }
         },
         "horóscopo diario": {
+          "templateFamily": "sign_pages",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Horóscopo Diario Gratis — ${TODAY_DISPLAY}",
@@ -313,6 +345,7 @@
           }
         },
         "horóscopo gratis": {
+          "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
             "INDEX_TITLE": "Horóscopo Gratis de Hoy — Predicciones por Signo",

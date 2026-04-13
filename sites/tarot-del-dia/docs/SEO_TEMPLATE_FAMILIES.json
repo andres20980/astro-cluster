@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-04-13T11:52:33Z",
+  "site": "tarot-del-dia",
+  "domain": "tarot-del-dia.es",
+  "families": [
+    {
+      "family": "home",
+      "score": 783.0,
+      "ga4Views": 29.0,
+      "ga4LowEngagementViews": 29.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/"
+      ]
+    },
+    {
+      "family": "major_arcana",
+      "score": 54.0,
+      "ga4Views": 2.0,
+      "ga4LowEngagementViews": 2.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/arcanos-mayores/el-carro",
+        "/arcanos-mayores/la-torre"
+      ]
+    }
+  ],
+  "topFamily": {
+    "family": "home",
+    "score": 783.0,
+    "ga4Views": 29.0,
+    "ga4LowEngagementViews": 29.0,
+    "gscImpressions": 0.0,
+    "gscOpportunity": 0.0,
+    "paths": [
+      "/"
+    ]
+  }
+}

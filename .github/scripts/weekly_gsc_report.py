@@ -58,6 +58,31 @@ def build_query_rows(rows):
     results.sort(key=lambda item: item["opportunity"], reverse=True)
     return results
 
+
+def build_page_rows(rows, domain):
+    results = []
+    base = f"https://{domain}"
+    for row in rows or []:
+        page = row.get("keys", [""])[0]
+        path = page.replace(base, "") or "/"
+        clicks = float(row.get("clicks", 0) or 0)
+        impressions = float(row.get("impressions", 0) or 0)
+        position = float(row.get("position", 0) or 0)
+        ctr = (clicks / impressions) if impressions else 0.0
+        opportunity = impressions * (1 - ctr)
+        results.append(
+            {
+                "path": path,
+                "clicks": clicks,
+                "impressions": impressions,
+                "ctr": ctr,
+                "position": position,
+                "opportunity": opportunity,
+            }
+        )
+    results.sort(key=lambda item: item["opportunity"], reverse=True)
+    return results
+
 cluster = {"clicks": 0.0, "impressions": 0.0}
 site_reports = []
 
@@ -113,12 +138,14 @@ for site_key, domain, site_url in sites:
 
     if output_dir:
         query_rows = build_query_rows(queries.get("rows", []))
+        page_rows = build_page_rows(pages.get("rows", []), domain)
         payload = {
             "generatedAt": os.environ.get("GSC_GENERATED_AT", ""),
             "site": site_key,
             "domain": domain,
             "range": {"start": start, "end": end},
             "queries": query_rows,
+            "pages": page_rows,
             "topOpportunities": query_rows[:5],
         }
         target_dir = os.path.join(output_dir, site_key, "docs")

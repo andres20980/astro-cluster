@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-04-13T11:52:33Z",
+  "site": "compatibilidad-signos",
+  "domain": "compatibilidad-signos.es",
+  "families": [
+    {
+      "family": "home",
+      "score": 567.0,
+      "ga4Views": 21.0,
+      "ga4LowEngagementViews": 21.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/"
+      ]
+    },
+    {
+      "family": "pair_pages",
+      "score": 162.0,
+      "ga4Views": 6.0,
+      "ga4LowEngagementViews": 6.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/acuario-aries",
+        "/cancer-aries",
+        "/cancer-geminis",
+        "/escorpio-leo",
+        "/leo-aries"
+      ]
+    }
+  ],
+  "topFamily": {
+    "family": "home",
+    "score": 567.0,
+    "ga4Views": 21.0,
+    "ga4LowEngagementViews": 21.0,
+    "gscImpressions": 0.0,
+    "gscOpportunity": 0.0,
+    "paths": [
+      "/"
+    ]
+  }
+}

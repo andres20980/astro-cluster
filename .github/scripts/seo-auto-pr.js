@@ -10,6 +10,7 @@ const SITE_KEY = process.env.SITE_KEY || 'carta-astral';
 const RECS_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_RECOMMENDATIONS.json');
 const COMPETITOR_INTEL_PATH = path.join(SITE_ROOT, 'docs', 'SEO_COMPETITOR_INTEL.json');
 const GSC_SIGNAL_PATH = path.join(SITE_ROOT, 'docs', 'SEO_GSC_QUERIES.json');
+const TEMPLATE_SIGNAL_PATH = path.join(SITE_ROOT, 'docs', 'SEO_TEMPLATE_FAMILIES.json');
 const RULES_PATH = path.join(REPO_ROOT, '.github', 'config', 'seo-autopatch-rules.json');
 const STATE_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_STATE.json');
 const MAX_CHANGES = Number(process.env.SEO_AUTO_PR_MAX_CHANGES || 1);
@@ -203,6 +204,32 @@ function scoreKeywordByGsc(keyword, gscSignals) {
   return { score: base - boost, matchedSignals };
 }
 
+function scoreKeywordByTemplateFamily(keyword, templateSignals) {
+  const family = String(keyword.templateFamily || '').trim();
+  const base = (keyword.priority || 99) * 100;
+  if (!family || !templateSignals || !Array.isArray(templateSignals.families)) {
+    return { score: base, matchedSignals: [] };
+  }
+
+  const match = templateSignals.families.find((item) => item.family === family);
+  if (!match) {
+    return { score: base, matchedSignals: [] };
+  }
+
+  let boost = 0;
+  const matchedSignals = [];
+  if (Number(match.gscOpportunity || 0) > 0) {
+    boost += Math.min(50, Number(match.gscOpportunity || 0) / 5);
+    matchedSignals.push(`family_gsc_${family}`);
+  }
+  if (Number(match.ga4LowEngagementViews || 0) > 0) {
+    boost += Math.min(40, Number(match.ga4LowEngagementViews || 0) * 5);
+    matchedSignals.push(`family_ga4_${family}`);
+  }
+
+  return { score: base - boost, matchedSignals };
+}
+
 function updateSitemapLastmod(siteConfig, dateStr) {
   if (!siteConfig.sitemapFile || !siteConfig.homeUrl) return false;
   const sitemapPath = path.join(SITE_ROOT, siteConfig.sitemapFile);
@@ -246,7 +273,7 @@ function optimizeFile(siteConfig, rule) {
   return { file: rule.file, changed: true, reason: 'optimized' };
 }
 
-function pickRecommendations(siteConfig, state, payload, competitorIntel, gscSignals) {
+function pickRecommendations(siteConfig, state, payload, competitorIntel, gscSignals, templateSignals) {
   const rules = siteConfig.rulesByQuery || {};
 
   if (payload && Array.isArray(payload.topRecommendations) && payload.topRecommendations.length > 0) {
@@ -258,13 +285,19 @@ function pickRecommendations(siteConfig, state, payload, competitorIntel, gscSig
     .map((keyword) => {
       const competitorScore = scoreKeywordByCompetitorIntel(keyword, competitorIntel);
       const gscScore = scoreKeywordByGsc(keyword, gscSignals);
-      const combinedScore = Math.min(competitorScore.score, gscScore.score);
+      const familyScore = scoreKeywordByTemplateFamily(keyword, templateSignals);
+      const combinedScore = Math.min(competitorScore.score, gscScore.score, familyScore.score);
       return {
         ...keyword,
         competitorScore: competitorScore.score,
         gscScore: gscScore.score,
+        familyScore: familyScore.score,
         combinedScore,
-        matchedSignals: [...(competitorScore.matchedSignals || []), ...(gscScore.matchedSignals || [])],
+        matchedSignals: [
+          ...(competitorScore.matchedSignals || []),
+          ...(gscScore.matchedSignals || []),
+          ...(familyScore.matchedSignals || []),
+        ],
       };
     })
     .sort((a, b) => {
@@ -305,9 +338,11 @@ function main() {
   const payload = readJson(RECS_PATH, null);
   const competitorIntelRaw = readJson(COMPETITOR_INTEL_PATH, null);
   const gscSignalsRaw = readJson(GSC_SIGNAL_PATH, null);
+  const templateSignalsRaw = readJson(TEMPLATE_SIGNAL_PATH, null);
   const competitorIntel = isFreshSignal(competitorIntelRaw) ? competitorIntelRaw : null;
   const gscSignals = isFreshSignal(gscSignalsRaw) ? gscSignalsRaw : null;
-  const recs = pickRecommendations(siteConfig, state, payload, competitorIntel, gscSignals);
+  const templateSignals = isFreshSignal(templateSignalsRaw) ? templateSignalsRaw : null;
+  const recs = pickRecommendations(siteConfig, state, payload, competitorIntel, gscSignals, templateSignals);
 
   const runAt = new Date().toISOString();
   const results = [];
@@ -347,9 +382,11 @@ function main() {
     totalChecked: results.length,
     competitorIntelLoaded: Boolean(competitorIntel && competitorIntel.insights),
     gscSignalsLoaded: Boolean(gscSignals && Array.isArray(gscSignals.queries)),
+    templateSignalsLoaded: Boolean(templateSignals && Array.isArray(templateSignals.families)),
     staleSignalsIgnored: {
       competitorIntel: Boolean(competitorIntelRaw && !competitorIntel),
       gscSignals: Boolean(gscSignalsRaw && !gscSignals),
+      templateSignals: Boolean(templateSignalsRaw && !templateSignals),
     },
     runAt,
   }));

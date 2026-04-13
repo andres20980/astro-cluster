@@ -35,6 +35,7 @@ def score_site(site_key):
     score = 0.0
     gsc = read_json(f"sites/{site_key}/docs/SEO_GSC_QUERIES.json")
     ga4 = read_json(f"sites/{site_key}/docs/SEO_GA4_PAGES.json")
+    families = read_json(f"sites/{site_key}/docs/SEO_TEMPLATE_FAMILIES.json")
 
     if is_fresh(gsc):
         for row in (gsc.get("topOpportunities") or [])[:3]:
@@ -43,6 +44,9 @@ def score_site(site_key):
     if is_fresh(ga4) and ga4.get("weakHomepageEngagement"):
         home = ga4.get("homepage") or {}
         score += float(home.get("views", 0) or 0) * 20
+
+    if is_fresh(families) and families.get("topFamily"):
+        score += float(families["topFamily"].get("score", 0) or 0)
 
     return score
 

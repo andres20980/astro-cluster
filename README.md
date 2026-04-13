@@ -96,6 +96,7 @@ astro-cluster/
 - El auto-SEO ignora señales de GSC/competencia envejecidas para no optimizar con datos stale.
 - La selección automática del site a optimizar usa GSC + GA4 cuando hay señal fresca; si no, vuelve al fallback rotatorio.
 - En los sites generados, el auto-SEO actualiza tanto la home como las plantillas de sus familias long-tail para propagar mejoras a muchas URLs con un único cambio barato.
+- El weekly report genera señales por familia de plantillas para que el auto-SEO priorice también dónde tocar dentro de cada site.
 - `seo-competitor-intel.yml`: captura señales de competidores de forma rotatoria para un site del cluster por ejecución, con guardia de recencia para evitar gasto innecesario en GitHub Actions.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense, con bloque agregado del cluster y detalle por dominio.
 - `ga4-admin-sync.yml`: sincroniza mensualmente o bajo demanda las custom dimensions y key events de GA4 contra los manifiestos del repo.

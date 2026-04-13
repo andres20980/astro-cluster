@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-04-13T11:52:33Z",
+  "site": "horoscopo-de-hoy",
+  "domain": "horoscopo-de-hoy.es",
+  "families": [
+    {
+      "family": "home",
+      "score": 540.0,
+      "ga4Views": 20.0,
+      "ga4LowEngagementViews": 20.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/"
+      ]
+    },
+    {
+      "family": "sign_pages",
+      "score": 27.0,
+      "ga4Views": 1.0,
+      "ga4LowEngagementViews": 1.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/virgo"
+      ]
+    }
+  ],
+  "topFamily": {
+    "family": "home",
+    "score": 540.0,
+    "ga4Views": 20.0,
+    "ga4LowEngagementViews": 20.0,
+    "gscImpressions": 0.0,
+    "gscOpportunity": 0.0,
+    "paths": [
+      "/"
+    ]
+  }
+}
