@@ -241,19 +241,19 @@
     ]
   },
   "auto": {
-    "last_eval": "2026-04-12",
+    "last_eval": "2026-04-13",
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
-      "sessions": 160,
-      "users": 148,
-      "views": 208,
+      "sessions": 207,
+      "users": 194,
+      "views": 270,
       "organic_sessions": 0,
       "organic_share": 0,
-      "bounce_rate": 0.875,
-      "avg_duration_s": 70.5,
-      "chart_calculated": 8,
-      "interpretation_generated": 8
+      "bounce_rate": 0.8841,
+      "avg_duration_s": 99.2,
+      "chart_calculated": 17,
+      "interpretation_generated": 12
     },
     "capability_signals": {
       "ga4_unified": true,
