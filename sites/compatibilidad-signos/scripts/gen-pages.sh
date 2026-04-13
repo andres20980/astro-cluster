@@ -494,4 +494,5 @@ cat > "$PUBLIC/404.html" <<END404
 END404
 
 echo "  ✓ ads.txt, robots.txt, sitemap.xml, 404.html"
+bash "$REPO_ROOT/gen-legal.sh" "$SITE_KEY"
 echo "Done! ${PAGE_COUNT} pages + index + static files in $PUBLIC"

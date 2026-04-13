@@ -427,4 +427,5 @@ cat > "$PUBLIC/404.html" <<END404
 END404
 
 echo "  ✓ Static files"
+bash "$REPO_ROOT/gen-legal.sh" "$SITE_KEY"
 echo "Done! ${PAGE_COUNT} sign pages + index in $PUBLIC"

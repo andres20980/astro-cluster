@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Generate privacy.html + terms.html for all cluster sites (AdSense requirement)
+# Generate privacy.html + terms.html for one or more cluster sites (AdSense requirement)
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 source "$REPO_ROOT/shared/config.sh"
@@ -49,7 +49,21 @@ CSS='
     .network a{color:var(--accent);text-decoration:none}
 '
 
-for site_key in compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy; do
+if [[ $# -gt 0 ]]; then
+  SITE_KEYS=("$@")
+else
+  SITE_KEYS=(compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+fi
+
+for site_key in "${SITE_KEYS[@]}"; do
+  if [[ -z "${DOMAINS[$site_key]:-}" ]]; then
+    echo "Unknown site key: ${site_key}" >&2
+    exit 1
+  fi
+  if [[ -z "${SITE_DESC[$site_key]:-}" ]]; then
+    echo "No legal template configured for site: ${site_key}" >&2
+    exit 1
+  fi
   domain="${DOMAINS[$site_key]}"
   site_name="${CROSSLINKS[$site_key]}"
   desc="${SITE_DESC[$site_key]}"
@@ -199,4 +213,4 @@ ENDTERMS
   echo "  ✓ ${site_key}: privacy.html + terms.html"
 done
 
-echo "Done! Legal pages generated for all satellite sites."
+echo "Done! Legal pages generated for: ${SITE_KEYS[*]}"
