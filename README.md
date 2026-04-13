@@ -17,6 +17,7 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 - `sites/*/scripts/gen-pages.sh`: genera HTML estático, `ads.txt`, `robots.txt`, `sitemap.xml` y páginas legales.
 - `sites/*/public/`: salida estática lista para deploy.
 - `shared/config.sh`: configuración compartida de dominios, GA4, AdSense, crosslinks y media kits.
+- `shared/ga4_custom_dimensions.json` y `shared/ga4_key_events.json`: estado deseado de la configuración GA4 Admin.
 - `deploy.sh`: deploy manual a Firebase Hosting.
 - `.github/workflows/`: automatización de deploy, smoke SEO, daily regen y reporting.
 
@@ -42,7 +43,8 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 - Los workflows del cluster reutilizan `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` y `GOOGLE_OAUTH_REFRESH_TOKEN`.
 - Para GSC, el refresh token debe incluir `https://www.googleapis.com/auth/webmasters` y `https://www.googleapis.com/auth/siteverification`.
 - Para AdSense, ese mismo refresh token debe incluir además `https://www.googleapis.com/auth/adsense.readonly`.
-- Para depuración manual de Analytics vía OAuth, es recomendable añadir también `https://www.googleapis.com/auth/analytics.readonly`, aunque el pipeline principal usa service account.
+- Para Admin API de Analytics, ese mismo refresh token debe incluir `https://www.googleapis.com/auth/analytics.edit`.
+- Para depuración manual de Analytics vía OAuth, `https://www.googleapis.com/auth/analytics.readonly` es opcional; para sincronizar custom dimensions y key events basta `analytics.edit`.
 - Si el refresh token no tiene esos scopes, los workflows seguirán generando issues canónicos explicando el bloqueo exacto.
 
 ## Desarrollo local
@@ -93,6 +95,7 @@ astro-cluster/
 - `seo-auto-pr.yml`: aplica mejoras SEO automáticas de forma rotatoria sobre un site del cluster por ejecución.
 - `seo-competitor-intel.yml`: captura señales de competidores.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense, con bloque agregado del cluster y detalle por dominio.
+- `ga4-admin-sync.yml`: sincroniza mensualmente o bajo demanda las custom dimensions y key events de GA4 contra los manifiestos del repo.
 - `gsc-index-watch.yml`: mantiene un issue canónico con el estado de indexación de las home del cluster.
 - `adsense-site-watch.yml`: mantiene un issue canónico con el estado de los sitios del cluster en la API de AdSense y sus alertas activas.
 - `google-auth-audit.yml`: audita los scopes reales del OAuth del cluster y la salud del acceso a Analytics por service account.

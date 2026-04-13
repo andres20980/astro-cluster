@@ -193,6 +193,28 @@ cmd_ga4_apply_custom_dimensions() {
     --apply
 }
 
+cmd_ga4_sync_key_events() {
+  python3 "${REPO_ROOT}/.github/scripts/ga4_key_events.py" \
+    --property "$GA4_PROPERTY" \
+    --token "$(_ga4_admin_token)" \
+    --manifest "${REPO_ROOT}/shared/ga4_key_events.json" \
+    --apply
+}
+
+cmd_ga4_watch_admin() {
+  python3 "${REPO_ROOT}/.github/scripts/ga4_admin_watch.py" \
+    --property "$GA4_PROPERTY" \
+    --token "$(_ga4_admin_token)" \
+    --dimensions-manifest "${REPO_ROOT}/shared/ga4_custom_dimensions.json" \
+    --key-events-manifest "${REPO_ROOT}/shared/ga4_key_events.json"
+}
+
+cmd_ga4_sync_admin() {
+  cmd_ga4_apply_custom_dimensions
+  echo ""
+  cmd_ga4_sync_key_events
+}
+
 cmd_ga4_create_key_event() {
   local event_name="${1:?Usage: $0 ga4-create-key-event <event_name>}"
   echo "Creating key event: $event_name"
@@ -483,6 +505,9 @@ Usage: $(basename "$0") <command> [args]
     ga4-key-events      List key events (conversions)
     ga4-custom-dimensions      List current vs desired custom dimensions
     ga4-apply-custom-dimensions Create missing GA4 custom dimensions
+    ga4-sync-key-events Create missing GA4 key events from manifest
+    ga4-watch-admin     Compare GA4 Admin config with repo manifests
+    ga4-sync-admin      Sync custom dimensions + key events
     ga4-create-key-event <name>  Create a key event
 
   AdSense:
@@ -525,6 +550,9 @@ case "${1:-help}" in
   ga4-key-events)       cmd_ga4_key_events ;;
   ga4-custom-dimensions) cmd_ga4_custom_dimensions ;;
   ga4-apply-custom-dimensions) cmd_ga4_apply_custom_dimensions ;;
+  ga4-sync-key-events)  cmd_ga4_sync_key_events ;;
+  ga4-watch-admin)      cmd_ga4_watch_admin ;;
+  ga4-sync-admin)       cmd_ga4_sync_admin ;;
   ga4-create-key-event) cmd_ga4_create_key_event "${2:-}" ;;
   adsense-earnings)     cmd_adsense_earnings "${2:-7}" ;;
   adsense-sites)        cmd_adsense_sites ;;

@@ -1,0 +1,26 @@
+[
+  {
+    "eventName": "chart_calculated",
+    "displayName": "Carta calculada"
+  },
+  {
+    "eventName": "compatibility_view",
+    "displayName": "Compatibilidad consultada"
+  },
+  {
+    "eventName": "tarot_reading_complete",
+    "displayName": "Tirada completada"
+  },
+  {
+    "eventName": "numerology_calculated",
+    "displayName": "Numerologia calculada"
+  },
+  {
+    "eventName": "interpretation_generated",
+    "displayName": "Interpretacion generada"
+  },
+  {
+    "eventName": "advertiser_cta_click",
+    "displayName": "CTA anunciante"
+  }
+]
