@@ -1,11 +1,111 @@
 {
-  "generatedAt": "2026-04-13T11:52:37Z",
+  "generatedAt": "2026-04-16T09:28:57Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "range": {
-    "start": "2026-03-16",
-    "end": "2026-04-10"
+    "start": "2026-03-19",
+    "end": "2026-04-13"
   },
-  "queries": [],
-  "topOpportunities": []
+  "queries": [
+    {
+      "query": "horóscopo de hoy gratis",
+      "clicks": 0.0,
+      "impressions": 8.0,
+      "ctr": 0.0,
+      "position": 27.625,
+      "opportunity": 8.0
+    },
+    {
+      "query": "horoscopo gratis",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 28.0,
+      "opportunity": 2.0
+    },
+    {
+      "query": "astrologia horoscopo diario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 68.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo de hoy gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 53.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo diario gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 74.0,
+      "opportunity": 1.0
+    }
+  ],
+  "pages": [
+    {
+      "path": "/",
+      "clicks": 0.0,
+      "impressions": 14.0,
+      "ctr": 0.0,
+      "position": 36.357142857142854,
+      "opportunity": 14.0
+    },
+    {
+      "path": "http://horoscopo-de-hoy.es/",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 5.0,
+      "opportunity": 1.0
+    }
+  ],
+  "topOpportunities": [
+    {
+      "query": "horóscopo de hoy gratis",
+      "clicks": 0.0,
+      "impressions": 8.0,
+      "ctr": 0.0,
+      "position": 27.625,
+      "opportunity": 8.0
+    },
+    {
+      "query": "horoscopo gratis",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 28.0,
+      "opportunity": 2.0
+    },
+    {
+      "query": "astrologia horoscopo diario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 68.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo de hoy gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 53.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo diario gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 74.0,
+      "opportunity": 1.0
+    }
+  ]
 }

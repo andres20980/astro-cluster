@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-13T11:52:33Z",
+  "generatedAt": "2026-04-16T09:28:52Z",
   "site": "carta-astral",
   "domain": "carta-astral-gratis.es",
   "range": {
@@ -8,17 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 145.0,
-    "bounceRate": 0.7764705882352941,
-    "averageSessionDuration": 215.7026094117647
+    "views": 103.0,
+    "bounceRate": 0.8032786885245902,
+    "averageSessionDuration": 158.45216606557378
   },
   "weakHomepageEngagement": true,
   "pages": [
     {
       "path": "/",
-      "views": 145.0,
-      "bounceRate": 0.7764705882352941,
-      "averageSessionDuration": 215.7026094117647
+      "views": 103.0,
+      "bounceRate": 0.8032786885245902,
+      "averageSessionDuration": 158.45216606557378
     }
   ]
 }

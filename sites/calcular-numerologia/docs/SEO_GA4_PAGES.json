@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-13T11:52:33Z",
+  "generatedAt": "2026-04-16T09:28:52Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "range": {
@@ -8,17 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 26.0,
-    "bounceRate": 0.9230769230769231,
-    "averageSessionDuration": 1.801112
+    "views": 29.0,
+    "bounceRate": 0.9310344827586207,
+    "averageSessionDuration": 1.6147900689655172
   },
   "weakHomepageEngagement": true,
   "pages": [
     {
       "path": "/",
-      "views": 26.0,
-      "bounceRate": 0.9230769230769231,
-      "averageSessionDuration": 1.801112
+      "views": 29.0,
+      "bounceRate": 0.9310344827586207,
+      "averageSessionDuration": 1.6147900689655172
     }
   ]
 }

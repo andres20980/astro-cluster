@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-13T11:52:33Z",
+  "generatedAt": "2026-04-16T09:28:52Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
@@ -8,17 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 21.0,
-    "bounceRate": 0.9523809523809523,
-    "averageSessionDuration": 5.4296851904761905
+    "views": 26.0,
+    "bounceRate": 0.9230769230769231,
+    "averageSessionDuration": 1.3454814615384616
   },
-  "weakHomepageEngagement": false,
+  "weakHomepageEngagement": true,
   "pages": [
     {
       "path": "/",
-      "views": 21.0,
-      "bounceRate": 0.9523809523809523,
-      "averageSessionDuration": 5.4296851904761905
+      "views": 26.0,
+      "bounceRate": 0.9230769230769231,
+      "averageSessionDuration": 1.3454814615384616
     },
     {
       "path": "/acuario-aries",

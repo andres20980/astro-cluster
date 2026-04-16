@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-13T11:52:33Z",
+  "generatedAt": "2026-04-16T09:28:52Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "families": [
     {
       "family": "home",
-      "score": 567.0,
-      "ga4Views": 21.0,
-      "ga4LowEngagementViews": 21.0,
+      "score": 702.0,
+      "ga4Views": 26.0,
+      "ga4LowEngagementViews": 26.0,
       "gscImpressions": 0.0,
       "gscOpportunity": 0.0,
       "paths": [
@@ -32,9 +32,9 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 567.0,
-    "ga4Views": 21.0,
-    "ga4LowEngagementViews": 21.0,
+    "score": 702.0,
+    "ga4Views": 26.0,
+    "ga4LowEngagementViews": 26.0,
     "gscImpressions": 0.0,
     "gscOpportunity": 0.0,
     "paths": [
