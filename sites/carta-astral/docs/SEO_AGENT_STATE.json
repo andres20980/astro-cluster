@@ -1,12 +1,11 @@
 {
   "site": "carta-astral",
-  "lastRun": "2026-04-18T06:44:34.962Z",
-  "lastQuery": "carta astral",
+  "lastRun": "2026-04-19T06:52:57.870Z",
+  "lastQuery": "carta astral gratis",
   "results": [
     {
-      "query": "carta astral",
+      "query": "carta astral gratis",
       "matchedSignals": [
-        "top_keyword_exact",
         "token_overlap_2"
       ],
       "file": "public/index.html",
@@ -14,9 +13,8 @@
       "reason": "optimized"
     },
     {
-      "query": "carta astral",
+      "query": "carta astral gratis",
       "matchedSignals": [
-        "top_keyword_exact",
         "token_overlap_2"
       ],
       "file": "scripts/gen-sign-pages.sh",
