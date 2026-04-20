@@ -419,10 +419,10 @@
       </p>
       <div class="social-proof-wrap">
         <div class="social-proof">
-          <span>✨</span> <span class="counter" id="chartCounter">0</span> cartas calculadas
+          <span>✨</span> <span class="counter" id="chartCounter">0</span> cartas registradas
         </div>
         <div class="social-proof">
-          <span>👁️</span> <span class="counter" id="visitorCounter">0</span> visitantes
+          <span>📊</span> métricas GA4 desde lanzamiento
         </div>
       </div>
     </div>
@@ -431,7 +431,7 @@
 
 <!-- Ad: mobile leaderboard (below header, high visibility) -->
 <div class="ad-h mob" id="ad-top" style="min-height:100px">
-  <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí">
+  <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="top_mobile_cta" data-link-context="mobile_leaderboard">
     <span class="ad-icon">🌙</span>
     <span class="ad-label">¿Quieres tu publicidad aquí?</span>
     <span class="ad-cta">Contáctanos →</span>
@@ -441,7 +441,7 @@
 <div class="page-wrap">
   <!-- AD LEFT -->
   <div class="ad-col"><div class="ad-slot" id="ad-left">
-    <a class="ad-ph ad-ph-v" href="/publicidad" title="Anúnciate aquí">
+    <a class="ad-ph ad-ph-v" href="/publicidad" title="Anúnciate aquí" data-ad-slot="left_rail_cta" data-link-context="desktop_left_rail">
       <span class="ad-icon">✦</span>
       <span class="ad-label">¿Vendes cristales, tarot o incienso?</span>
       <span class="ad-cta">Anúnciate aquí</span>
@@ -565,7 +565,7 @@
 
       <!-- Ad: in-article after results (highest engagement point) -->
       <div class="ad-h" id="ad-mid" style="min-height:250px">
-        <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" style="min-height:250px">
+        <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="chart_mid_cta" data-link-context="calculator_mid_content" style="min-height:250px">
           <span class="ad-icon">☉</span>
           <span class="ad-label">¿Ofreces consultas astrológicas o lecturas de tarot?</span>
           <span class="ad-cta">Pon tu anuncio aquí →</span>
@@ -634,9 +634,9 @@
 
       <!-- Ad: between casas and FAQ (content break, good viewability) -->
       <div class="ad-h" id="ad-casas" style="min-height:100px">
-        <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí">
+        <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="casas_faq_cta" data-link-context="content_break">
           <span class="ad-icon">🔮</span>
-          <span class="ad-label">Espacio para tu marca — Llega a miles de amantes de la astrología</span>
+          <span class="ad-label">Espacio para tu marca — Audiencia contextual de astrología</span>
           <span class="ad-cta">Informarte →</span>
         </a>
       </div>
@@ -675,7 +675,7 @@
 
   <!-- AD RIGHT -->
   <div class="ad-col"><div class="ad-slot" id="ad-right">
-    <a class="ad-ph ad-ph-v" href="/publicidad" title="Anúnciate aquí">
+    <a class="ad-ph ad-ph-v" href="/publicidad" title="Anúnciate aquí" data-ad-slot="right_rail_cta" data-link-context="desktop_right_rail">
       <span class="ad-icon">☽</span>
       <span class="ad-label">¿Ofreces sesiones de coaching o terapia holística?</span>
       <span class="ad-cta">Tu anuncio aquí</span>
@@ -773,20 +773,18 @@ function loadLeaflet(){return new Promise(res=>{
 let step=1,bLat=null,bLng=null,bCity='',map=null,marker=null,geoT=null,chartData=null,mode=null;
 let toolStarted=false;
 
-// Social proof counters — fetched from GA4 via /stats.json + localStorage delta
-let CHART_BASE=0,VISITOR_BASE=0;
-function getChartCount(){return CHART_BASE+Number(localStorage.getItem('cc')||0)}
-function incChartCount(){const n=Number(localStorage.getItem('cc')||0)+1;localStorage.setItem('cc',String(n));updCounters()}
+// Public counters are fetched from the weekly GA4 snapshot.
+let CHART_BASE=0;
+function getChartCount(){return CHART_BASE}
+function incChartCount(){updCounters()}
 function fmtNum(n){return n.toLocaleString('es-ES')}
 function updCounters(){
-  const ce=document.getElementById('chartCounter'),ve=document.getElementById('visitorCounter');
+  const ce=document.getElementById('chartCounter');
   if(ce)ce.textContent=fmtNum(getChartCount());
-  if(ve)ve.textContent=fmtNum(VISITOR_BASE);
 }
 function loadCounters(){
   fetch('/stats.json').then(r=>r.json()).then(d=>{
     CHART_BASE=Number(d.charts_calculated)||0;
-    VISITOR_BASE=Number(d.visitors)||0;
     updCounters();
   }).catch(()=>updCounters());
 }

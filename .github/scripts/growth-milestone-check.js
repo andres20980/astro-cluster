@@ -87,6 +87,30 @@ function countOccurrences(text, needle) {
   return text.split(needle).length - 1;
 }
 
+function countGa4OptOutCoverage(dirPath) {
+  const totals = { tagged: 0, optOut: 0 };
+  if (!fs.existsSync(dirPath)) {
+    return totals;
+  }
+  for (const entry of fs.readdirSync(dirPath, { withFileTypes: true })) {
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      const nested = countGa4OptOutCoverage(fullPath);
+      totals.tagged += nested.tagged;
+      totals.optOut += nested.optOut;
+    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      const html = fs.readFileSync(fullPath, 'utf8');
+      if (html.includes('googletagmanager.com/gtag/js')) {
+        totals.tagged += 1;
+        if (html.includes('astro_cluster_analytics_optout')) {
+          totals.optOut += 1;
+        }
+      }
+    }
+  }
+  return totals;
+}
+
 function repoSignals() {
   const shared = read('shared/config.sh');
   const deployWorkflow = read('.github/workflows/deploy-all-sites.yml');
@@ -110,6 +134,7 @@ function repoSignals() {
   let clusterRecirculationCoverage = 0;
   let premiumSlotCoverage = 0;
   let adsTxtCoverage = 0;
+  const ga4Coverage = { tagged: 0, optOut: 0 };
 
   for (const site of SITE_KEYS) {
     const publicDir = repoPath('sites', site, 'public');
@@ -119,6 +144,9 @@ function repoSignals() {
     const htmlCount = walkHtmlFiles(publicDir);
     publicHtmlBySite[site] = htmlCount;
     totalHtmlPages += htmlCount;
+    const siteGa4Coverage = countGa4OptOutCoverage(publicDir);
+    ga4Coverage.tagged += siteGa4Coverage.tagged;
+    ga4Coverage.optOut += siteGa4Coverage.optOut;
 
     if (exists(path.join('sites', site, 'public', 'publicidad.html')) || scriptBody.includes('gen_publicidad_page')) {
       publicidadCoverage += 1;
@@ -171,6 +199,12 @@ function repoSignals() {
     premiumSlotsBySite: premiumSlotCoverage === SITE_KEYS.length,
     clusterSuiteEntrypoint: cartaIndex.includes('cluster-suite'),
     longTailCoverage: totalHtmlPages >= 180,
+    ga4TaggedPages: ga4Coverage.tagged,
+    ga4OptOutPages: ga4Coverage.optOut,
+    internalTrafficOptOut: ga4Coverage.tagged > 0 &&
+      ga4Coverage.optOut === ga4Coverage.tagged &&
+      shared.includes('analytics_optout') &&
+      shared.includes('ga-disable-'),
     eeatSchemasPresent: SITE_KEYS.filter((site) => {
       const body = read(path.join('sites', site, 'scripts', 'gen-pages.sh')) + read(path.join('sites', site, 'public', 'index.html'));
       return body.includes('"@type":"FAQPage"') && body.includes('"@type":"BreadcrumbList"');
@@ -344,6 +378,7 @@ function main() {
     ['Autopatch rotatorio', signals.seoAutopatchRotatory],
     ['Reporting GSC por cluster', signals.gscClusterReporting],
     ['Envío de sitemap por API', signals.gscSitemapSubmit],
+    ['Exclusión de tráfico interno', signals.internalTrafficOptOut],
     ['Media kit /publicidad', signals.clusterMediaKits],
     ['Recirculación interna por intención', signals.clusterRecirculation && signals.clusterSuiteEntrypoint],
     ['Slots premium por site', signals.premiumSlotsBySite],
@@ -382,6 +417,15 @@ function main() {
     lines.push(...kpiResults);
     lines.push('');
   }
+
+  lines.push('#### Calidad de medición');
+  lines.push('| Control | Estado |');
+  lines.push('|---------|--------|');
+  lines.push(`| Opt-out de tráfico interno | ${signals.internalTrafficOptOut ? `✅ ${signals.ga4OptOutPages}/${signals.ga4TaggedPages} páginas GA4 cubiertas` : `⚠️ ${signals.ga4OptOutPages}/${signals.ga4TaggedPages} páginas GA4 cubiertas`} |`);
+  lines.push('| Línea base limpia | Desde que cada navegador interno abra `?analytics_optout=1` |');
+  lines.push('');
+  lines.push('> Los datos previos pueden incluir visitas propias o de revisión. Para evaluar tracción real, compara los próximos 7 días después de activar el opt-out en tus navegadores/dispositivos habituales.');
+  lines.push('');
 
   if (nextActions.length > 0) {
     lines.push(`#### 📋 Siguientes acciones (${next.id}: ${next.name})`);
@@ -443,6 +487,9 @@ function main() {
       gsc_cluster_reporting: signals.gscClusterReporting,
       gsc_sitemap_submit: signals.gscSitemapSubmit,
       gsc_verified_site_count: gscVerifiedSiteCount,
+      internal_traffic_optout: signals.internalTrafficOptOut,
+      ga4_tagged_pages: signals.ga4TaggedPages,
+      ga4_optout_pages: signals.ga4OptOutPages,
       cluster_media_kits: signals.clusterMediaKits,
       cluster_recirculation: signals.clusterRecirculation && signals.clusterSuiteEntrypoint,
       premium_slots_by_site: signals.premiumSlotsBySite,

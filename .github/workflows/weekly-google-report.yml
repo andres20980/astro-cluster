@@ -480,6 +480,7 @@ jobs:
           stats = {
             'charts_calculated': int('${TOTAL_CHARTS}' or 0),
             'visitors': int('${TOTAL_VISITORS}' or 0),
+            'scope': 'GA4 totals since 2026-01-01; may include historical technical/internal traffic before opt-out activation',
             'updated': datetime.now(UTC).strftime('%Y-%m-%dT%H:%MZ')
           }
           with open('sites/carta-astral/public/stats.json','w') as f: json.dump(stats, f)

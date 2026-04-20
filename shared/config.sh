@@ -390,7 +390,7 @@ gen_publicidad_page() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publicidad en ${name} - Media Kit para Anunciantes</title>
-  <meta name="description" content="Anuncia tu marca en ${domain}. ${hook} Espacios premium, patrocinios directos y formatos flexibles para anunciantes del nicho.">
+  <meta name="description" content="Anuncia tu marca en ${domain} o en todo el cluster esoterico. ${hook} Espacios premium, patrocinios directos y formatos flexibles.">
   <link rel="canonical" href="https://${domain}/publicidad">
   <meta property="og:title" content="Publicidad en ${name}">
   <meta property="og:description" content="${hook}">
@@ -446,7 +446,7 @@ $(canonical_host_redirect_script "$domain")
 <div class="wrap">
   <div class="hero">
     <h1>Media Kit - Publicidad</h1>
-    <p>${hook} Si vendes ${brands}, este inventario te pone delante de una audiencia contextual y ya predispuesta a convertir.</p>
+    <p>${hook} Si vendes ${brands}, este inventario te pone delante de una audiencia contextual. Puedes reservar un espacio de este site o comprar presencia estatica en todo el cluster.</p>
   </div>
 
   <section>
@@ -465,7 +465,12 @@ $(canonical_host_redirect_script "$domain")
       <div class="card">
         <div class="icon">💸</div>
         <h3>Directo antes que remanente</h3>
-        <p>El patrocinio directo tiene mas valor que AdSense porque controlas ubicacion, mensaje y exclusividad comercial.</p>
+        <p>El patrocinio directo tiene prioridad comercial. AdSense queda como remanente cuando un espacio no esta vendido.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📦</div>
+        <h3>Compra por cluster</h3>
+        <p>Una misma creatividad puede aparecer en las 5 herramientas para cubrir astrologia, tarot, numerologia, horoscopo y compatibilidad.</p>
       </div>
     </div>
   </section>
@@ -506,17 +511,19 @@ $(canonical_host_redirect_script "$domain")
         <tr><td>Banner superior</td><td>Maxima visibilidad</td><td>25 EUR / mes</td></tr>
         <tr><td>Banner en contenido</td><td>CTR y afinidad</td><td>30 EUR / mes</td></tr>
         <tr><td>Banner pre-footer</td><td>Frecuencia extra</td><td>15 EUR / mes</td></tr>
-        <tr><td>Pack presencia</td><td>Superior + contenido</td><td>45 EUR / mes</td></tr>
-        <tr><td>Takeover comercial</td><td>3 espacios + exclusividad</td><td>75 EUR / mes</td></tr>
+        <tr><td>Pack site</td><td>Superior + contenido</td><td>45 EUR / mes</td></tr>
+        <tr><td>Takeover site</td><td>3 espacios + exclusividad del site</td><td>75 EUR / mes</td></tr>
+        <tr><td>Pack cluster</td><td>Presencia estatica en 5 dominios</td><td>120 EUR / mes</td></tr>
+        <tr><td>Takeover cluster</td><td>Espacios premium + exclusividad de categoria</td><td>250 EUR / mes</td></tr>
       </tbody>
     </table>
-    <p style="margin-top:.75rem">Datos de trafico, screenshots de GA4, creatividades admitidas y opciones de patrocinio ampliado disponibles bajo solicitud.</p>
+    <p style="margin-top:.75rem">Datos de trafico, screenshots de GA4, creatividades admitidas, paquetes trimestrales y opciones de patrocinio ampliado disponibles bajo solicitud.</p>
   </section>
 
   <div class="cta">
     <h2>Reservar un espacio</h2>
-    <p>Escribe con tu marca, objetivo, creatividad o landing y te devolvemos propuesta, disponibilidad y opciones directas sin intermediarios.</p>
-    <a class="btn" href="mailto:${CONTACT_EMAIL}?subject=Publicidad%20${domain}">Contactar por email</a>
+    <p>Escribe con tu marca, objetivo, creatividad o landing y te devolvemos propuesta, disponibilidad, packs de site y opciones cluster sin intermediarios.</p>
+    <a class="btn" href="mailto:${CONTACT_EMAIL}?subject=Publicidad%20${domain}%20o%20cluster&body=Hola%2C%0A%0AMe%20interesa%20anunciarme%20en%20${domain}%20o%20en%20el%20cluster.%0A%0APack%20que%20me%20interesa%3A%0APeriodo%3A%0AWeb%2Fmarca%3A%0A%0AGracias">Contactar por email</a>
   </div>
 
   <footer>
