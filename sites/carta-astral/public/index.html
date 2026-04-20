@@ -32,6 +32,22 @@
   <!-- Redirect duplicate hosts to custom domain -->
   <script>if(location.hostname==='www.carta-astral-gratis.es'||location.hostname.endsWith('.web.app'))location.replace('https://carta-astral-gratis.es'+location.pathname+location.search);</script>
   <!-- GA4 -->
+  <script>
+    (function(){
+      const measurementId='G-DEWMQ73FH5';
+      const storageKey='astro_cluster_analytics_optout';
+      let optedOut=false;
+      try{
+        const params=new URLSearchParams(location.search);
+        const value=params.get('analytics_optout');
+        if(value==='1'||value==='true')localStorage.setItem(storageKey,'1');
+        if(value==='0'||value==='false')localStorage.removeItem(storageKey);
+        optedOut=localStorage.getItem(storageKey)==='1';
+      }catch(e){}
+      window.clusterAnalyticsOptedOut=optedOut;
+      window['ga-disable-'+measurementId]=window.clusterAnalyticsOptedOut;
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
@@ -52,6 +68,7 @@
       content_group:'tool'
     };
     window.clusterTrack=function(eventName,params){
+      if(window.clusterAnalyticsOptedOut)return;
       const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
       Object.keys(payload).forEach(key=>{
         if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];

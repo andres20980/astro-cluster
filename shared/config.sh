@@ -151,6 +151,22 @@ ga4_head_snippet() {
   site_map_js="${site_map_js%,}"
 
   cat <<EOF
+  <script>
+    (function(){
+      const measurementId='${measurement_id}';
+      const storageKey='astro_cluster_analytics_optout';
+      let optedOut=false;
+      try{
+        const params=new URLSearchParams(location.search);
+        const value=params.get('analytics_optout');
+        if(value==='1'||value==='true')localStorage.setItem(storageKey,'1');
+        if(value==='0'||value==='false')localStorage.removeItem(storageKey);
+        optedOut=localStorage.getItem(storageKey)==='1';
+      }catch(e){}
+      window.clusterAnalyticsOptedOut=optedOut;
+      window['ga-disable-'+measurementId]=window.clusterAnalyticsOptedOut;
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=${measurement_id}"></script>
   <script>
     window.dataLayer=window.dataLayer||[];
@@ -166,6 +182,7 @@ ga4_head_snippet() {
       entity_slug:'${entity_slug}'
     };
     window.clusterTrack=function(eventName,params){
+      if(window.clusterAnalyticsOptedOut)return;
       const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
       Object.keys(payload).forEach(key=>{
         if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
