@@ -12,13 +12,19 @@ heading_title = os.environ.get("GOOGLE_AUTH_REPORT_TITLE", "🔐 Auditoría de a
 subheading_level = heading_level + "#"
 analytics_sa_status = os.environ.get("ANALYTICS_SA_STATUS", "Sin comprobar")
 
-REQUIRED_SCOPES = {
+REQUIRED_SCOPE_GROUPS = {
     "Search Console": [
-        "https://www.googleapis.com/auth/webmasters",
-        "https://www.googleapis.com/auth/siteverification",
+        ["https://www.googleapis.com/auth/webmasters"],
+        [
+            "https://www.googleapis.com/auth/siteverification",
+            "https://www.googleapis.com/auth/cloud-platform",
+        ],
     ],
     "AdSense": [
-        "https://www.googleapis.com/auth/adsense.readonly",
+        [
+            "https://www.googleapis.com/auth/adsense.readonly",
+            "https://www.googleapis.com/auth/adsense",
+        ],
     ],
 }
 
@@ -52,11 +58,6 @@ if token:
     scopes = set((tokeninfo.get("scope") or "").split())
 
 
-def scope_status(required_scopes):
-    missing = [scope for scope in required_scopes if scope not in scopes]
-    return ("OK", missing) if not missing else ("Falta scope", missing)
-
-
 def grouped_scope_status(scope_groups):
     missing_groups = []
     for group in scope_groups:
@@ -86,7 +87,7 @@ else:
     analytics_state = "Pendiente"
 print(f"| Analytics CI | Service account / ADC | {analytics_state} | {analytics_sa_status} |")
 
-for system, required in REQUIRED_SCOPES.items():
+for system, scope_groups in REQUIRED_SCOPE_GROUPS.items():
     if not token:
         status = "No configurado"
         detail = "No hay refresh token disponible"
@@ -94,8 +95,10 @@ for system, required in REQUIRED_SCOPES.items():
         status = "Error"
         detail = tokeninfo_error
     else:
-        status, missing = scope_status(required)
-        detail = "Todos los scopes presentes" if not missing else ", ".join(missing)
+        status, missing_groups = grouped_scope_status(scope_groups)
+        detail = "Todos los scopes presentes" if not missing_groups else " o ".join(
+            " / ".join(group) for group in missing_groups
+        )
     print(f"| {system} | OAuth de usuario | {status} | {detail} |")
 
 for system, scope_groups in OPTIONAL_SCOPE_GROUPS.items():
@@ -120,16 +123,19 @@ print("- `Search Console`, `Site Verification` y `AdSense`: OAuth de usuario por
 print("- `analytics.readonly` o `analytics.edit` en OAuth es opcional; útil para depuración y Admin API, pero no necesario para el pipeline principal.")
 
 if token and not tokeninfo_error:
-    missing_required = {
-        system: [scope for scope in required if scope not in scopes]
-        for system, required in REQUIRED_SCOPES.items()
-    }
-    blocking = {system: missing for system, missing in missing_required.items() if missing}
+    missing_required = {}
+    for system, scope_groups in REQUIRED_SCOPE_GROUPS.items():
+        missing_groups = [group for group in scope_groups if not any(scope in scopes for scope in group)]
+        if missing_groups:
+            missing_required[system] = missing_groups
     print("")
-    if blocking:
+    if missing_required:
         print(f"{subheading_level} Acciones pendientes")
-        for system, missing in blocking.items():
-            print(f"- `{system}`: faltan {', '.join(f'`{scope}`' for scope in missing)}")
+        for system, missing_groups in missing_required.items():
+            alternatives = " y ".join(
+                " / ".join(f"`{scope}`" for scope in group) for group in missing_groups
+            )
+            print(f"- `{system}`: faltan {alternatives}")
     else:
         print(f"{subheading_level} ✅ OAuth listo para GSC y AdSense")
 

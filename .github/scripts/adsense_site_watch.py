@@ -8,6 +8,7 @@ import urllib.request
 token = os.environ["OAUTH_TOKEN"]
 account = os.environ["ADSENSE_ACCOUNT"]
 expected_domains = json.loads(os.environ["EXPECTED_DOMAINS_JSON"])
+quota_project = os.environ.get("GOOGLE_CLOUD_QUOTA_PROJECT", "").strip()
 include_raw = os.environ.get("ADSENSE_INCLUDE_RAW_JSON", "1") != "0"
 heading_level = os.environ.get("ADSENSE_HEADING_LEVEL", "##")
 heading_title = os.environ.get("ADSENSE_REPORT_TITLE", "💰 Vigilancia de sitios AdSense del cluster")
@@ -15,9 +16,13 @@ subheading_level = heading_level + "#"
 
 
 def fetch(url):
+    headers = {"Authorization": f"Bearer {token}"}
+    if quota_project:
+        headers["X-Goog-User-Project"] = quota_project
+
     req = urllib.request.Request(
         url,
-        headers={"Authorization": f"Bearer {token}"},
+        headers=headers,
         method="GET",
     )
     try:

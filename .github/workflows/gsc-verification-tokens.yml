@@ -42,7 +42,7 @@ jobs:
       - name: "🔎 List GSC properties"
         env:
           ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-          QUOTA_PROJECT: horoscopo-hoy-es
+          QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
           curl -sS \
@@ -53,7 +53,7 @@ jobs:
       - name: "🧾 Generate DNS TXT tokens"
         env:
           ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-          QUOTA_PROJECT: horoscopo-hoy-es
+          QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
 

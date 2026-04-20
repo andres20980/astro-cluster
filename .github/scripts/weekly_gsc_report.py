@@ -10,17 +10,22 @@ token = os.environ["OAUTH_TOKEN"]
 start = os.environ["GSC_START"]
 end = os.environ["GSC_END"]
 output_dir = os.environ.get("GSC_OUTPUT_DIR", "").strip()
+quota_project = os.environ.get("GOOGLE_CLOUD_QUOTA_PROJECT", "").strip()
 
 
 def fetch(site_url, payload):
     encoded = urllib.parse.quote(site_url, safe="")
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+    if quota_project:
+        headers["X-Goog-User-Project"] = quota_project
+
     req = urllib.request.Request(
         f"https://searchconsole.googleapis.com/webmasters/v3/sites/{encoded}/searchAnalytics/query",
         data=json.dumps(payload).encode(),
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
+        headers=headers,
         method="POST",
     )
     try:

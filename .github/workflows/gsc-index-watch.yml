@@ -53,6 +53,7 @@ jobs:
         if: steps.oauth.outputs.missing == 'false'
         env:
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
           GSC_SITES_JSON: >-
             [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
         run: |

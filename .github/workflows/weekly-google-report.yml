@@ -32,6 +32,7 @@ jobs:
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           # GA4 token from Service Account
           pip -q install google-auth
@@ -290,7 +291,11 @@ jobs:
 
           GSC_VERIFIED_SITE_COUNT=0
           if [ -n "$OAUTH_TOKEN" ]; then
-            GSC_SITES_API=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+            GSC_HEADERS=(-H "Authorization: Bearer $OAUTH_TOKEN")
+            if [ -n "${GOOGLE_CLOUD_QUOTA_PROJECT:-}" ]; then
+              GSC_HEADERS+=(-H "X-Goog-User-Project: $GOOGLE_CLOUD_QUOTA_PROJECT")
+            fi
+            GSC_SITES_API=$(curl -s "${GSC_HEADERS[@]}" \
               "https://searchconsole.googleapis.com/webmasters/v3/sites" 2>/dev/null || echo "{}")
             GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "import json, os, sys; cluster={entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}; data=json.load(sys.stdin); print(sum(1 for entry in data.get('siteEntry', []) if entry.get('siteUrl') in cluster and entry.get('permissionLevel') == 'siteOwner'))" 2>/dev/null || echo "0")
           fi
@@ -302,8 +307,9 @@ jobs:
             GSC_END=$(date -d '3 days ago' +%Y-%m-%d)
             GSC_GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             OAUTH_TOKEN="$OAUTH_TOKEN" GSC_START="$GSC_START" GSC_END="$GSC_END" GSC_SITES_JSON="$GSC_SITES_JSON" \
-              GSC_OUTPUT_DIR="sites" GSC_GENERATED_AT="$GSC_GENERATED_AT" \
-              python3 .github/scripts/weekly_gsc_report.py >> /tmp/report.md
+            GSC_OUTPUT_DIR="sites" GSC_GENERATED_AT="$GSC_GENERATED_AT" \
+            GOOGLE_CLOUD_QUOTA_PROJECT="$GOOGLE_CLOUD_QUOTA_PROJECT" \
+            python3 .github/scripts/weekly_gsc_report.py >> /tmp/report.md
           else
             echo "> GSC no disponible (faltan los secretos GOOGLE_OAUTH_*)" >> /tmp/report.md
           fi
@@ -312,7 +318,11 @@ jobs:
           # AdSense earnings (best-effort, may fail if not yet approved)
           echo "### 💰 Ingresos de AdSense (últimos 7 días)" >> /tmp/report.md
           if [ -n "$OAUTH_TOKEN" ]; then
-            ADSENSE=$(curl -s -H "Authorization: Bearer $OAUTH_TOKEN" \
+            ADSENSE_HEADERS=(-H "Authorization: Bearer $OAUTH_TOKEN")
+            if [ -n "${GOOGLE_CLOUD_QUOTA_PROJECT:-}" ]; then
+              ADSENSE_HEADERS+=(-H "X-Goog-User-Project: $GOOGLE_CLOUD_QUOTA_PROJECT")
+            fi
+            ADSENSE=$(curl -s "${ADSENSE_HEADERS[@]}" \
               "https://adsense.googleapis.com/v2/$ADSENSE_ACCOUNT/reports:generate?dateRange=LAST_7_DAYS&metrics=ESTIMATED_EARNINGS&metrics=PAGE_VIEWS&metrics=IMPRESSIONS&metrics=CLICKS" 2>/dev/null || echo "{}")
 
             AD_EARNINGS=$(echo "$ADSENSE" | python3 -c "
@@ -345,6 +355,7 @@ jobs:
             OAUTH_TOKEN="$OAUTH_TOKEN" \
             ADSENSE_ACCOUNT="$ADSENSE_ACCOUNT" \
             EXPECTED_DOMAINS_JSON='["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]' \
+            GOOGLE_CLOUD_QUOTA_PROJECT="$GOOGLE_CLOUD_QUOTA_PROJECT" \
             ADSENSE_INCLUDE_RAW_JSON=0 \
             ADSENSE_HEADING_LEVEL="###" \
             ADSENSE_REPORT_TITLE="Estado de sitios en AdSense" \

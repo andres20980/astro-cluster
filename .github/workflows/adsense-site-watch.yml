@@ -53,6 +53,7 @@ jobs:
         if: steps.oauth.outputs.missing == 'false'
         env:
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
           ADSENSE_ACCOUNT: "accounts/pub-9368517395014039"
           EXPECTED_DOMAINS_JSON: >-
             ["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]
@@ -71,7 +72,7 @@ jobs:
             const titlePrefix = '💰 Vigilancia de sitios AdSense';
             const today = new Date().toISOString().slice(0, 10);
             const body = process.env.MISSING_OAUTH === 'true'
-              ? 'No se pudo ejecutar la vigilancia de AdSense porque faltan los secretos GOOGLE_OAUTH_* necesarios. Para consultar la API de AdSense, el refresh token debe incluir al menos el scope `https://www.googleapis.com/auth/adsense.readonly`.'
+              ? 'No se pudo ejecutar la vigilancia de AdSense porque faltan los secretos GOOGLE_OAUTH_* necesarios. Para consultar la API de AdSense, el refresh token debe incluir `https://www.googleapis.com/auth/adsense.readonly` o `https://www.googleapis.com/auth/adsense`.'
               : fs.readFileSync(process.env.REPORT_PATH, 'utf8');
 
             const issues = await github.paginate(github.rest.issues.listForRepo, {

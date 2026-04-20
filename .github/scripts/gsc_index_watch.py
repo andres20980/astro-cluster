@@ -7,18 +7,23 @@ import urllib.request
 
 sites = json.loads(os.environ["GSC_SITES_JSON"])
 token = os.environ["OAUTH_TOKEN"]
+quota_project = os.environ.get("GOOGLE_CLOUD_QUOTA_PROJECT", "").strip()
 
 
 def inspect(site_url, inspect_url):
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+    if quota_project:
+        headers["X-Goog-User-Project"] = quota_project
+
     req = urllib.request.Request(
         "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
         data=json.dumps(
             {"inspectionUrl": inspect_url, "siteUrl": site_url}
         ).encode(),
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
+        headers=headers,
         method="POST",
     )
     try:
