@@ -315,8 +315,8 @@ echo "  ✓ ${PAGE_COUNT} pair pages generated"
 # ══════════════════════════════════════════════════════════════
 echo "Generating index..."
 
-INDEX_TITLE="Compatibilidad de Signos Zodiacales — Calculadora Gratis"
-INDEX_DESC="Descubre la compatibilidad entre los 12 signos del zodíaco. 144 combinaciones analizadas: fortalezas, retos y porcentaje de afinidad. Herramienta gratuita."
+INDEX_TITLE="Compatibilidad de Signos Gratis — Tabla Zodiacal Completa"
+INDEX_DESC="Calcula la compatibilidad de signos gratis y consulta la tabla zodiacal completa: 144 combinaciones con porcentaje de afinidad, fortalezas y retos."
 
 # Build the 12x12 grid rows
 GRID_ROWS=""
@@ -344,7 +344,7 @@ $(gen_head "$INDEX_TITLE" "$INDEX_DESC" "/" "tool_home" "tool")
   {"@context":"https://schema.org","@type":"WebSite","name":"Compatibilidad de Signos","url":"https://${DOMAIN}/","description":"${INDEX_DESC}","inLanguage":"es"}
   </script>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se calcula la compatibilidad entre signos?","acceptedAnswer":{"@type":"Answer","text":"La compatibilidad se basa en el elemento (Fuego, Tierra, Aire, Agua), la modalidad (Cardinal, Fijo, Mutable) y los planetas regentes de cada signo. Se analizan las sinergias y tensiones naturales entre estos factores."}},{"@type":"Question","name":"¿Qué signos son más compatibles entre sí?","acceptedAnswer":{"@type":"Answer","text":"Los signos del mismo elemento suelen tener alta compatibilidad (Fuego con Fuego, Tierra con Tierra). También los elementos complementarios: Fuego con Aire, y Tierra con Agua."}}]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se calcula la compatibilidad entre signos?","acceptedAnswer":{"@type":"Answer","text":"La compatibilidad se basa en el elemento (Fuego, Tierra, Aire, Agua), la modalidad (Cardinal, Fijo, Mutable) y los planetas regentes de cada signo. Se analizan las sinergias y tensiones naturales entre estos factores."}},{"@type":"Question","name":"¿Qué incluye la tabla de compatibilidad zodiacal completa?","acceptedAnswer":{"@type":"Answer","text":"La tabla completa cruza los 12 signos del zodíaco entre sí y enlaza a 144 combinaciones con porcentaje de afinidad, fortalezas, retos y lectura de pareja."}},{"@type":"Question","name":"¿Qué signos son más compatibles entre sí?","acceptedAnswer":{"@type":"Answer","text":"Los signos del mismo elemento suelen tener alta compatibilidad (Fuego con Fuego, Tierra con Tierra). También los elementos complementarios: Fuego con Aire, y Tierra con Agua."}}]}
   </script>
   <style>
 ${COMMON_CSS}
@@ -375,7 +375,7 @@ ${COMMON_CSS}
   <header style="text-align:center;padding:1.5rem 0 .5rem">
     <div style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600">Astrología</div>
     <h1><span>Compatibilidad de Signos</span></h1>
-    <p class="intro">Descubre el grado de afinidad entre los 12 signos del zodíaco. Selecciona dos signos o explora la tabla completa con las 144 combinaciones.</p>
+    <p class="intro">Calcula la compatibilidad de signos gratis y consulta la tabla zodiacal completa con las 144 combinaciones: porcentaje de afinidad, fortalezas y retos de pareja.</p>
   </header>
 
   <div class="calc">
@@ -390,7 +390,7 @@ ${COMMON_CSS}
 
 $(ad_block "❤" "Publicidad premium en un nicho de amor y afinidad" "La ubicacion mas visible para captar usuarios antes de que profundicen en la tabla completa." "Informarme ->")
 
-  <h2 style="text-align:center">Tabla de Compatibilidad Completa</h2>
+  <h2 style="text-align:center">Tabla completa de compatibilidad de signos zodiacales</h2>
   <div class="grid-wrap">
   <table>
     <thead><tr><th></th>$(for s in "${SLUGS[@]}"; do echo "<th>${GLYPH[$s]}<br>${NAME[$s]}</th>"; done)</tr></thead>
@@ -410,7 +410,7 @@ $(ad_block "🔮" "Patrocina trafico SEO de alta intencion" "Tu marca puede apar
 
   <div class="seo-text panel">
     <h2>¿Cómo funciona la compatibilidad entre signos?</h2>
-    <p>La compatibilidad astrológica analiza la relación entre dos signos del zodíaco basándose en tres factores clave:</p>
+    <p>La compatibilidad astrológica analiza la relación entre dos signos del zodíaco basándose en tres factores clave. La calculadora gratuita resume esos factores en un porcentaje de afinidad y la tabla completa permite comparar cualquier pareja de signos en un clic.</p>
     <ul>
       <li><strong>Elemento:</strong> Los 12 signos se dividen en Fuego (Aries, Leo, Sagitario), Tierra (Tauro, Virgo, Capricornio), Aire (Géminis, Libra, Acuario) y Agua (Cáncer, Escorpio, Piscis). Los elementos del mismo grupo se entienden naturalmente.</li>
       <li><strong>Modalidad:</strong> Cardinal (iniciadores), Fijo (estables) y Mutable (adaptables). La interacción entre modalidades afecta al ritmo de la relación.</li>
