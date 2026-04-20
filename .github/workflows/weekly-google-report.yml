@@ -71,17 +71,17 @@ jobs:
           python3 .github/scripts/google_auth_audit.py >> /tmp/report.md
           echo "" >> /tmp/report.md
 
-          if [ -n "$OAUTH_TOKEN" ]; then
+          if [ -n "$TOKEN" ]; then
             python3 .github/scripts/ga4_admin_watch.py \
               --property "$GA4_PROPERTY" \
-              --token "$OAUTH_TOKEN" \
+              --token "$TOKEN" \
               --dimensions-manifest shared/ga4_custom_dimensions.json \
               --key-events-manifest shared/ga4_key_events.json \
               --heading-level "###" \
               --title "Estado de configuración GA4" >> /tmp/report.md
           else
             echo "### Estado de configuración GA4" >> /tmp/report.md
-            echo "> No se pudo validar la Admin API de GA4 porque falta OAuth de usuario con \`analytics.edit\`." >> /tmp/report.md
+            echo "> No se pudo validar la Admin API de GA4 porque falta token de service account." >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
