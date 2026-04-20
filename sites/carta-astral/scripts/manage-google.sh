@@ -73,7 +73,23 @@ _adc_quota_project() {
     echo "$GOOGLE_CLOUD_QUOTA_PROJECT"
     return
   fi
-  gcloud auth application-default get-quota-project 2>/dev/null || true
+  local quota
+  quota="$(gcloud auth application-default get-quota-project 2>/dev/null || true)"
+  if [[ -n "$quota" ]]; then
+    echo "$quota"
+    return
+  fi
+  python3 - <<'PY' 2>/dev/null || true
+import json
+import os
+
+path = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
+try:
+    with open(path, encoding="utf-8") as fh:
+        print(json.load(fh).get("quota_project_id", ""))
+except FileNotFoundError:
+    pass
+PY
 }
 
 _api() {

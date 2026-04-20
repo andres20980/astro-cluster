@@ -202,6 +202,7 @@ jobs:
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
 
@@ -227,9 +228,14 @@ jobs:
           sitemap_url="https://${DOMAIN}/sitemap.xml"
           sitemap_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${sitemap_url}',''))")
 
+          headers=(-H "Authorization: Bearer $access_token")
+          if [ -n "${GOOGLE_CLOUD_QUOTA_PROJECT:-}" ]; then
+            headers+=(-H "X-Goog-User-Project: ${GOOGLE_CLOUD_QUOTA_PROJECT}")
+          fi
+
           code=$(curl -sS -o /tmp/gsc-submit-response.json -w "%{http_code}" \
             -X PUT \
-            -H "Authorization: Bearer $access_token" \
+            "${headers[@]}" \
             "https://searchconsole.googleapis.com/webmasters/v3/sites/${site_url_enc}/sitemaps/${sitemap_enc}")
 
           if [ "$code" = "200" ] || [ "$code" = "204" ]; then
