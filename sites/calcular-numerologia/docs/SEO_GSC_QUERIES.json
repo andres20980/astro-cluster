@@ -1,12 +1,29 @@
 {
-  "generatedAt": "2026-04-16T09:28:57Z",
+  "generatedAt": "2026-04-20T10:49:00Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "range": {
-    "start": "2026-03-19",
-    "end": "2026-04-13"
+    "start": "2026-03-23",
+    "end": "2026-04-17"
   },
   "queries": [],
-  "pages": [],
+  "pages": [
+    {
+      "path": "/",
+      "clicks": 1.0,
+      "impressions": 3.0,
+      "ctr": 0.3333333333333333,
+      "position": 52.0,
+      "opportunity": 2.0
+    },
+    {
+      "path": "http://calcular-numerologia.es/",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 19.5,
+      "opportunity": 2.0
+    }
+  ],
   "topOpportunities": []
 }

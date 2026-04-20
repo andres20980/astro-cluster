@@ -1,42 +1,38 @@
 {
-  "generatedAt": "2026-04-16T09:28:52Z",
+  "generatedAt": "2026-04-20T10:48:56Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "families": [
     {
       "family": "home",
-      "score": 702.0,
-      "ga4Views": 26.0,
-      "ga4LowEngagementViews": 26.0,
-      "gscImpressions": 0.0,
-      "gscOpportunity": 0.0,
+      "score": 354.0,
+      "ga4Views": 13.0,
+      "ga4LowEngagementViews": 13.0,
+      "gscImpressions": 3.0,
+      "gscOpportunity": 3.0,
       "paths": [
         "/"
       ]
     },
     {
       "family": "pair_pages",
-      "score": 162.0,
-      "ga4Views": 6.0,
-      "ga4LowEngagementViews": 6.0,
-      "gscImpressions": 0.0,
-      "gscOpportunity": 0.0,
+      "score": 4.0,
+      "ga4Views": 0.0,
+      "ga4LowEngagementViews": 0.0,
+      "gscImpressions": 4.0,
+      "gscOpportunity": 4.0,
       "paths": [
-        "/acuario-aries",
-        "/cancer-aries",
-        "/cancer-geminis",
-        "/escorpio-leo",
-        "/leo-aries"
+        "http://compatibilidad-signos.es/"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 702.0,
-    "ga4Views": 26.0,
-    "ga4LowEngagementViews": 26.0,
-    "gscImpressions": 0.0,
-    "gscOpportunity": 0.0,
+    "score": 354.0,
+    "ga4Views": 13.0,
+    "ga4LowEngagementViews": 13.0,
+    "gscImpressions": 3.0,
+    "gscOpportunity": 3.0,
     "paths": [
       "/"
     ]

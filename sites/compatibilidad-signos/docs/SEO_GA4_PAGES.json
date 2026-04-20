@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-16T09:28:52Z",
+  "generatedAt": "2026-04-20T10:48:56Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
@@ -8,53 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 26.0,
-    "bounceRate": 0.9230769230769231,
-    "averageSessionDuration": 1.3454814615384616
+    "views": 13.0,
+    "bounceRate": 1.0,
+    "averageSessionDuration": 0.0
   },
-  "weakHomepageEngagement": true,
+  "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 26.0,
-      "bounceRate": 0.9230769230769231,
-      "averageSessionDuration": 1.3454814615384616
-    },
-    {
-      "path": "/acuario-aries",
-      "views": 1.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 1.318857
-    },
-    {
-      "path": "/cancer-aries",
-      "views": 1.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 1.289933
-    },
-    {
-      "path": "/cancer-geminis",
-      "views": 1.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 1.395192
-    },
-    {
-      "path": "/escorpio-leo",
-      "views": 1.0,
+      "views": 13.0,
       "bounceRate": 1.0,
       "averageSessionDuration": 0.0
-    },
-    {
-      "path": "/leo-aries",
-      "views": 1.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 0.0
-    },
-    {
-      "path": "/piscis-virgo",
-      "views": 1.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 1.974854
     }
   ]
 }

@@ -1,20 +1,12 @@
 {
-  "generatedAt": "2026-04-16T09:28:57Z",
+  "generatedAt": "2026-04-20T10:49:00Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "range": {
-    "start": "2026-03-19",
-    "end": "2026-04-13"
+    "start": "2026-03-23",
+    "end": "2026-04-17"
   },
   "queries": [
-    {
-      "query": "horóscopo de hoy gratis",
-      "clicks": 0.0,
-      "impressions": 8.0,
-      "ctr": 0.0,
-      "position": 27.625,
-      "opportunity": 8.0
-    },
     {
       "query": "horoscopo gratis",
       "clicks": 0.0,
@@ -46,16 +38,24 @@
       "ctr": 0.0,
       "position": 74.0,
       "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo lectura",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 9.0,
+      "opportunity": 1.0
     }
   ],
   "pages": [
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 14.0,
+      "impressions": 16.0,
       "ctr": 0.0,
-      "position": 36.357142857142854,
-      "opportunity": 14.0
+      "position": 33.5625,
+      "opportunity": 16.0
     },
     {
       "path": "http://horoscopo-de-hoy.es/",
@@ -68,14 +68,6 @@
   ],
   "topOpportunities": [
     {
-      "query": "horóscopo de hoy gratis",
-      "clicks": 0.0,
-      "impressions": 8.0,
-      "ctr": 0.0,
-      "position": 27.625,
-      "opportunity": 8.0
-    },
-    {
       "query": "horoscopo gratis",
       "clicks": 0.0,
       "impressions": 2.0,
@@ -105,6 +97,14 @@
       "impressions": 1.0,
       "ctr": 0.0,
       "position": 74.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo lectura",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 9.0,
       "opportunity": 1.0
     }
   ]

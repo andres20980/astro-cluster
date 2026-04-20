@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-16T09:28:52Z",
+  "generatedAt": "2026-04-20T10:48:56Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
       "family": "home",
-      "score": 945.0,
-      "ga4Views": 35.0,
-      "ga4LowEngagementViews": 35.0,
+      "score": 567.0,
+      "ga4Views": 21.0,
+      "ga4LowEngagementViews": 21.0,
       "gscImpressions": 0.0,
       "gscOpportunity": 0.0,
       "paths": [
@@ -16,23 +16,24 @@
     },
     {
       "family": "major_arcana",
-      "score": 81.0,
+      "score": 82.0,
       "ga4Views": 3.0,
       "ga4LowEngagementViews": 3.0,
-      "gscImpressions": 0.0,
-      "gscOpportunity": 0.0,
+      "gscImpressions": 1.0,
+      "gscOpportunity": 1.0,
       "paths": [
         "/arcanos-mayores/el-carro",
         "/arcanos-mayores/el-diablo",
+        "/arcanos-mayores/la-emperatriz",
         "/arcanos-mayores/la-torre"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 945.0,
-    "ga4Views": 35.0,
-    "ga4LowEngagementViews": 35.0,
+    "score": 567.0,
+    "ga4Views": 21.0,
+    "ga4LowEngagementViews": 21.0,
     "gscImpressions": 0.0,
     "gscOpportunity": 0.0,
     "paths": [

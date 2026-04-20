@@ -1,12 +1,28 @@
 {
-  "generatedAt": "2026-04-16T09:28:57Z",
+  "generatedAt": "2026-04-20T10:49:00Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
-    "start": "2026-03-19",
-    "end": "2026-04-13"
+    "start": "2026-03-23",
+    "end": "2026-04-17"
   },
   "queries": [
+    {
+      "query": "compatibilidad de signos gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 23.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad signos zodiacales tabla completa",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 15.0,
+      "opportunity": 1.0
+    },
     {
       "query": "tabla complementaria de aries",
       "clicks": 0.0,
@@ -18,23 +34,39 @@
   ],
   "pages": [
     {
-      "path": "http://compatibilidad-signos.es/",
-      "clicks": 0.0,
-      "impressions": 4.0,
-      "ctr": 0.0,
-      "position": 8.5,
-      "opportunity": 4.0
-    },
-    {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 3.0,
+      "impressions": 18.0,
       "ctr": 0.0,
-      "position": 6.333333333333333,
-      "opportunity": 3.0
+      "position": 9.11111111111111,
+      "opportunity": 18.0
+    },
+    {
+      "path": "http://compatibilidad-signos.es/",
+      "clicks": 0.0,
+      "impressions": 7.0,
+      "ctr": 0.0,
+      "position": 9.857142857142858,
+      "opportunity": 7.0
     }
   ],
   "topOpportunities": [
+    {
+      "query": "compatibilidad de signos gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 23.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad signos zodiacales tabla completa",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 15.0,
+      "opportunity": 1.0
+    },
     {
       "query": "tabla complementaria de aries",
       "clicks": 0.0,

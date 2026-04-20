@@ -1,21 +1,135 @@
 {
-  "generatedAt": "2026-04-16T09:28:57Z",
+  "generatedAt": "2026-04-20T10:49:00Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "range": {
-    "start": "2026-03-19",
-    "end": "2026-04-13"
+    "start": "2026-03-23",
+    "end": "2026-04-17"
   },
-  "queries": [],
-  "pages": [
+  "queries": [
     {
-      "path": "/arcanos-mayores/la-emperatriz",
+      "query": "arcanos mayores",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 71.5,
+      "opportunity": 4.0
+    },
+    {
+      "query": "arcano 6 tarot",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 52.0,
+      "position": 63.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcano dia",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 8.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcano mayores",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 77.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcanos mayores significado",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 86.0,
       "opportunity": 1.0
     }
   ],
-  "topOpportunities": []
+  "pages": [
+    {
+      "path": "/arcanos-mayores",
+      "clicks": 0.0,
+      "impressions": 8.0,
+      "ctr": 0.0,
+      "position": 79.625,
+      "opportunity": 8.0
+    },
+    {
+      "path": "/arcanos-mayores/los-enamorados",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 48.0,
+      "opportunity": 4.0
+    },
+    {
+      "path": "/arcanos-mayores/la-emperatriz",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 60.5,
+      "opportunity": 2.0
+    },
+    {
+      "path": "/",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 8.0,
+      "opportunity": 1.0
+    },
+    {
+      "path": "/arcanos-mayores/la-estrella",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 59.0,
+      "opportunity": 1.0
+    }
+  ],
+  "topOpportunities": [
+    {
+      "query": "arcanos mayores",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 71.5,
+      "opportunity": 4.0
+    },
+    {
+      "query": "arcano 6 tarot",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 63.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcano dia",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 8.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcano mayores",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 77.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "arcanos mayores significado",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 86.0,
+      "opportunity": 1.0
+    }
+  ]
 }

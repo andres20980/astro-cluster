@@ -1,39 +1,71 @@
 {
-  "generatedAt": "2026-04-16T09:28:57Z",
+  "generatedAt": "2026-04-20T10:49:00Z",
   "site": "carta-astral",
   "domain": "carta-astral-gratis.es",
   "range": {
-    "start": "2026-03-19",
-    "end": "2026-04-13"
+    "start": "2026-03-23",
+    "end": "2026-04-17"
   },
   "queries": [
     {
       "query": "certificado nacimiento carta astral",
       "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 7.0,
+      "opportunity": 3.0
+    },
+    {
+      "query": "cartas astrales gratis",
+      "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
-      "position": 5.0,
+      "position": 91.0,
       "opportunity": 2.0
+    },
+    {
+      "query": "cartas astral gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 54.0,
+      "opportunity": 1.0
     }
   ],
   "pages": [
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 5.0,
+      "impressions": 14.0,
       "ctr": 0.0,
-      "position": 14.0,
-      "opportunity": 5.0
+      "position": 25.071428571428573,
+      "opportunity": 14.0
     }
   ],
   "topOpportunities": [
     {
       "query": "certificado nacimiento carta astral",
       "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 7.0,
+      "opportunity": 3.0
+    },
+    {
+      "query": "cartas astrales gratis",
+      "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
-      "position": 5.0,
+      "position": 91.0,
       "opportunity": 2.0
+    },
+    {
+      "query": "cartas astral gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 54.0,
+      "opportunity": 1.0
     }
   ]
 }
