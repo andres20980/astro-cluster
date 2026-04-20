@@ -93,6 +93,7 @@ function repoSignals() {
   const smokeWorkflow = read('.github/workflows/seo-smoke-all.yml');
   const weeklyWorkflow = read('.github/workflows/weekly-google-report.yml');
   const seoAutoWorkflow = read('.github/workflows/seo-auto-pr.yml');
+  const seoSiteSelector = read('.github/scripts/select_seo_site.py');
   const seoRulesRaw = read('.github/config/seo-autopatch-rules.json');
   const cartaIndex = read('sites/carta-astral/public/index.html');
 
@@ -146,6 +147,7 @@ function repoSignals() {
   const trackingDomainsCoverage = trackingDomains.filter((domain) => shared.includes(`"${domain}"`)).length;
   const gscSiteConfigCoverage = SITE_KEYS.filter((site) => shared.includes(`[${site}]="sc-domain:`)).length;
   const autoPatchSiteCount = Object.keys(seoRules.sites || {}).length + (seoRules.rulesByQuery ? 1 : 0);
+  const selectorCoversAllSites = SITE_KEYS.every((site) => seoSiteSelector.includes(`"${site}"`));
 
   return {
     siteCount: SITE_KEYS.length,
@@ -158,7 +160,10 @@ function repoSignals() {
     gscSitesConfigured: gscSiteConfigCoverage === SITE_KEYS.length,
     deploySelective: deployWorkflow.includes('detect-changes') && deployWorkflow.includes('shared/') && deployWorkflow.includes('SITES+='),
     seoSmokeCluster: smokeWorkflow.includes('/publicidad') && exists('.github/scripts/seo_smoke_html_checks.py'),
-    seoAutopatchRotatory: seoAutoWorkflow.includes("sites=(") && seoAutoWorkflow.includes('SEO_AUTO_PR_MAX_CHANGES') && autoPatchSiteCount >= SITE_KEYS.length,
+    seoAutopatchRotatory: seoAutoWorkflow.includes('select_seo_site.py') &&
+      seoAutoWorkflow.includes('SEO_AUTO_PR_MAX_CHANGES') &&
+      selectorCoversAllSites &&
+      autoPatchSiteCount >= SITE_KEYS.length,
     gscClusterReporting: weeklyWorkflow.includes('GSC_SITES_JSON') && exists('.github/scripts/weekly_gsc_report.py'),
     gscSitemapSubmit: deployWorkflow.includes('Submit sitemap to GSC') && deployWorkflow.includes('searchconsole.googleapis.com/webmasters/v3/sites'),
     clusterMediaKits: publicidadCoverage === SITE_KEYS.length,
