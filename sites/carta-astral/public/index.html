@@ -105,14 +105,10 @@
       }
     },{capture:true});
   </script>
-  <!-- AdSense Auto Ads (defer to improve LCP) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://pagead2.googlesyndication.com">
   <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" media="print" onload="this.media='all'" />
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
   <style>
@@ -739,14 +735,21 @@
 <script>
 // Lazy-load Leaflet JS (only needed at Step 2)
 let leafletLoaded=false;
+function loadLeafletCss(){
+  if(document.querySelector('link[data-leaflet-css]'))return;
+  const l=document.createElement('link');
+  l.rel='stylesheet';
+  l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  l.dataset.leafletCss='true';
+  document.head.appendChild(l);
+}
 function loadLeaflet(){return new Promise(res=>{
   if(leafletLoaded)return res();
+  loadLeafletCss();
   const s=document.createElement('script');
   s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
   s.onload=()=>{leafletLoaded=true;res()};
   document.head.appendChild(s);
-  // Ensure CSS is active
-  document.querySelector('link[href*="leaflet"]').media='all';
 })}
 </script>
 <script>
@@ -763,12 +766,16 @@ function updCounters(){
   if(ce)ce.textContent=fmtNum(getChartCount());
   if(ve)ve.textContent=fmtNum(VISITOR_BASE);
 }
-fetch('/stats.json').then(r=>r.json()).then(d=>{
-  CHART_BASE=Number(d.charts_calculated)||0;
-  VISITOR_BASE=Number(d.visitors)||0;
-  updCounters();
-}).catch(()=>updCounters());
+function loadCounters(){
+  fetch('/stats.json').then(r=>r.json()).then(d=>{
+    CHART_BASE=Number(d.charts_calculated)||0;
+    VISITOR_BASE=Number(d.visitors)||0;
+    updCounters();
+  }).catch(()=>updCounters());
+}
 updCounters();
+if('requestIdleCallback'in window)requestIdleCallback(loadCounters,{timeout:2500});
+else setTimeout(loadCounters,1200);
 selOpt('manual');
 
 function openModal(){document.getElementById('certModal').classList.add('open')}
@@ -992,6 +999,23 @@ async function requestInterpretation(){
 }
 
 updSteps();
+
+function loadAdsense(){
+  if(document.querySelector('script[data-adsense-auto]'))return;
+  const s=document.createElement('script');
+  s.async=true;
+  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039';
+  s.crossOrigin='anonymous';
+  s.dataset.adsenseAuto='true';
+  document.head.appendChild(s);
+}
+function scheduleAdsense(){
+  const loadOnce=()=>loadAdsense();
+  ['pointerdown','keydown','scroll'].forEach(evt=>window.addEventListener(evt,loadOnce,{once:true,passive:true}));
+  if('requestIdleCallback'in window)requestIdleCallback(loadOnce,{timeout:3500});
+  else setTimeout(loadOnce,3500);
+}
+scheduleAdsense();
 
 // Hide ad placeholders when Auto Ads fills nearby slots
 setTimeout(()=>{

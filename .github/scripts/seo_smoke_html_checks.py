@@ -81,6 +81,10 @@ class PageParser(HTMLParser):
 
 parser = PageParser()
 parser.feed(html)
+has_adsense_loader = (
+    "pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" in html
+    and "ca-pub-9368517395014039" in html
+)
 
 title_text = " ".join(chunk.strip() for chunk in parser.title_chunks if chunk.strip()).strip()
 h1_text = " ".join(chunk.strip() for chunk in parser.h1_chunks if chunk.strip()).strip()
@@ -91,7 +95,7 @@ results = {
     "meta_description_present": bool(parser.meta_description.strip()),
     "canonical_ok": parser.canonical in {f"https://{DOMAIN}", f"https://{DOMAIN}/"},
     "structured_data_present": parser.has_ldjson,
-    "adsense_script_present": parser.has_adsense_script,
+    "adsense_script_present": parser.has_adsense_script or has_adsense_loader,
     "homepage_not_noindex": "noindex" not in meta_robots,
     "h1_present": bool(h1_text),
     "internal_copy_leaked": any(marker in html_lower for marker in INTERNAL_COPY_MARKERS),
