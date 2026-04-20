@@ -1,23 +1,14 @@
 {
   "site": "carta-astral",
-  "lastRun": "2026-04-19T06:52:57.870Z",
-  "lastQuery": "carta astral gratis",
+  "lastRun": "2026-04-20T07:05:49.760Z",
+  "lastQuery": "carta natal gratis",
   "results": [
     {
-      "query": "carta astral gratis",
+      "query": "carta natal gratis",
       "matchedSignals": [
         "token_overlap_2"
       ],
       "file": "public/index.html",
-      "changed": true,
-      "reason": "optimized"
-    },
-    {
-      "query": "carta astral gratis",
-      "matchedSignals": [
-        "token_overlap_2"
-      ],
-      "file": "scripts/gen-sign-pages.sh",
       "changed": true,
       "reason": "optimized"
     }
