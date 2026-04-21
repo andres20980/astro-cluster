@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T10:51:10Z",
+  "generatedAt": "2026-04-21T15:09:56Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "range": {
@@ -8,35 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 21.0,
-    "bounceRate": 0.9047619047619048,
-    "averageSessionDuration": 3.262272619047619
+    "views": 14.0,
+    "bounceRate": 1.0,
+    "averageSessionDuration": 0.6384907857142857
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 21.0,
-      "bounceRate": 0.9047619047619048,
-      "averageSessionDuration": 3.262272619047619
-    },
-    {
-      "path": "/arcanos-mayores/el-carro",
-      "views": 1.0,
-      "bounceRate": 0.0,
-      "averageSessionDuration": 34.889418
-    },
-    {
-      "path": "/arcanos-mayores/el-diablo",
-      "views": 1.0,
-      "bounceRate": 0.0,
-      "averageSessionDuration": 32.970631
-    },
-    {
-      "path": "/arcanos-mayores/la-torre",
-      "views": 1.0,
-      "bounceRate": 0.0,
-      "averageSessionDuration": 40.358732
+      "views": 14.0,
+      "bounceRate": 1.0,
+      "averageSessionDuration": 0.6384907857142857
     }
   ]
 }

@@ -1,32 +1,17 @@
 {
-  "generatedAt": "2026-04-20T10:51:10Z",
+  "generatedAt": "2026-04-21T15:09:56Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
       "family": "home",
-      "score": 568.0,
-      "ga4Views": 21.0,
-      "ga4LowEngagementViews": 21.0,
+      "score": 379.0,
+      "ga4Views": 14.0,
+      "ga4LowEngagementViews": 14.0,
       "gscImpressions": 1.0,
       "gscOpportunity": 1.0,
       "paths": [
         "/"
-      ]
-    },
-    {
-      "family": "major_arcana",
-      "score": 88.0,
-      "ga4Views": 3.0,
-      "ga4LowEngagementViews": 3.0,
-      "gscImpressions": 7.0,
-      "gscOpportunity": 7.0,
-      "paths": [
-        "/arcanos-mayores/el-carro",
-        "/arcanos-mayores/el-diablo",
-        "/arcanos-mayores/la-emperatriz",
-        "/arcanos-mayores/la-estrella",
-        "/arcanos-mayores/la-torre"
       ]
     },
     {
@@ -39,13 +24,26 @@
       "paths": [
         "/arcanos-mayores"
       ]
+    },
+    {
+      "family": "major_arcana",
+      "score": 7.0,
+      "ga4Views": 0.0,
+      "ga4LowEngagementViews": 0.0,
+      "gscImpressions": 7.0,
+      "gscOpportunity": 7.0,
+      "paths": [
+        "/arcanos-mayores/la-emperatriz",
+        "/arcanos-mayores/la-estrella",
+        "/arcanos-mayores/los-enamorados"
+      ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 568.0,
-    "ga4Views": 21.0,
-    "ga4LowEngagementViews": 21.0,
+    "score": 379.0,
+    "ga4Views": 14.0,
+    "ga4LowEngagementViews": 14.0,
     "gscImpressions": 1.0,
     "gscOpportunity": 1.0,
     "paths": [

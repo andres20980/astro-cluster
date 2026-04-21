@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T10:51:10Z",
+  "generatedAt": "2026-04-21T15:09:56Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
@@ -8,7 +8,7 @@
   },
   "homepage": {
     "path": "/",
-    "views": 13.0,
+    "views": 12.0,
     "bounceRate": 1.0,
     "averageSessionDuration": 0.0
   },
@@ -16,7 +16,7 @@
   "pages": [
     {
       "path": "/",
-      "views": 13.0,
+      "views": 12.0,
       "bounceRate": 1.0,
       "averageSessionDuration": 0.0
     }
