@@ -54,13 +54,14 @@ function fmtPct(ratio) {
   return `${(ratio * 100).toFixed(1)}%`;
 }
 
-function evalKpi(label, actual, target, comparator) {
+function evalKpi(label, actual, target, comparator, formatter) {
   const ok = comparator === 'gte' ? actual >= target : actual <= target;
   const symbol = comparator === 'gte' ? '≥' : '≤';
-  const fmtActual = typeof actual === 'number' && actual < 1 && actual >= 0
-    ? fmtPct(actual) : String(actual);
-  const fmtTarget = typeof target === 'number' && target < 1 && target >= 0
-    ? fmtPct(target) : String(target);
+  const fmtValue = formatter || ((value) => (
+    typeof value === 'number' && value < 1 && value >= 0 ? fmtPct(value) : String(value)
+  ));
+  const fmtActual = fmtValue(actual);
+  const fmtTarget = fmtValue(target);
   return `| ${label} | ${fmtActual} | ${symbol}${fmtTarget} | ${ok ? '✅' : '⚠️'} |`;
 }
 
@@ -362,7 +363,7 @@ function main() {
     kpiResults.push(evalKpi('Porcentaje de rebote', bounce, kpis.bounce_rate_max, 'lte'));
   }
   if (kpis.avg_duration_min_s !== undefined) {
-    kpiResults.push(evalKpi('Duración media', `${duration.toFixed(0)}s`, `${kpis.avg_duration_min_s}s`, 'gte'));
+    kpiResults.push(evalKpi('Duración media', duration, kpis.avg_duration_min_s, 'gte', (value) => `${value.toFixed(0)}s`));
   }
   if (kpis.chart_calculated_min !== undefined) {
     kpiResults.push(evalKpi('Cartas calculadas', chartCalc, kpis.chart_calculated_min, 'gte'));

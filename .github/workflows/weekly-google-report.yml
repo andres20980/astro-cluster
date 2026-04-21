@@ -367,6 +367,18 @@ jobs:
           echo "" >> /tmp/report.md
 
           # Growth milestone check
+          # Generate ignored long-tail pages before measuring SEO capability.
+          for generator in \
+            sites/compatibilidad-signos/scripts/gen-pages.sh \
+            sites/tarot-del-dia/scripts/gen-pages.sh \
+            sites/calcular-numerologia/scripts/gen-pages.sh \
+            sites/horoscopo-de-hoy/scripts/gen-pages.sh
+          do
+            if [ -x "$generator" ]; then
+              bash "$generator" >/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log
+            fi
+          done
+
           BOUNCE_RAW=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);print(r.get('rows',[{}])[0].get('metricValues',[{}])[4].get('value','0'))" 2>/dev/null || echo "0")
           DURATION_RAW=$(echo "$TRAFFIC" | python3 -c "import sys,json;r=json.load(sys.stdin);print(r.get('rows',[{}])[0].get('metricValues',[{}])[3].get('value','0'))" 2>/dev/null || echo "0")
 
