@@ -152,8 +152,8 @@
           "templateFamily": "home",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
-            "INDEX_TITLE": "Compatibilidad de Signos Zodiacales — Calculadora Gratis",
-            "INDEX_DESC": "Descubre la compatibilidad entre los 12 signos del zodíaco. 144 combinaciones analizadas: fortalezas, retos y porcentaje de afinidad. Herramienta gratuita.",
+            "INDEX_TITLE": "Tabla de Compatibilidad de Signos Gratis — 144 Combinaciones",
+            "INDEX_DESC": "Consulta la tabla de compatibilidad de signos gratis: 144 combinaciones zodiacales con porcentaje de afinidad, amor, fortalezas y retos.",
             "PAIR_TITLE_TEMPLATE": "Compatibilidad {{name1}} y {{name2}} {{glyphs}} — {{score}}% {{label}}",
             "PAIR_DESC_TEMPLATE": "¿Son compatibles {{name1}} y {{name2}}? Descubre su afinidad amorosa ({{score}}%), fortalezas, retos y cómo se complementan según sus elementos y planetas regentes."
           }
@@ -162,8 +162,8 @@
           "templateFamily": "pair_pages",
           "file": "scripts/gen-pages.sh",
           "shellVariables": {
-            "INDEX_TITLE": "Compatibilidad de Signos Gratis — Calcula tu Afinidad Amorosa",
-            "INDEX_DESC": "Calcula la compatibilidad de signos gratis y compara las 144 combinaciones del zodíaco con porcentaje, puntos fuertes, retos y consejos.",
+            "INDEX_TITLE": "Tabla de Compatibilidad de Signos Gratis — 144 Combinaciones",
+            "INDEX_DESC": "Consulta la tabla de compatibilidad de signos gratis: 144 combinaciones zodiacales con porcentaje de afinidad, amor, fortalezas y retos.",
             "PAIR_TITLE_TEMPLATE": "Compatibilidad amorosa entre {{name1}} y {{name2}} {{glyphs}} — {{score}}% de afinidad",
             "PAIR_DESC_TEMPLATE": "Calcula la compatibilidad amorosa entre {{name1}} y {{name2}}. Revisa su porcentaje de afinidad ({{score}}%), fortalezas de pareja y retos según el zodíaco."
           }

@@ -328,13 +328,13 @@ echo "  ✓ ${PAGE_COUNT} pair pages generated"
 # ══════════════════════════════════════════════════════════════
 echo "Generating index..."
 
-INDEX_TITLE="Compatibilidad de Signos Gratis — Tabla Zodiacal Completa"
-INDEX_DESC="Calcula la compatibilidad de signos gratis y consulta la tabla zodiacal completa: 144 combinaciones con porcentaje de afinidad, fortalezas y retos."
+INDEX_TITLE="Tabla de Compatibilidad de Signos Gratis — 144 Combinaciones"
+INDEX_DESC="Consulta la tabla de compatibilidad de signos gratis: 144 combinaciones zodiacales con porcentaje de afinidad, amor, fortalezas y retos."
 
 # Build the 12x12 grid rows
 GRID_ROWS=""
 for s1 in "${SLUGS[@]}"; do
-  GRID_ROWS+="<tr><th class=\"row-h\">${GLYPH[$s1]}<br><span>${NAME[$s1]}</span></th>"
+  GRID_ROWS+="<tr id=\"tabla-${s1}\"><th class=\"row-h\">${GLYPH[$s1]}<br><span>${NAME[$s1]}</span></th>"
   for s2 in "${SLUGS[@]}"; do
     sc=$(calc_score "$s1" "$s2")
     lbl=$(score_label "$sc")
@@ -346,6 +346,15 @@ for s1 in "${SLUGS[@]}"; do
     GRID_ROWS+="<td class=\"cell ${cls}\"><a href=\"/${s1}-${s2}\">${sc}%</a></td>"
   done
   GRID_ROWS+="</tr>"
+done
+
+GEMINIS_LINKS=""
+ARIES_LINKS=""
+for s in "${SLUGS[@]}"; do
+  geminis_score=$(calc_score "geminis" "$s")
+  aries_score=$(calc_score "aries" "$s")
+  GEMINIS_LINKS+="<a href=\"/geminis-${s}\">Géminis con ${NAME[$s]} <strong>${geminis_score}%</strong></a>"
+  ARIES_LINKS+="<a href=\"/aries-${s}\">Aries con ${NAME[$s]} <strong>${aries_score}%</strong></a>"
 done
 
 cat > "$PUBLIC/index.html" <<ENDINDEX
@@ -381,14 +390,22 @@ ${COMMON_CSS}
     .seo-text h2{font-size:1.2rem;margin:1.5rem 0 .6rem}
     .seo-text p,.seo-text li{line-height:1.7;color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
     .seo-text ul{padding-left:1.2rem}
+    .quick-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem;margin:1rem 0 1.4rem}
+    .quick-nav a{display:block;text-decoration:none;color:var(--accent);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.7rem .8rem;font-size:.86rem;font-weight:600}
+    .spotlight{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.2rem 0}
+    .spotlight-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem}
+    .spotlight-card h3{font-size:.95rem;margin-bottom:.6rem}
+    .spotlight-links{display:grid;gap:.45rem}
+    .spotlight-links a{display:flex;justify-content:space-between;gap:.8rem;text-decoration:none;color:var(--text);font-size:.84rem;border-bottom:1px solid var(--border);padding-bottom:.35rem}
+    .spotlight-links strong{color:var(--accent)}
   </style>
 </head>
 <body>
 <div class="container">
   <header style="text-align:center;padding:1.5rem 0 .5rem">
     <div style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600">Astrología</div>
-    <h1><span>Compatibilidad de Signos</span></h1>
-    <p class="intro">Calcula la compatibilidad de signos gratis y consulta la tabla zodiacal completa con las 144 combinaciones: porcentaje de afinidad, fortalezas y retos de pareja.</p>
+    <h1><span>Tabla de Compatibilidad de Signos</span></h1>
+    <p class="intro">Calcula la compatibilidad de signos gratis y consulta la tabla zodiacal completa con 144 combinaciones: Aries, Tauro, Géminis, Cáncer y el resto del zodíaco con porcentaje de afinidad, fortalezas y retos de pareja.</p>
   </header>
 
   <div class="calc">
@@ -401,9 +418,15 @@ ${COMMON_CSS}
     <button class="btn" onclick="openCompatibilityFromHome()">Ver compatibilidad →</button>
   </div>
 
+  <nav class="quick-nav" aria-label="Accesos rápidos a la tabla de compatibilidad">
+    <a href="#tabla-geminis">Tabla de compatibilidad de Géminis</a>
+    <a href="#tabla-aries">Tabla de compatibilidad de Aries</a>
+    <a href="#tabla-completa">Tabla zodiacal completa</a>
+  </nav>
+
 $(ad_block "❤" "Publicidad destacada en un nicho de amor y afinidad" "La ubicación más visible para captar usuarios antes de que profundicen en la tabla completa." "Informarme →")
 
-  <h2 style="text-align:center">Tabla completa de compatibilidad de signos zodiacales</h2>
+  <h2 id="tabla-completa" style="text-align:center">Tabla completa de compatibilidad de signos zodiacales</h2>
   <div class="grid-wrap">
   <table>
     <thead><tr><th></th>$(for s in "${SLUGS[@]}"; do echo "<th>${GLYPH[$s]}<br>${NAME[$s]}</th>"; done)</tr></thead>
@@ -412,6 +435,17 @@ ${GRID_ROWS}
     </tbody>
   </table>
   </div>
+
+  <section class="spotlight" aria-label="Tablas de compatibilidad destacadas">
+    <div class="spotlight-card">
+      <h3>Tabla de compatibilidad de Géminis</h3>
+      <div class="spotlight-links">${GEMINIS_LINKS}</div>
+    </div>
+    <div class="spotlight-card">
+      <h3>Tabla de compatibilidad de Aries</h3>
+      <div class="spotlight-links">${ARIES_LINKS}</div>
+    </div>
+  </section>
 
 $(ad_block "🔮" "Patrocina tráfico orgánico de alta intención" "Tu marca puede aparecer entre la herramienta de cálculo y las 144 combinaciones de signos." "Ver espacios →")
 
@@ -423,7 +457,7 @@ $(ad_block "🔮" "Patrocina tráfico orgánico de alta intención" "Tu marca pu
 
   <div class="seo-text panel">
     <h2>¿Cómo funciona la compatibilidad entre signos?</h2>
-    <p>La compatibilidad astrológica analiza la relación entre dos signos del zodíaco basándose en tres factores clave. La calculadora gratuita resume esos factores en un porcentaje de afinidad y la tabla completa permite comparar cualquier pareja de signos en un clic.</p>
+    <p>La compatibilidad astrológica analiza la relación entre dos signos del zodíaco basándose en tres factores clave. La calculadora gratuita resume esos factores en un porcentaje de afinidad y la tabla completa permite comparar cualquier pareja de signos en un clic, incluyendo búsquedas concretas como la compatibilidad de Géminis, Aries o cualquier combinación zodiacal.</p>
     <ul>
       <li><strong>Elemento:</strong> Los 12 signos se dividen en Fuego (Aries, Leo, Sagitario), Tierra (Tauro, Virgo, Capricornio), Aire (Géminis, Libra, Acuario) y Agua (Cáncer, Escorpio, Piscis). Los elementos del mismo grupo se entienden naturalmente.</li>
       <li><strong>Modalidad:</strong> Cardinal (iniciadores), Fijo (estables) y Mutable (adaptables). La interacción entre modalidades afecta al ritmo de la relación.</li>
