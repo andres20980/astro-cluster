@@ -69,6 +69,10 @@ jobs:
           script: |
             const fs = require('fs');
             const titlePrefix = '🔎 Vigilancia de indexación de GSC';
+            const legacyTitlePrefixes = [
+              titlePrefix,
+              '🔎 Vigilancia de indexación GSC'
+            ];
             const today = new Date().toISOString().slice(0, 10);
             const body = process.env.MISSING_OAUTH === 'true'
               ? 'No se pudo ejecutar la vigilancia de indexación porque faltan los secretos GOOGLE_OAUTH_* necesarios para Search Console.'
@@ -82,7 +86,9 @@ jobs:
               per_page: 100
             });
 
-            const matching = issues.filter(issue => issue.title.startsWith(titlePrefix));
+            const matching = issues
+              .filter(issue => legacyTitlePrefixes.some(prefix => issue.title.startsWith(prefix)))
+              .sort((a, b) => a.number - b.number);
             const title = `${titlePrefix} — ${today}`;
 
             if (matching.length > 0) {

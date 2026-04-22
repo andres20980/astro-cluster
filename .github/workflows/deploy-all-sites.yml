@@ -149,6 +149,8 @@ jobs:
 
       - name: "🏗️ Generar sitio estático si hace falta"
         shell: bash
+        env:
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
         run: |
           site_dir="sites/${{ matrix.site }}"
           generated=0
@@ -164,6 +166,9 @@ jobs:
           if [ "$generated" -eq 0 ]; then
             echo "No generator script for ${{ matrix.site }}"
           fi
+
+          source shared/config.sh
+          adsense_apply_head_snippet_to_file "$site_dir/public/index.html"
 
           if [ ! -d "$site_dir/public" ]; then
             echo "Expected $site_dir/public to exist before deploy" >&2

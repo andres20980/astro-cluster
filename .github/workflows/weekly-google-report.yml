@@ -375,7 +375,8 @@ jobs:
             sites/horoscopo-de-hoy/scripts/gen-pages.sh
           do
             if [ -x "$generator" ]; then
-              bash "$generator" >/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log
+              ADSENSE_AUTO_ADS_ENABLED="${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}" \
+                bash "$generator" >/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log
             fi
           done
 

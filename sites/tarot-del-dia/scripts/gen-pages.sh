@@ -40,6 +40,7 @@ gen_head() {
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
 $(canonical_host_redirect_script "$DOMAIN")
 $(ga4_head_snippet "$GA4" "$SITE_KEY" "$page_type" "$content_group" "$entity_slug")
+$(adsense_head_snippet)
 ENDHEAD
 }
 

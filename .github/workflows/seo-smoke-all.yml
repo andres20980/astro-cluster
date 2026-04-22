@@ -44,6 +44,8 @@ jobs:
       - name: "🔎 Comprobar ${{ matrix.domain }}"
         id: smoke
         shell: bash
+        env:
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
         run: |
           set -euo pipefail
           SITE="https://${{ matrix.domain }}"
@@ -167,9 +169,11 @@ jobs:
 
             if echo "$html_checks" | jq -e '.adsense_script_present' >/dev/null; then
               report+="- ✅ AdSense script present on homepage"$'\n'
-            else
-              report+="- ❌ AdSense script missing on homepage"$'\n'
+            elif [[ "${ADSENSE_AUTO_ADS_ENABLED:-0}" == "1" || "${ADSENSE_AUTO_ADS_ENABLED:-0}" == "true" || "${ADSENSE_AUTO_ADS_ENABLED:-0}" == "yes" ]]; then
+              report+="- ❌ AdSense script missing on homepage while ADSENSE_AUTO_ADS_ENABLED is active"$'\n'
               failures=$((failures + 1))
+            else
+              report+="- ⚠️ AdSense script pending until ADSENSE_AUTO_ADS_ENABLED=1"$'\n'
             fi
 
             if echo "$html_checks" | jq -e '.homepage_not_noindex' >/dev/null; then
@@ -217,7 +221,9 @@ jobs:
               per_page: 100
             });
 
-            const matching = issues.filter(issue => issue.title.startsWith(titlePrefix));
+            const matching = issues
+              .filter(issue => issue.title.startsWith(titlePrefix))
+              .sort((a, b) => a.number - b.number);
             const primary = matching[0];
 
             if ('${{ steps.smoke.outputs.failures }}' !== '0') {

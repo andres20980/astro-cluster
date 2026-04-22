@@ -58,6 +58,7 @@ jobs:
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}
           SEO_AUTO_PR_MAX_CHANGES: '1'
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
         run: |
           set -euo pipefail
           pushd "sites/${SITE_KEY}" >/dev/null

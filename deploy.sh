@@ -4,6 +4,7 @@ set -euo pipefail
 # Usage: ./deploy.sh [site-name]   (blank = all sites)
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+source "${REPO_ROOT}/shared/config.sh"
 
 declare -A PROJECTS=(
   [carta-astral]="carta-astral-f4ab9"
@@ -22,6 +23,7 @@ deploy_site() {
     echo "❌ No public/ found for ${site}. Run gen-pages.sh first."
     return 1
   fi
+  adsense_apply_head_snippet_to_file "$site_dir/public/index.html"
 
   echo ""
   echo "🚀 Deploying ${site} → ${project}"

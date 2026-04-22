@@ -4,6 +4,7 @@
 
 # — AdSense (same account for all sites)
 ADSENSE_PUB="ca-pub-9368517395014039"
+ADSENSE_AUTO_ADS_ENABLED="${ADSENSE_AUTO_ADS_ENABLED:-0}"
 
 # — GA4 (single cluster-wide property + cross-domain linker)
 CLUSTER_GA4_ID="G-DEWMQ73FH5"
@@ -237,6 +238,48 @@ ga4_head_snippet() {
     },{capture:true});
   </script>
 EOF
+}
+
+adsense_head_snippet() {
+  case "${ADSENSE_AUTO_ADS_ENABLED:-0}" in
+    1|true|TRUE|yes|YES)
+      cat <<EOF
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUB}" crossorigin="anonymous"></script>
+EOF
+      ;;
+  esac
+}
+
+adsense_apply_head_snippet_to_file() {
+  local file="$1"
+  local snippet
+  snippet="$(adsense_head_snippet)"
+
+  if [[ -z "$snippet" || ! -f "$file" ]]; then
+    return 0
+  fi
+
+  if grep -q 'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js' "$file"; then
+    return 0
+  fi
+
+  local tmp="${file}.adsense.tmp"
+  awk -v snippet="$snippet" '
+    !inserted && /<\/head>/ {
+      print snippet
+      inserted=1
+    }
+    { print }
+    END {
+      if (!inserted) {
+        exit 2
+      }
+    }
+  ' "$file" > "$tmp" || {
+    rm -f "$tmp"
+    return 1
+  }
+  mv "$tmp" "$file"
 }
 
 ad_css() {

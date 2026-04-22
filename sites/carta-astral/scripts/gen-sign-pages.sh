@@ -83,6 +83,7 @@ for slug in aries tauro geminis cancer leo virgo libra escorpio sagitario capric
   <!-- GA4 -->
 $(canonical_host_redirect_script "carta-astral-gratis.es")
 $(ga4_head_snippet "$GA4" "carta-astral" "sign_profile" "evergreen" "$slug")
+$(adsense_head_snippet)
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Article","headline":"Carta Astral ${name} ${glyph}","description":"${name} en la carta astral: significado, fechas, elemento y cómo influye en tu mapa natal.","author":{"@type":"Organization","name":"Carta Astral Gratis"},"publisher":{"@type":"Organization","name":"Carta Astral Gratis","url":"https://carta-astral-gratis.es/"},"mainEntityOfPage":"https://carta-astral-gratis.es/signos/${slug}","inLanguage":"es"}
   </script>
@@ -228,6 +229,7 @@ cat > "$DIR/index.html" <<HEREDOC
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 $(canonical_host_redirect_script "carta-astral-gratis.es")
 $(ga4_head_snippet "$GA4" "carta-astral" "content_hub" "hub" "signos")
+$(adsense_head_snippet)
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://carta-astral-gratis.es/"},{"@type":"ListItem","position":2,"name":"Signos del Zodíaco","item":"https://carta-astral-gratis.es/signos"}]}
   </script>

@@ -27,6 +27,7 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 - Measurement ID GA4 compartido para todo el cluster: `G-DEWMQ73FH5`
 - Todos los sitios publican `ads.txt` con ese publisher.
 - Todas las variantes `www` sirven `ads.txt` por HTTPS para no romper validaciones de AdSense.
+- El script de Auto Ads está preparado como opt-in: generar con `ADSENSE_AUTO_ADS_ENABLED=1` o definir la variable de GitHub Actions `ADSENSE_AUTO_ADS_ENABLED=1` lo inserta cuando AdSense marque los sitios como listos.
 - Todos los sitios incluyen huecos premium y landing `/publicidad` para venta directa.
 - La venta directa convive con AdSense y tiene prioridad comercial sobre inventario remanente.
 - El tracking GA4 se hace con linker cross-domain para mantener la sesión al saltar entre herramientas.

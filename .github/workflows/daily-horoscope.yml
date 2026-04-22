@@ -20,6 +20,8 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: "🔄 Regenerar páginas del horóscopo"
+        env:
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
         run: bash sites/horoscopo-de-hoy/scripts/gen-pages.sh
 
       - name: "📤 Confirmar y subir cambios"
