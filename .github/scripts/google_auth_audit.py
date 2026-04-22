@@ -26,12 +26,8 @@ REQUIRED_SCOPE_GROUPS = {
             "https://www.googleapis.com/auth/adsense",
         ],
     ],
-}
-
-OPTIONAL_SCOPE_GROUPS = {
-    "Analytics OAuth (opcional)": [
+    "GA4 Admin": [
         [
-            "https://www.googleapis.com/auth/analytics.readonly",
             "https://www.googleapis.com/auth/analytics.edit",
         ],
     ],
@@ -101,26 +97,11 @@ for system, scope_groups in REQUIRED_SCOPE_GROUPS.items():
         )
     print(f"| {system} | OAuth de usuario | {status} | {detail} |")
 
-for system, scope_groups in OPTIONAL_SCOPE_GROUPS.items():
-    if not token:
-        status = "No configurado"
-        detail = "No hay refresh token disponible"
-    elif tokeninfo_error:
-        status = "Error"
-        detail = tokeninfo_error
-    else:
-        status, missing_groups = grouped_scope_status(scope_groups)
-        if not missing_groups:
-            detail = "Disponible"
-        else:
-            detail = " o ".join(" / ".join(group) for group in missing_groups)
-    print(f"| {system} | OAuth de usuario | {status} | {detail} |")
-
 print("")
 print(f"{subheading_level} Modelo recomendado del cluster")
 print("- `Analytics / GA4`: service account en CI para reporting estable y sin interacción.")
 print("- `Search Console`, `Site Verification` y `AdSense`: OAuth de usuario porque son APIs ligadas a la cuenta propietaria.")
-print("- `analytics.readonly` o `analytics.edit` en OAuth es opcional; útil para depuración y Admin API, pero no necesario para el pipeline principal.")
+print("- `GA4 Admin`: OAuth de usuario con `analytics.edit` para crear dimensiones personalizadas y eventos clave.")
 
 if token and not tokeninfo_error:
     missing_required = {}
@@ -137,7 +118,7 @@ if token and not tokeninfo_error:
             )
             print(f"- `{system}`: faltan {alternatives}")
     else:
-        print(f"{subheading_level} ✅ OAuth listo para GSC y AdSense")
+        print(f"{subheading_level} ✅ OAuth listo para GSC, AdSense y GA4 Admin")
 
 if include_raw:
     print("")
