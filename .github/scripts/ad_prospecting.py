@@ -15,10 +15,21 @@ ROOT = os.environ.get("GITHUB_WORKSPACE", os.getcwd())
 PROSPECTS_PATH = os.path.join(ROOT, "docs", "AD_PROSPECTS.json")
 QUERIES_PATH = os.path.join(ROOT, "docs", "AD_PROSPECT_SEARCH_QUERIES.json")
 
-MAX_NEW = int(os.environ.get("MAX_NEW_PROSPECTS", "10"))
-MAX_QUERIES = int(os.environ.get("MAX_SEARCH_QUERIES", "5"))
-MAX_RESULTS_PER_QUERY = int(os.environ.get("MAX_RESULTS_PER_QUERY", "5"))
-TIMEOUT = int(os.environ.get("PROSPECT_FETCH_TIMEOUT", "12"))
+def env_int(name, default, minimum=0, maximum=None):
+    try:
+        value = int(os.environ.get(name, str(default)))
+    except ValueError:
+        value = default
+    value = max(minimum, value)
+    if maximum is not None:
+        value = min(maximum, value)
+    return value
+
+
+MAX_NEW = env_int("MAX_NEW_PROSPECTS", 10, minimum=0, maximum=25)
+MAX_QUERIES = env_int("MAX_SEARCH_QUERIES", 5, minimum=0, maximum=5)
+MAX_RESULTS_PER_QUERY = env_int("MAX_RESULTS_PER_QUERY", 5, minimum=1, maximum=10)
+TIMEOUT = env_int("PROSPECT_FETCH_TIMEOUT", 12, minimum=3, maximum=20)
 
 EMAIL_RE = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.I)
 BAD_EMAIL_PARTS = {
@@ -212,6 +223,8 @@ def report(existing, added, errors, missing_config):
         "",
         f"- Candidatos nuevos: **{len(added)}**",
         f"- Total histórico: **{len(existing) + len(added)}**",
+        f"- Límite de búsqueda por ejecución: **{MAX_QUERIES} consultas x {MAX_RESULTS_PER_QUERY} resultados**.",
+        f"- Límite de candidatos nuevos por ejecución: **{MAX_NEW}**.",
         "- Envío automático: **solo si el candidato valida MX y fuente pública en el workflow de captación**.",
         "",
     ]
