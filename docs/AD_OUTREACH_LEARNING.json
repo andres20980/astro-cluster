@@ -113,14 +113,14 @@
       "recommended_action": "continue",
       "totals": {
         "prospects": 10,
-        "approved": 4,
-        "sent": 4,
+        "approved": 2,
+        "sent": 6,
         "replied": 0,
         "not_interested": 0,
-        "bounced": 0,
+        "bounced": 1,
         "reply_rate": 0.0,
         "not_interested_rate": 0.0,
-        "bounce_rate": 0.0
+        "bounce_rate": 0.1667
       },
       "segments": {
         "astrologia": {
@@ -151,21 +151,21 @@
           "sent": 1,
           "replied": 0,
           "not_interested": 0,
+          "bounced": 1,
+          "reply_rate": 0.0,
+          "not_interested_rate": 0.0,
+          "bounce_rate": 1.0
+        },
+        "esoterismo": {
+          "prospects": 1,
+          "approved": 0,
+          "sent": 1,
+          "replied": 0,
+          "not_interested": 0,
           "bounced": 0,
           "reply_rate": 0.0,
           "not_interested_rate": 0.0,
           "bounce_rate": 0.0
-        },
-        "esoterismo": {
-          "prospects": 1,
-          "approved": 1,
-          "sent": 0,
-          "replied": 0,
-          "not_interested": 0,
-          "bounced": 0,
-          "reply_rate": 0,
-          "not_interested_rate": 0,
-          "bounce_rate": 0
         },
         "tarot online": {
           "prospects": 1,
@@ -180,8 +180,8 @@
         },
         "tarotista": {
           "prospects": 2,
-          "approved": 1,
-          "sent": 1,
+          "approved": 0,
+          "sent": 2,
           "replied": 0,
           "not_interested": 0,
           "bounced": 0,
@@ -214,5 +214,5 @@
       }
     }
   ],
-  "updated_at": "2026-04-22T08:56:44+00:00"
+  "updated_at": "2026-04-22T09:22:14+00:00"
 }
