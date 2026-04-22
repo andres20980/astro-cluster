@@ -85,6 +85,19 @@ def fetch_json(url):
         return json.loads(resp.read().decode("utf-8"))
 
 
+def http_error_message(exc):
+    try:
+        payload = json.loads(exc.read().decode("utf-8", errors="ignore"))
+    except Exception:
+        return str(exc)
+    error = payload.get("error", {})
+    return error.get("message") or str(exc)
+
+
+def is_custom_search_access_denied(message):
+    return "does not have the access to custom search json api" in (message or "").lower()
+
+
 def fetch_text(url):
     req = urllib.request.Request(url, headers={"User-Agent": "astro-cluster-prospecting/1.0"})
     with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
@@ -192,6 +205,17 @@ def prospect(api_key, cx, existing):
             break
         try:
             results = google_search(query, api_key, cx)
+        except urllib.error.HTTPError as exc:
+            message = http_error_message(exc)
+            if exc.code == 403 and is_custom_search_access_denied(message):
+                errors.append(
+                    "Custom Search JSON API: acceso denegado para este proyecto. "
+                    "Google indica que la API esta cerrada a nuevos clientes; "
+                    "se detienen los reintentos para mantener la ejecucion free-tier friendly."
+                )
+                break
+            errors.append(f"{query}: HTTP {exc.code}: {message}")
+            continue
         except Exception as exc:
             errors.append(f"{query}: {exc}")
             continue
