@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
@@ -8,9 +9,13 @@ from pathlib import Path
 
 
 def api_json(url, token):
+    headers = {"Authorization": f"Bearer {token}"}
+    quota_project = os.environ.get("GOOGLE_CLOUD_QUOTA_PROJECT", "").strip()
+    if quota_project:
+        headers["x-goog-user-project"] = quota_project
     req = urllib.request.Request(
         url,
-        headers={"Authorization": f"Bearer {token}"},
+        headers=headers,
         method="GET",
     )
     try:
