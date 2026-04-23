@@ -553,6 +553,11 @@ def is_our_mailbox_address(address):
     return address in {normalize_email(FROM_EMAIL), normalize_email(IMPERSONATE), normalize_email(GMAIL_USER)}
 
 
+def is_bounce_sender(address):
+    local = normalize_email(address).split("@", 1)[0]
+    return local in {"mailer-daemon", "postmaster"}
+
+
 def latest_inbound_from_thread(token, thread_id):
     if active_transport() == "smtp" or not thread_id:
         return None
@@ -888,7 +893,9 @@ def sync_status(token, prospects, restrict_emails=None):
         if inbound_thread:
             snippet = inbound_thread.get("snippet", "")
             matched_thread_id = inbound_thread.get("thread_id", "") or matched_thread_id
+            inbound_sender = inbound_thread.get("sender", "")
         else:
+            inbound_sender = ""
             inbound = mail_list(token, f"from:{email} newer_than:45d")
             if inbound:
                 if isinstance(inbound[0], dict):
@@ -897,16 +904,22 @@ def sync_status(token, prospects, restrict_emails=None):
                 snippet = (detail.get("snippet") or "").strip()
 
         if snippet:
-            new_status = "not_interested" if NEGATIVE_RE.search(snippet) else "replied"
-            if prospect.get("status") != new_status:
-                prospect["status"] = new_status
-                prospect["reply_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
-                prospect["reply_snippet"] = snippet[:240]
-                if new_status == "not_interested":
-                    prospect["suppressed_at"] = prospect["reply_at"]
-                changed.append(prospect)
-            if new_status in {"replied", "not_interested"}:
+            if is_bounce_sender(inbound_sender) or BOUNCE_USER_UNKNOWN_RE.search(snippet):
+                if prospect.get("status") != "bounced":
+                    mark_bounced(prospect, snippet)
+                    changed.append(prospect)
                 postprocess_handled_conversation(token, prospect, matched_thread_id)
+            else:
+                new_status = "not_interested" if NEGATIVE_RE.search(snippet) else "replied"
+                if prospect.get("status") != new_status:
+                    prospect["status"] = new_status
+                    prospect["reply_at"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+                    prospect["reply_snippet"] = snippet[:240]
+                    if new_status == "not_interested":
+                        prospect["suppressed_at"] = prospect["reply_at"]
+                    changed.append(prospect)
+                if new_status in {"replied", "not_interested"}:
+                    postprocess_handled_conversation(token, prospect, matched_thread_id)
 
         bounces = mail_list(token, f"from:(mailer-daemon@googlemail.com OR mailer-daemon@google.com) {email} newer_than:45d")
         if bounces and prospect.get("status") != "bounced":
