@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-21T15:14:56Z",
+  "generatedAt": "2026-04-23T09:30:28Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
       "family": "home",
-      "score": 381.0,
-      "ga4Views": 14.0,
-      "ga4LowEngagementViews": 14.0,
+      "score": 354.0,
+      "ga4Views": 13.0,
+      "ga4LowEngagementViews": 13.0,
       "gscImpressions": 3.0,
       "gscOpportunity": 3.0,
       "paths": [
@@ -41,9 +41,9 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 381.0,
-    "ga4Views": 14.0,
-    "ga4LowEngagementViews": 14.0,
+    "score": 354.0,
+    "ga4Views": 13.0,
+    "ga4LowEngagementViews": 13.0,
     "gscImpressions": 3.0,
     "gscOpportunity": 3.0,
     "paths": [

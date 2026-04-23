@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-04-21T15:14:59Z",
+  "generatedAt": "2026-04-23T09:30:34Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "range": {
-    "start": "2026-03-24",
-    "end": "2026-04-18"
+    "start": "2026-03-26",
+    "end": "2026-04-20"
   },
   "queries": [
     {
-      "query": "arcanos mayores",
+      "query": "arcano 6 significado",
       "clicks": 0.0,
-      "impressions": 6.0,
+      "impressions": 1.0,
       "ctr": 0.0,
-      "position": 71.83333333333333,
-      "opportunity": 6.0
+      "position": 29.0,
+      "opportunity": 1.0
     },
     {
       "query": "arcano 6 tarot",
@@ -40,11 +40,11 @@
       "opportunity": 1.0
     },
     {
-      "query": "arcanos mayores significado",
+      "query": "arcano numero 6",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 86.0,
+      "position": 73.0,
       "opportunity": 1.0
     }
   ],
@@ -52,26 +52,26 @@
     {
       "path": "/arcanos-mayores",
       "clicks": 0.0,
-      "impressions": 13.0,
+      "impressions": 18.0,
       "ctr": 0.0,
-      "position": 82.0,
-      "opportunity": 13.0
-    },
-    {
-      "path": "/arcanos-mayores/los-enamorados",
-      "clicks": 0.0,
-      "impressions": 5.0,
-      "ctr": 0.0,
-      "position": 57.8,
-      "opportunity": 5.0
+      "position": 80.5,
+      "opportunity": 18.0
     },
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 3.0,
+      "impressions": 4.0,
       "ctr": 0.0,
-      "position": 31.0,
-      "opportunity": 3.0
+      "position": 34.25,
+      "opportunity": 4.0
+    },
+    {
+      "path": "/arcanos-mayores/la-estrella",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 79.5,
+      "opportunity": 4.0
     },
     {
       "path": "/arcanos-mayores/la-emperatriz",
@@ -82,22 +82,22 @@
       "opportunity": 2.0
     },
     {
-      "path": "/arcanos-mayores/la-estrella",
+      "path": "/arcanos-mayores/",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 59.0,
+      "position": 73.0,
       "opportunity": 1.0
     }
   ],
   "topOpportunities": [
     {
-      "query": "arcanos mayores",
+      "query": "arcano 6 significado",
       "clicks": 0.0,
-      "impressions": 6.0,
+      "impressions": 1.0,
       "ctr": 0.0,
-      "position": 71.83333333333333,
-      "opportunity": 6.0
+      "position": 29.0,
+      "opportunity": 1.0
     },
     {
       "query": "arcano 6 tarot",
@@ -124,11 +124,11 @@
       "opportunity": 1.0
     },
     {
-      "query": "arcanos mayores significado",
+      "query": "arcano numero 6",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 86.0,
+      "position": 73.0,
       "opportunity": 1.0
     }
   ]
