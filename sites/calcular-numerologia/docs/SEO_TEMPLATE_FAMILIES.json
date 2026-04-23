@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-04-23T09:30:28Z",
+  "generatedAt": "2026-04-23T15:30:20Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "families": [
     {
       "family": "home",
-      "score": 461.0,
+      "score": 462.0,
       "ga4Views": 17.0,
       "ga4LowEngagementViews": 17.0,
-      "gscImpressions": 3.0,
-      "gscOpportunity": 2.0,
+      "gscImpressions": 4.0,
+      "gscOpportunity": 3.0,
       "paths": [
         "/"
       ]
@@ -28,11 +28,11 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 461.0,
+    "score": 462.0,
     "ga4Views": 17.0,
     "ga4LowEngagementViews": 17.0,
-    "gscImpressions": 3.0,
-    "gscOpportunity": 2.0,
+    "gscImpressions": 4.0,
+    "gscOpportunity": 3.0,
     "paths": [
       "/"
     ]
