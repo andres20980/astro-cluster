@@ -14,6 +14,8 @@ import httpx
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-2.5-flash"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+MAX_OUTPUT_TOKENS = int(os.environ.get("GEMINI_MAX_OUTPUT_TOKENS", "16000"))
+MAX_CONTINUATIONS = int(os.environ.get("GEMINI_MAX_CONTINUATIONS", "2"))
 
 # --------------- caché en memoria ---------------
 _CACHE: dict[str, tuple[float, str]] = {}   # key → (timestamp, html)
@@ -129,6 +131,52 @@ def _build_chart_summary(chart: dict) -> str:
     return "\n".join(lines)
 
 
+def _clean_model_text(text: str) -> str:
+    """Elimina envoltorios markdown habituales sin tocar el HTML interno."""
+    text = text.strip()
+    if text.startswith("```html"):
+        text = text[7:]
+    if text.startswith("```"):
+        text = text[3:]
+    if text.endswith("```"):
+        text = text[:-3]
+    return text.strip()
+
+
+def _extract_text_and_finish_reason(data: dict) -> tuple[str, str]:
+    """Extrae texto y motivo de finalización de la respuesta de Gemini."""
+    candidate = data["candidates"][0]
+    parts = candidate.get("content", {}).get("parts", [])
+    text = "".join(part.get("text", "") for part in parts)
+    return text, candidate.get("finishReason", "")
+
+
+def _looks_incomplete(text: str) -> bool:
+    """Detecta respuestas que no llegaron a la síntesis o terminan cortadas."""
+    clean = _clean_model_text(text)
+    if "Síntesis y misión de vida" not in clean and "Sintesis y misión de vida" not in clean:
+        return True
+    return bool(clean) and clean[-1] not in ".!?»”'>"
+
+
+async def _generate_content(client: httpx.AsyncClient, contents: list[dict]) -> tuple[str, str]:
+    payload = {
+        "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+        "contents": contents,
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": MAX_OUTPUT_TOKENS,
+        },
+    }
+    resp = await client.post(
+        GEMINI_URL,
+        params={"key": GEMINI_KEY},
+        json=payload,
+    )
+    resp.raise_for_status()
+    return _extract_text_and_finish_reason(resp.json())
+
+
 async def interpret_chart(chart: dict, sex: str | None = None) -> str:
     """Envía la carta a Gemini y devuelve HTML con la interpretación."""
     if sex:
@@ -160,32 +208,36 @@ async def interpret_chart(chart: dict, sex: str | None = None) -> str:
 
     chart_text = _build_chart_summary(chart)
 
-    payload = {
-        "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
-        "contents": [{"parts": [{"text": f"Interpreta esta carta astral natal:\n\n{chart_text}"}]}],
-        "generationConfig": {
-            "temperature": 0.7,
-            "maxOutputTokens": 10000,
-        },
-    }
-
     async with httpx.AsyncClient(timeout=120) as client:
-        resp = await client.post(
-            GEMINI_URL,
-            params={"key": GEMINI_KEY},
-            json=payload,
-        )
-        resp.raise_for_status()
+        initial_prompt = f"Interpreta esta carta astral natal:\n\n{chart_text}"
+        contents = [{"role": "user", "parts": [{"text": initial_prompt}]}]
+        text, finish_reason = await _generate_content(client, contents)
 
-    data = resp.json()
-    text = data["candidates"][0]["content"]["parts"][0]["text"]
-    # Limpiar posibles wrappers markdown
-    if text.startswith("```html"):
-        text = text[7:]
-    if text.startswith("```"):
-        text = text[3:]
-    if text.endswith("```"):
-        text = text[:-3]
-    result = text.strip()
+        continuations = 0
+        while (finish_reason == "MAX_TOKENS" or _looks_incomplete(text)) and continuations < MAX_CONTINUATIONS:
+            contents = [
+                {"role": "user", "parts": [{"text": initial_prompt}]},
+                {"role": "model", "parts": [{"text": text}]},
+                {
+                    "role": "user",
+                    "parts": [{
+                        "text": (
+                            "La respuesta anterior quedó incompleta. "
+                            "Continúa exactamente desde donde se interrumpió si estaba cortada; "
+                            "si faltan secciones, añade solo las secciones pendientes, sin repetir contenido, "
+                            "manteniendo HTML limpio y cerrando la interpretación con la sección "
+                            "'Síntesis y misión de vida'."
+                        )
+                    }],
+                },
+            ]
+            more_text, finish_reason = await _generate_content(client, contents)
+            text += more_text
+            continuations += 1
+
+        if finish_reason == "MAX_TOKENS" or _looks_incomplete(text):
+            raise RuntimeError("La interpretación quedó incompleta. Inténtalo de nuevo.")
+
+    result = _clean_model_text(text)
     _CACHE[cache_key] = (time.monotonic(), result)
     return result
