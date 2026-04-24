@@ -420,7 +420,7 @@
           <span>✨</span> <span class="counter" id="chartCounter">0</span> cartas registradas
         </div>
         <div class="social-proof">
-          <span>📊</span> métricas GA4 desde lanzamiento
+          <span>📊</span> <span class="counter" id="visitorCounter">0</span> visitantes reales
         </div>
       </div>
     </div>
@@ -771,18 +771,23 @@ function loadLeaflet(){return new Promise(res=>{
 let step=1,bLat=null,bLng=null,bCity='',map=null,marker=null,geoT=null,chartData=null,mode=null;
 let toolStarted=false;
 
-// Public counters are fetched from the weekly GA4 snapshot.
+// Public counters are fetched from the published stats snapshot.
 let CHART_BASE=0;
+let VISITOR_BASE=0;
 function getChartCount(){return CHART_BASE}
+function getVisitorCount(){return VISITOR_BASE}
 function incChartCount(){updCounters()}
 function fmtNum(n){return n.toLocaleString('es-ES')}
 function updCounters(){
   const ce=document.getElementById('chartCounter');
+  const ve=document.getElementById('visitorCounter');
   if(ce)ce.textContent=fmtNum(getChartCount());
+  if(ve)ve.textContent=fmtNum(getVisitorCount());
 }
 function loadCounters(){
   fetch('/stats.json').then(r=>r.json()).then(d=>{
     CHART_BASE=Number(d.charts_calculated)||0;
+    VISITOR_BASE=Number(d.visitors)||0;
     updCounters();
   }).catch(()=>updCounters());
 }
