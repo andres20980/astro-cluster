@@ -5,6 +5,7 @@ __pycache__/
 .kerykeion_cache/
 .firebase/
 .tmp/
+.local/
 docs/SEO_AGENT_STATE.json
 certificado*
 *.pdf
