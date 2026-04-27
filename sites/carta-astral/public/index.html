@@ -30,7 +30,7 @@
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#7c3aed">
   <!-- Redirect duplicate hosts to custom domain -->
-  <script>if(location.hostname==='www.carta-astral-gratis.es'||location.hostname.endsWith('.web.app'))location.replace('https://carta-astral-gratis.es'+location.pathname+location.search);</script>
+  <script>if(location.protocol!=='https:'||location.hostname==='www.carta-astral-gratis.es'||location.hostname.endsWith('.web.app'))location.replace('https://carta-astral-gratis.es'+location.pathname+location.search);</script>
   <!-- GA4 -->
   <script>
     (function(){
