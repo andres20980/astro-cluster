@@ -70,7 +70,7 @@ sitemap_url_for() {
 canonical_host_redirect_script() {
   local domain="$1"
   cat <<EOF
-  <script>if(location.hostname==='www.${domain}'||location.hostname.endsWith('.web.app'))location.replace('https://${domain}'+location.pathname+location.search);</script>
+  <script>if(location.protocol!=='https:'||location.hostname==='www.${domain}'||location.hostname.endsWith('.web.app'))location.replace('https://${domain}'+location.pathname+location.search);</script>
 EOF
 }
 

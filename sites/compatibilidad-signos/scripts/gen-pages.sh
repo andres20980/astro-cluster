@@ -420,8 +420,8 @@ ${COMMON_CSS}
   </div>
 
   <nav class="quick-nav" aria-label="Accesos rápidos a la tabla de compatibilidad">
-    <a href="#tabla-geminis">Tabla de compatibilidad de Géminis</a>
-    <a href="#tabla-aries">Tabla de compatibilidad de Aries</a>
+    <a href="/tabla-compatibilidad-geminis">Tabla de compatibilidad de Géminis</a>
+    <a href="/tabla-compatibilidad-aries">Tabla de compatibilidad de Aries</a>
     <a href="#tabla-completa">Tabla zodiacal completa</a>
   </nav>
 
@@ -502,6 +502,119 @@ ENDINDEX
 
 SITEMAP_URLS="  <url><loc>https://${DOMAIN}/</loc><lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>\n${SITEMAP_URLS}"
 echo "  ✓ index.html"
+
+# ══════════════════════════════════════════════════════════════
+# SIGN TABLE LANDING PAGES
+# ══════════════════════════════════════════════════════════════
+echo "Generating sign table landing pages..."
+SIGN_TABLE_COUNT=0
+for sign in "${SLUGS[@]}"; do
+  sign_name="${NAME[$sign]}"
+  sign_glyph="${GLYPH[$sign]}"
+  sign_element="${ELEMENT[$sign]}"
+  sign_ruler="${RULER[$sign]}"
+  page_slug="tabla-compatibilidad-${sign}"
+  page_path="/${page_slug}"
+  page_title="Tabla de Compatibilidad de ${sign_name} — Signos Compatibles"
+  page_desc="Consulta la tabla de compatibilidad de ${sign_name}: porcentajes de afinidad con los 12 signos, mejores parejas, retos y enlaces a cada combinación."
+  rows=""
+  best_links=""
+  moderate_links=""
+  challenge_links=""
+  for other in "${SLUGS[@]}"; do
+    other_name="${NAME[$other]}"
+    other_glyph="${GLYPH[$other]}"
+    score=$(calc_score "$sign" "$other")
+    label=$(score_label "$score")
+    rows+="<tr><td><a href=\"/${sign}-${other}\">${sign_glyph} ${sign_name} con ${other_glyph} ${other_name}</a></td><td><strong>${score}%</strong></td><td>${label}</td></tr>"
+    if (( score >= 65 )); then
+      best_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+    elif (( score >= 50 )); then
+      moderate_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+    else
+      challenge_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+    fi
+  done
+  [[ -z "$best_links" ]] && best_links="<li>No hay combinaciones de ${sign_name} por encima del 65% en esta tabla; revisa las compatibilidades medias para ver las mejores opciones.</li>"
+  [[ -z "$moderate_links" ]] && moderate_links="<li>No hay combinaciones medias para ${sign_name}; sus resultados se concentran entre afinidades altas y relaciones con más reto.</li>"
+  [[ -z "$challenge_links" ]] && challenge_links="<li>No hay combinaciones de ${sign_name} por debajo del 50% en esta tabla; aun así conviene leer cada pareja en detalle.</li>"
+
+  cat > "$PUBLIC/${page_slug}.html" <<ENDSIGN
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "$page_title" "$page_desc" "$page_path" "sign_table_landing" "long_tail" "$sign")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"${page_title}","description":"${page_desc}","url":"https://${DOMAIN}${page_path}","inLanguage":"es"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://${DOMAIN}/"},{"@type":"ListItem","position":2,"name":"Tabla de compatibilidad de ${sign_name}","item":"https://${DOMAIN}${page_path}"}]}
+  </script>
+  <style>
+${COMMON_CSS}
+    .sign-table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:1rem}
+    .sign-table th,.sign-table td{border-bottom:1px solid var(--border);padding:.7rem .4rem;text-align:left}
+    .sign-table th{color:var(--accent);font-size:.78rem;text-transform:uppercase}
+    .sign-table a{color:var(--accent);text-decoration:none;font-weight:600}
+    .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .split h2{font-size:1rem}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Compatibilidad Signos</a> › Tabla de ${sign_name}</nav>
+  <div class="score-hero">
+    <div class="glyphs">${sign_glyph}</div>
+    <h1><span>Tabla de compatibilidad de ${sign_name}</span></h1>
+    <div class="label">${sign_name} · ${sign_element} · regente ${sign_ruler}</div>
+  </div>
+
+  <div class="panel">
+    <h2>Compatibilidad de ${sign_name} con todos los signos</h2>
+    <p>Esta tabla resume la afinidad de ${sign_name} con los 12 signos del zodíaco. Entra en cada combinación para ver fortalezas, retos, elementos, planetas regentes y consejos de relación.</p>
+    <table class="sign-table">
+      <thead><tr><th>Combinación</th><th>Afinidad</th><th>Nivel</th></tr></thead>
+      <tbody>
+${rows}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="split">
+    <div class="panel">
+      <h2>Mejores compatibilidades de ${sign_name}</h2>
+      <ul>${best_links}</ul>
+    </div>
+    <div class="panel">
+      <h2>Compatibilidades medias</h2>
+      <ul>${moderate_links}</ul>
+    </div>
+    <div class="panel">
+      <h2>Relaciones con más reto</h2>
+      <ul>${challenge_links}</ul>
+    </div>
+  </div>
+
+$(ad_block "❤" "Patrocina una tabla de compatibilidad por signo" "Ubicación contextual para usuarios que comparan parejas y afinidad amorosa por signo." "Ver espacios →")
+
+  <div class="cta-box">
+    <h3>Calcula una compatibilidad concreta</h3>
+    <p>Vuelve a la tabla completa para comparar cualquier pareja de signos en un clic.</p>
+    <a href="/">Ver tabla zodiacal completa →</a>
+  </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
+
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDSIGN
+
+  SITEMAP_URLS+="  <url><loc>https://${DOMAIN}${page_path}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
+  SIGN_TABLE_COUNT=$((SIGN_TABLE_COUNT + 1))
+done
+echo "  ✓ ${SIGN_TABLE_COUNT} sign table pages generated"
 
 # ══════════════════════════════════════════════════════════════
 # STATIC FILES: 404, ads.txt, robots.txt, sitemap.xml
