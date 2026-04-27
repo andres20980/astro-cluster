@@ -302,4 +302,3 @@ jobs:
           configPath: .github/lighthouserc.json
           uploadArtifacts: true
           artifactName: lighthouse-results-${{ matrix.site }}
-          temporaryPublicStorage: true
