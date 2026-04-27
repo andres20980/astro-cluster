@@ -208,7 +208,7 @@ jobs:
 
           export GOOGLE_APPLICATION_CREDENTIALS="$creds_file"
           cd "sites/${{ matrix.site }}"
-          npx firebase-tools@latest deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+          npx firebase-tools@15.15.0 deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
 
       - name: "📮 Enviar sitemap a GSC"
         shell: bash
