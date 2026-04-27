@@ -1,0 +1,7 @@
+/
+/privacy
+/terms
+/publicidad
+/sitemap.xml
+/robots.txt
+/ads.txt
