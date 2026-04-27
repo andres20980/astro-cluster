@@ -83,6 +83,7 @@ jobs:
       matrix:
         site: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
       fail-fast: false
+      max-parallel: 2
     steps:
       - uses: actions/checkout@v6
 
@@ -287,6 +288,7 @@ jobs:
       matrix:
         site: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
       fail-fast: false
+      max-parallel: 2
     steps:
       - uses: actions/checkout@v6
 
