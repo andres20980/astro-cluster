@@ -30,11 +30,13 @@ jobs:
           MAX_RESULTS_PER_QUERY: ${{ vars.MAX_RESULTS_PER_QUERY || '5' }}
           CUSTOM_SEARCH_ACCESS_DENIED_COOLDOWN_DAYS: ${{ vars.CUSTOM_SEARCH_ACCESS_DENIED_COOLDOWN_DAYS || '30' }}
         run: |
+          set -euo pipefail
           python3 .github/scripts/ad_prospecting.py --write --report /tmp/ad-prospecting-report.md
           cat /tmp/ad-prospecting-report.md
 
       - name: "💾 Persistir candidatos nuevos"
         run: |
+          set -euo pipefail
           if git diff --quiet -- docs/AD_PROSPECTS.json docs/AD_PROSPECTING_STATE.json; then
             echo "No hay candidatos nuevos que persistir."
             exit 0

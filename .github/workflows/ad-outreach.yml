@@ -39,7 +39,9 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: "🐍 Preparar dependencias"
-        run: python3 -m pip install --user cryptography
+        run: |
+          set -euo pipefail
+          python3 -m pip install --user cryptography
 
       - name: "📨 Enviar propuestas aprobadas y sincronizar respuestas"
         env:
@@ -111,6 +113,7 @@ jobs:
 
       - name: "💾 Persistir estado de captación"
         run: |
+          set -euo pipefail
           if git diff --quiet -- docs/AD_PROSPECTS.json docs/AD_OUTREACH_LEARNING.json; then
             echo "No hay cambios de estado."
             exit 0
