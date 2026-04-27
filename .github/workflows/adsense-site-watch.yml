@@ -58,6 +58,7 @@ jobs:
           EXPECTED_DOMAINS_JSON: >-
             ["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]
         run: |
+          set -euo pipefail
           python3 .github/scripts/adsense_site_watch.py > /tmp/adsense-site-watch.md
           cat /tmp/adsense-site-watch.md
 

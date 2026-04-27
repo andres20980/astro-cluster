@@ -59,6 +59,7 @@ jobs:
         env:
           OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
         run: |
+          set -euo pipefail
           python3 .github/scripts/ga4_custom_definitions.py \
             --property properties/531527723 \
             --token "$(cat "$OAUTH_TOKEN_PATH")" \
@@ -70,6 +71,7 @@ jobs:
         env:
           OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
         run: |
+          set -euo pipefail
           python3 .github/scripts/ga4_key_events.py \
             --property properties/531527723 \
             --token "$(cat "$OAUTH_TOKEN_PATH")" \
@@ -79,6 +81,7 @@ jobs:
       - name: "🧾 Resumen"
         if: always()
         run: |
+          set -euo pipefail
           if [ "${{ steps.saauth.outcome }}" != "success" ] || [ "${{ steps.ga4_admin.outputs.missing }}" = "true" ]; then
             echo "No se pudo sincronizar GA4 Admin porque falta o falla FIREBASE_SERVICE_ACCOUNT." >> /tmp/ga4-admin-sync.md
           else

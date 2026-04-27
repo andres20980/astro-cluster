@@ -46,6 +46,7 @@ jobs:
         id: select
         shell: bash
         run: |
+          set -euo pipefail
           sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
@@ -62,12 +63,15 @@ jobs:
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}
           FORCE: ${{ inputs.force }}
-        run: node .github/scripts/seo-competitor-intel.js
+        run: |
+          set -euo pipefail
+          node .github/scripts/seo-competitor-intel.js
 
       - name: "📤 Confirmar resultados"
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "sites/${SITE_KEY}/docs/SEO_COMPETITOR_INTEL.json"
