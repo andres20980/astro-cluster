@@ -82,7 +82,7 @@ for site_key in "${SITE_KEYS[@]}"; do
   <title>Política de Privacidad — ${site_name}</title>
   <meta name="description" content="Política de privacidad de ${domain}. Información sobre cookies, analítica y publicidad directa.">
   <link rel="canonical" href="https://${domain}/privacy">
-  <meta name="robots" content="noindex, follow">
+  <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="${BRAND_FONTS}" rel="stylesheet">
 $(canonical_host_redirect_script "$domain")
@@ -156,7 +156,7 @@ ENDPRIV
   <title>Términos de Uso — ${site_name}</title>
   <meta name="description" content="Términos y condiciones de uso de ${domain}. Servicio gratuito de ${desc}.">
   <link rel="canonical" href="https://${domain}/terms">
-  <meta name="robots" content="noindex, follow">
+  <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="${BRAND_FONTS}" rel="stylesheet">
 $(canonical_host_redirect_script "$domain")
