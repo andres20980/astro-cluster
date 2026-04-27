@@ -71,6 +71,12 @@ jobs:
           fi
 
           popd >/dev/null
+
+          source shared/config.sh
+          domain="${DOMAINS[$SITE_KEY]}"
+          python3 .github/scripts/check_internal_urls.py "sites/${SITE_KEY}/public" "$domain"
+          python3 .github/scripts/check_sitemap_indexability.py "sites/${SITE_KEY}/public" "$domain"
+
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
           cat /tmp/seo-result.json
 

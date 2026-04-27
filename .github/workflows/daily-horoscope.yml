@@ -22,10 +22,15 @@ jobs:
       - name: "🔄 Regenerar páginas del horóscopo"
         env:
           ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
-        run: bash sites/horoscopo-de-hoy/scripts/gen-pages.sh
+        run: |
+          set -euo pipefail
+          bash sites/horoscopo-de-hoy/scripts/gen-pages.sh
+          python3 .github/scripts/check_internal_urls.py sites/horoscopo-de-hoy/public horoscopo-de-hoy.es
+          python3 .github/scripts/check_sitemap_indexability.py sites/horoscopo-de-hoy/public horoscopo-de-hoy.es
 
       - name: "📤 Confirmar y subir cambios"
         run: |
+          set -euo pipefail
           cd sites/horoscopo-de-hoy
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
