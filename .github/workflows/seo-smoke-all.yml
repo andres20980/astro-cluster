@@ -77,6 +77,13 @@ jobs:
           site_dir="sites/${{ matrix.site }}"
           python3 .github/scripts/check_sitemap_indexability.py "$site_dir/public" "${{ matrix.domain }}"
 
+      - name: "🧪 Verificar URLs críticas"
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_dir="sites/${{ matrix.site }}"
+          python3 .github/scripts/check_critical_urls.py "$site_dir" "${{ matrix.domain }}"
+
       - name: "🔎 Comprobar ${{ matrix.domain }}"
         id: smoke
         shell: bash
