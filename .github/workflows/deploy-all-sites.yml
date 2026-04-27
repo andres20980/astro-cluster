@@ -215,7 +215,7 @@ jobs:
           cd "sites/${{ matrix.site }}"
           npx firebase-tools@15.15.0 deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
 
-      - name: "📮 Enviar sitemap a GSC"
+      - name: "📮 Enviar sitemap a GSC (no bloqueante)"
         shell: bash
         env:
           DOMAIN: ${{ steps.config.outputs.domain }}
@@ -228,8 +228,8 @@ jobs:
           set -euo pipefail
 
           if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
-            echo "Missing GOOGLE_OAUTH_* secrets; cannot submit sitemap to GSC" >&2
-            exit 1
+            echo "::warning::Missing GOOGLE_OAUTH_* secrets; skipping GSC sitemap submit"
+            exit 0
           fi
 
           token_json=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
@@ -241,8 +241,8 @@ jobs:
           access_token=$(echo "$token_json" | jq -r '.access_token // empty')
           if [ -z "$access_token" ]; then
             echo "$token_json"
-            echo "Could not mint OAuth access token for GSC sitemap submit" >&2
-            exit 1
+            echo "::warning::Could not mint OAuth access token for GSC sitemap submit"
+            exit 0
           fi
 
           site_url_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${GSC_SITE_URL}',''))")
@@ -262,9 +262,8 @@ jobs:
           if [ "$code" = "200" ] || [ "$code" = "204" ]; then
             echo "Sitemap submitted to GSC for ${DOMAIN}"
           else
-            echo "GSC sitemap submit returned HTTP ${code} for ${DOMAIN}" >&2
+            echo "::warning::GSC sitemap submit returned HTTP ${code} for ${DOMAIN}"
             cat /tmp/gsc-submit-response.json || true
-            exit 1
           fi
 
   lighthouse:
