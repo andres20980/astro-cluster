@@ -70,6 +70,11 @@ def main():
 
     failures = []
     locations = read_sitemap_locations(sitemap_path)
+    homepage = f"https://{domain}/"
+    if (public_dir / "index.html").is_file() and normalize_url(homepage) not in {
+        normalize_url(location) for location in locations
+    }:
+        locations.insert(0, homepage)
 
     for location in locations:
         parsed = urlparse(location)
