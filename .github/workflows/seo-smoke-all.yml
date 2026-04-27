@@ -34,6 +34,34 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: "🔁 Verificar generadores deterministas"
+        shell: bash
+        env:
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
+        run: |
+          set -euo pipefail
+          site_dir="sites/${{ matrix.site }}"
+          generated=0
+
+          for script_path in "$site_dir/scripts/gen-pages.sh" "$site_dir/scripts/gen-sign-pages.sh"; do
+            if [ -f "$script_path" ]; then
+              echo "Generating ${{ matrix.site }} with $script_path"
+              bash "$script_path"
+              generated=1
+            fi
+          done
+
+          if [ "$generated" -eq 0 ]; then
+            echo "No generator script for ${{ matrix.site }}"
+            exit 0
+          fi
+
+          if ! git diff --quiet -- "$site_dir/public"; then
+            echo "Generator for ${{ matrix.site }} produced uncommitted public changes. Run it locally and commit outputs." >&2
+            git diff --stat -- "$site_dir/public"
+            exit 1
+          fi
+
       - name: "🧱 Verificar URLs internas generadas"
         shell: bash
         run: |
