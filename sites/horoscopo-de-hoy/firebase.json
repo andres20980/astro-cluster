@@ -15,6 +15,18 @@
         ]
       },
       {
+        "source": "/",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=900, stale-while-revalidate=300" }
+        ]
+      },
+      {
+        "source": "/{aries,tauro,geminis,cancer,leo,virgo,libra,escorpio,sagitario,capricornio,acuario,piscis,privacy,terms,publicidad}",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=900, stale-while-revalidate=300" }
+        ]
+      },
+      {
         "source": "**/*.html",
         "headers": [
           { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=900, stale-while-revalidate=300" }
