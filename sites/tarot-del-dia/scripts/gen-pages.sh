@@ -205,7 +205,7 @@ $(ad_block "🔮" "¿Ofreces consultas, cursos o productos esotéricos?" "Tu mar
 
   <div class="panel">
     <h2>Cómo integrar el mensaje de ${name}</h2>
-    <p>Para interpretar ${name} con precisión, mira primero la pregunta y después la posición de la carta. En una tirada de pasado puede señalar una experiencia que todavía condiciona tu presente; en presente muestra una energía activa; en futuro habla de una tendencia si mantienes el mismo camino.</p>
+    <p>Para interpretar ${name} fuera de una tirada completa, empieza por la pregunta y el contexto. Si ya forma parte de una tirada de tres cartas, léela junto a su posición, su orientación y las cartas vecinas: en pasado puede señalar una experiencia que todavía condiciona; en presente muestra una energía activa; en futuro habla de una tendencia si mantienes el mismo camino.</p>
     <p>Si aparece al derecho, trabaja las claves de ${upright} de forma consciente. Si aparece invertida, no la leas como castigo: suele indicar una energía bloqueada, exagerada o vivida hacia dentro. La utilidad del tarot está en convertir el símbolo en una acción concreta.</p>
     <p>Antes de cerrar la lectura, formula una acción pequeña: una conversación que debes tener, un límite que conviene marcar, una decisión que necesita más información o un descanso que estás posponiendo. El símbolo gana valor cuando se traduce en una conducta observable durante el día.</p>
     <p>También es importante mirar las cartas vecinas. ${name} puede suavizarse, intensificarse o cambiar de matiz según el arcano que aparezca antes y después. Una lectura completa no suma significados sueltos: busca una historia coherente entre pregunta, posición, carta y contexto personal.</p>
@@ -339,7 +339,7 @@ cat >> "$PUBLIC/index.html" <<ENDINDEX
   {"@context":"https://schema.org","@type":"WebSite","name":"Tarot del Día","url":"https://${DOMAIN}/","description":"Tirada de tarot gratis del día con los 22 Arcanos Mayores.","inLanguage":"es"}
   </script>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo funciona la tirada de tarot gratis?","acceptedAnswer":{"@type":"Answer","text":"Concéntrate en tu pregunta, pulsa en 3 cartas del mazo y recibe la interpretación de cada arcano para tu situación."}},{"@type":"Question","name":"¿Cuántas veces puedo tirar las cartas?","acceptedAnswer":{"@type":"Answer","text":"Puedes hacer una tirada al día para obtener la mejor guía. Repetir la misma pregunta diluye la energía de la lectura."}},{"@type":"Question","name":"¿Es fiable el tarot por internet?","acceptedAnswer":{"@type":"Answer","text":"El tarot es una herramienta de reflexión e introspección. La selección aleatoria de cartas funciona como espejo de tu subconsciente, igual que en una tirada presencial."}}]}
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo funciona la tirada de tarot gratis?","acceptedAnswer":{"@type":"Answer","text":"Concéntrate en tu pregunta, pulsa en 3 cartas del mazo y recibe una lectura integrada que relaciona pasado, presente, futuro, orientación de cada carta y tendencia general."}},{"@type":"Question","name":"¿Cuántas veces puedo tirar las cartas?","acceptedAnswer":{"@type":"Answer","text":"Puedes hacer una tirada al día para obtener la mejor guía. Repetir la misma pregunta diluye la energía de la lectura."}},{"@type":"Question","name":"¿Es fiable el tarot por internet?","acceptedAnswer":{"@type":"Answer","text":"El tarot es una herramienta de reflexión e introspección. La selección aleatoria de cartas funciona como espejo de tu subconsciente, igual que en una tirada presencial."}}]}
   </script>
   <style>
 ${COMMON_CSS}
@@ -379,6 +379,19 @@ ${COMMON_CSS}
     .result .reading h3{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.5rem;color:var(--accent)}
     .result .reading p{line-height:1.7;color:var(--muted);font-size:.9rem}
     .result .reading .link{display:inline-block;margin-top:.5rem;color:var(--accent);text-decoration:none;font-size:.85rem;font-weight:500}
+    .result .reading-main{background:linear-gradient(135deg,#fff 0%,#f8f4ff 62%,#fff8e7 100%)}
+    .result .reading-main h2{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:.75rem;color:var(--text)}
+    .result .reading-main h3{margin-top:1rem}
+    .question-pill{display:inline-block;margin-bottom:.85rem;padding:.45rem .7rem;border-radius:999px;background:#f3eeff;color:var(--accent);font-size:.82rem;font-weight:700}
+    .reading-summary{font-size:1rem!important;color:var(--text)!important}
+    .card-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin:1rem 0}
+    .mini-card{border:1px solid var(--border);border-radius:12px;padding:.75rem;background:rgba(255,255,255,.78)}
+    .mini-card strong{display:block;font-family:'Playfair Display',serif;font-size:.95rem;color:var(--text)}
+    .mini-card span{display:block;margin-top:.25rem;color:var(--muted);font-size:.78rem}
+    .reading-actions{margin:.95rem 0 0;padding-left:1.1rem;color:var(--muted);font-size:.9rem;line-height:1.65}
+    .reading-actions li{margin:.35rem 0}
+    .arcana-links{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+    .arcana-links a{display:inline-block;padding:.45rem .65rem;border-radius:999px;background:#f8f4ff;color:var(--accent);text-decoration:none;font-size:.78rem;font-weight:700}
     .btn-reset{margin-top:1rem;padding:.5rem 1.5rem;background:var(--bg);color:var(--accent);border:1px solid var(--border);border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.85rem}
     .result-deeper{margin:1rem 0 0;padding:1.15rem;border-radius:14px;border:1px solid var(--border);background:linear-gradient(135deg,#fff 0%,#fef9ee 100%);text-align:center}
     .result-deeper h3{font-family:'Playfair Display',serif;font-size:1.02rem;margin-bottom:.35rem}
@@ -395,6 +408,7 @@ ${COMMON_CSS}
       .deck{--gap:13px;height:128px}
       .deck .card-back{width:58px;height:96px;border-radius:10px}
       .deck .card-back::after{width:14px;height:24px}
+      .card-strip{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -448,7 +462,7 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
     <p>La lectura funciona mejor si partes de una pregunta sencilla y verificable. En vez de preguntar qué ocurrirá en general, prueba con qué necesito ver hoy, qué actitud me ayuda o qué bloqueo conviene reconocer.</p>
 
     <h2>¿Cómo hacer una tirada de tarot gratis?</h2>
-    <p>Relájate, formula mentalmente tu pregunta o intención. Pulsa en 3 cartas del mazo para revelarlas. Cada carta puede salir al derecho (energía fluida) o invertida (energía bloqueada o interiorizada). Lee el mensaje completo y reflexiona sobre cómo se aplica a tu situación actual.</p>
+    <p>Relájate, formula mentalmente tu pregunta o intención. Baraja y pulsa en 3 cartas del mazo para revelarlas. Cada carta puede salir al derecho (energía fluida) o invertida (energía bloqueada o interiorizada). La lectura integra posición, orientación y relación entre cartas para darte un mensaje completo.</p>
 
     <h2>Los 22 Arcanos Mayores</h2>
     <p>Los Arcanos Mayores son las 22 cartas más poderosas del tarot. Representan arquetipos universales que reflejan las grandes lecciones y transiciones de la vida. Desde El Loco (el inicio del viaje) hasta El Mundo (la completud), cada arcano contiene una sabiduría ancestral que trasciende culturas y épocas.</p>
@@ -543,11 +557,87 @@ $(gen_footer)
     if(chosen.length===3)showResult();
   }
 
+  function escapeHtml(value){
+    return String(value||'').replace(/[<>&"]/g,(ch)=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[ch]));
+  }
+
+  function cardLabel(c){
+    return c.n+' ('+c.num+')'+(c.reversed?' invertida':'');
+  }
+
+  function cardEnergy(c){
+    return c.reversed?c.rev:c.up;
+  }
+
+  function detectContext(question){
+    const q=question.toLowerCase();
+    if(/pareja|amor|relaci[oó]n|ex|matrimonio|crisis|ruptura|volver|sentimientos/.test(q))return 'amor';
+    if(/trabajo|empleo|dinero|proyecto|negocio|cliente|carrera|empresa/.test(q))return 'trabajo';
+    return 'general';
+  }
+
+  function contextName(ctx){
+    return ctx==='amor'?'este vínculo':ctx==='trabajo'?'esta situación profesional':'esta situación';
+  }
+
+  function contextLens(ctx){
+    if(ctx==='amor')return 'En una lectura afectiva, no conviene mirar solo si una carta es positiva o difícil: importa si abre diálogo, si muestra bloqueo, si habla de confianza o si señala una salida realista.';
+    if(ctx==='trabajo')return 'En una lectura profesional, las cartas señalan el clima de decisión: qué patrón viene de antes, qué recurso está activo ahora y hacia dónde puede moverse el asunto si actúas con claridad.';
+    return 'La tirada no describe un destino cerrado: muestra un patrón, una energía activa y una tendencia probable si sigues moviéndote desde el mismo lugar.';
+  }
+
+  function orientationTone(c){
+    return c.reversed?'aparece invertida, así que su energía no fluye limpia: puede vivirse como bloqueo, exceso, miedo o resistencia':'aparece al derecho, así que su energía está disponible de forma más clara y aprovechable';
+  }
+
+  function positionReading(c,i,ctx){
+    const subject=contextName(ctx);
+    if(i===0){
+      return 'En el pasado, '+cardLabel(c)+' indica que '+subject+' viene condicionado por '+cardEnergy(c)+'. Al estar en la raíz de la tirada, no habla solo de algo que ocurrió: muestra el patrón que todavía pesa en la forma de mirar el presente. La carta '+orientationTone(c)+'.';
+    }
+    if(i===1){
+      return 'En el presente, '+cardLabel(c)+' describe la energía que está actuando ahora mismo: '+cardEnergy(c)+'. Esta es la carta central de la lectura, por eso conviene leerla como el punto de decisión. Lo que hagas ahora debe responder a esta carta, no a la ansiedad del pasado ni a una promesa futura.';
+    }
+    return 'En el futuro, '+cardLabel(c)+' marca la tendencia si integras el aprendizaje de las dos primeras cartas. Su mensaje principal es '+cardEnergy(c)+'. No lo leas como sentencia: es la dirección probable cuando el patrón del pasado se reconoce y la energía del presente se maneja con conciencia.';
+  }
+
+  function flowReading(cards,ctx){
+    const revCount=cards.filter(c=>c.reversed).length;
+    const names=cards.map(cardLabel);
+    let tone='La secuencia '+names[0]+' → '+names[1]+' → '+names[2]+' cuenta una evolución, no tres respuestas separadas. ';
+    if(revCount===0){
+      tone+='Las tres cartas salen al derecho, así que la tirada tiene continuidad: hay margen para actuar sin sentir que todo está bloqueado.';
+    }else if(revCount===1){
+      tone+='Solo una carta sale invertida: ese es el nudo de la lectura. Las otras dos muestran desde dónde puedes compensarlo y hacia dónde puede abrirse la situación.';
+    }else if(revCount===2){
+      tone+='Dos cartas invertidas señalan tensión interna o resistencia: la salida existe, pero requiere cambiar la forma de responder, no solo esperar un resultado externo.';
+    }else{
+      tone+='Las tres cartas invertidas piden pausa y honestidad. Antes de empujar una respuesta, conviene detectar qué miedo, apego o patrón repetido está mandando.';
+    }
+    if(ctx==='amor'){
+      tone+=' En pareja, esto suele hablar de dinámica entre dos personas: lo que se arrastra, lo que se calla o se expresa ahora, y la posibilidad real de recomponer o cerrar con más claridad.';
+    }
+    return tone;
+  }
+
+  function practicalActions(cards,ctx){
+    const center=cards[1];
+    const future=cards[2];
+    const subject=contextName(ctx);
+    const first=ctx==='amor'?'Ten una conversación breve y concreta: habla de lo que necesitas, no de lo que la otra persona "debería" adivinar.':'Elige una acción pequeña que puedas hacer hoy sin esperar a tener certeza total.';
+    return [
+      first,
+      'Usa la carta del presente, '+cardLabel(center)+', como brújula: trabaja '+cardEnergy(center)+' de forma consciente.',
+      'No fuerces el resultado de '+subject+'; orienta tus decisiones hacia '+cardEnergy(future)+', que es la tendencia que la tirada muestra como salida.'
+    ];
+  }
+
   function showResult(){
     instruction.textContent='Tu lectura está lista';
     const res=document.getElementById('result');
     let html='';
     const intentionValue=(intention.value||'').trim();
+    const ctx=detectContext(intentionValue);
     if(window.clusterTrack){
       window.clusterTrack('tarot_reading_complete',{
         cards_chosen:String(chosen.length),
@@ -556,13 +646,27 @@ $(gen_footer)
         third_card:chosen[2]?.slug||''
       });
     }
-    chosen.forEach((c,i)=>{
-      const meaning=c.reversed?c.rev:c.up;
-      html+='<div class="reading"><h3>'+POS[i]+': '+c.n+' ('+c.num+')'+(c.reversed?' ↕ Invertida':'')+'</h3><p>'+meaning+'</p><a class="link" href="/arcanos-mayores/'+c.slug+'">Leer significado completo de '+c.n+' →</a></div>';
-    });
+    html+='<div class="reading reading-main">';
     if(intentionValue){
-      html='<div class="reading"><h3>Intención de la tirada</h3><p>'+intentionValue.replace(/[<>&]/g,(ch)=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[ch]))+'</p></div>'+html;
+      html+='<span class="question-pill">Intención: '+escapeHtml(intentionValue)+'</span>';
     }
+    html+='<h2>Lectura completa de tu tirada</h2>';
+    html+='<p class="reading-summary">'+contextLens(ctx)+'</p>';
+    html+='<div class="card-strip">';
+    chosen.forEach((c,i)=>{
+      html+='<div class="mini-card"><strong>'+POS[i]+': '+escapeHtml(c.n)+'</strong><span>'+(c.reversed?'Invertida':'Al derecho')+' · '+escapeHtml(cardEnergy(c))+'</span></div>';
+    });
+    html+='</div>';
+    html+='<h3>La historia de las tres cartas</h3><p>'+escapeHtml(flowReading(chosen,ctx))+'</p>';
+    chosen.forEach((c,i)=>{
+      html+='<h3>'+POS[i]+': '+escapeHtml(cardLabel(c))+'</h3><p>'+escapeHtml(positionReading(c,i,ctx))+'</p>';
+    });
+    html+='<h3>Consejo para actuar</h3><ul class="reading-actions">';
+    practicalActions(chosen,ctx).forEach((action)=>{html+='<li>'+escapeHtml(action)+'</li>';});
+    html+='</ul>';
+    html+='<div class="arcana-links">';
+    chosen.forEach((c)=>{html+='<a href="/arcanos-mayores/'+c.slug+'">'+escapeHtml(c.n)+'</a>';});
+    html+='</div></div>';
     html+='<div class="result-deeper"><h3>¿Quieres profundizar más?</h3><p>Completa la lectura diaria con tu carta astral para entender qué área de tu vida está activando estas cartas.</p><a href="https://carta-astral-gratis.es/">Calcular mi carta astral gratis →</a></div>';
     html+='<div style="text-align:center"><button class="btn-reset" onclick="location.reload()">🔄 Nueva tirada</button></div>';
     res.innerHTML=html;
