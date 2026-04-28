@@ -837,5 +837,62 @@
     "validation_reason": "mx_and_public_source_ok_personal_mailbox",
     "approved_at": "2026-04-28T09:48:18+00:00",
     "approved_by": "automation"
+  },
+  {
+    "email": "avastrologia@gmail.com",
+    "name": "Consultas",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://www.avastrologia.com/2019/08/quieres-hacer-alguna-consulta.html",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-04-28",
+    "last_seen": "2026-04-28",
+    "score": 4
+  },
+  {
+    "email": "hola@cosmograma.com",
+    "name": "Consulta de Astrología Online | Sesión Personalizada por Zoom",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://www.cosmograma.com/consultas",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": false,
+      "mailto_visible": true,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-04-28",
+    "last_seen": "2026-04-28",
+    "score": 4
+  },
+  {
+    "email": "lluisgisbert@geocosmos.es",
+    "name": "Consulta astrología psicológica - Astrología Psicológica",
+    "segment": "astrologia",
+    "country_hint": "ES",
+    "source_url": "https://geocosmos.es/consulta-astrologia-psicologica/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": false,
+      "mailto_visible": true,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-04-28",
+    "last_seen": "2026-04-28",
+    "score": 4
   }
 ]
