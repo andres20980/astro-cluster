@@ -355,13 +355,16 @@ ${COMMON_CSS}
     .shuffle-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(124,58,237,.28);background:#6d28d9}
     .shuffle-btn:disabled{opacity:.7;cursor:default;transform:none}
     .draw-status{font-size:.84rem;color:var(--accent);font-weight:700;margin:.95rem 0 .4rem;min-height:1.4rem}
-    .deck-wrap{margin:1rem auto 1.4rem;max-width:760px;overflow-x:auto;overscroll-behavior-x:contain;padding:.35rem .2rem .85rem;scrollbar-width:thin}
-    .deck{display:flex;gap:.55rem;justify-content:flex-start;min-width:max-content;padding:.2rem}
+    .deck-wrap{margin:1rem auto 1.4rem;max-width:760px;min-height:178px;padding:1rem .75rem;border:1px solid var(--border);border-radius:18px;background:radial-gradient(ellipse at center,rgba(245,217,139,.22),transparent 58%),linear-gradient(135deg,#fff 0%,#f8f4ff 100%);box-shadow:var(--shadow);overflow:hidden}
+    .deck{--gap:26px;position:relative;height:150px;max-width:680px;margin:0 auto}
     .deck.locked{opacity:.46;filter:saturate(.75)}
     .deck.locked .card-back{pointer-events:none}
-    .deck .card-back{width:64px;height:104px;flex:0 0 64px;background:radial-gradient(circle at 50% 28%,rgba(212,160,23,.22),transparent 31%),linear-gradient(145deg,#17213f 0%,#35215e 55%,#111827 100%);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#f5d98b;font-size:1.45rem;transition:transform .2s,border-color .2s,box-shadow .2s,opacity .2s;border:1px solid rgba(245,217,139,.42);box-shadow:0 4px 12px rgba(17,24,39,.24)}
-    .deck.ready .card-back:hover{transform:translateY(-6px) rotate(-1deg);border-color:#f5d98b;box-shadow:0 10px 24px rgba(17,24,39,.32)}
-    .deck .card-back.picked{opacity:.24;pointer-events:none;transform:translateY(2px)}
+    .deck .card-back{position:absolute;left:50%;bottom:8px;width:72px;height:118px;background:radial-gradient(circle at 50% 26%,rgba(245,217,139,.24),transparent 30%),linear-gradient(145deg,#17213f 0%,#2c1b56 58%,#101624 100%);border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#f5d98b;font-size:1.5rem;transition:transform .22s,border-color .22s,box-shadow .22s,opacity .22s;border:1px solid rgba(245,217,139,.5);box-shadow:0 8px 18px rgba(17,24,39,.25);transform:translateX(calc(-50% + (var(--offset) * var(--gap)))) translateY(calc(var(--arc) * 1px)) rotate(calc(var(--offset) * 2.15deg));z-index:var(--z)}
+    .deck .card-back::before{content:"";position:absolute;inset:9px;border:1px solid rgba(245,217,139,.45);border-radius:8px}
+    .deck .card-back::after{content:"";width:18px;height:30px;border:1px solid rgba(245,217,139,.75);border-radius:2px;background:repeating-linear-gradient(90deg,transparent 0 3px,rgba(245,217,139,.55) 3px 4px),repeating-linear-gradient(0deg,transparent 0 3px,rgba(245,217,139,.55) 3px 4px)}
+    .deck .card-back span{display:none}
+    .deck.ready .card-back:hover{transform:translateX(calc(-50% + (var(--offset) * var(--gap)))) translateY(calc((var(--arc) * 1px) - 12px)) rotate(calc(var(--offset) * 2.15deg));border-color:#f5d98b;box-shadow:0 14px 28px rgba(17,24,39,.32)}
+    .deck .card-back.picked{opacity:.18;pointer-events:none;transform:translateX(calc(-50% + (var(--offset) * var(--gap)))) translateY(18px) rotate(calc(var(--offset) * 2.15deg))}
     .chosen{display:flex;gap:1rem;justify-content:center;margin:1.4rem 0 1.1rem;flex-wrap:wrap}
     .chosen .slot{width:146px;min-height:192px;border:2px dashed var(--border);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.85rem;transition:all .3s;background:rgba(255,255,255,.72)}
     .chosen .slot.filled{border:1px solid rgba(245,217,139,.65);background:linear-gradient(145deg,#17213f 0%,#35215e 62%,#111827 100%);color:#f8edd0;box-shadow:0 12px 26px rgba(17,24,39,.22)}
@@ -388,7 +391,10 @@ ${COMMON_CSS}
       .intention-row{grid-template-columns:1fr}
       .chosen{gap:.7rem}
       .chosen .slot{width:31%;min-width:96px;min-height:154px;padding:.65rem}
-      .deck .card-back{width:58px;height:94px;flex-basis:58px}
+      .deck-wrap{min-height:152px;padding:.75rem .45rem}
+      .deck{--gap:13px;height:128px}
+      .deck .card-back{width:58px;height:96px;border-radius:10px}
+      .deck .card-back::after{width:14px;height:24px}
     }
   </style>
 </head>
@@ -481,13 +487,18 @@ $(gen_footer)
 
   function renderDeck(){
     deck.innerHTML='';
-    shuffled.forEach((ci)=>{
+    const middle=(shuffled.length-1)/2;
+    shuffled.forEach((ci,i)=>{
+      const offset=i-middle;
       const el=document.createElement('button');
       el.type='button';
       el.setAttribute('aria-label','Carta boca abajo');
       el.className='card-back';
-      el.innerHTML='🂠';
+      el.innerHTML='<span>🂠</span>';
       el.dataset.idx=ci;
+      el.style.setProperty('--offset',offset.toFixed(2));
+      el.style.setProperty('--arc',Math.abs(offset*.95).toFixed(1));
+      el.style.setProperty('--z',String(i+1));
       el.addEventListener('click',()=>pickCard(el,ci));
       deck.appendChild(el);
     });
