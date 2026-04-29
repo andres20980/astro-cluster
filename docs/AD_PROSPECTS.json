@@ -894,5 +894,24 @@
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 4
+  },
+  {
+    "email": "exemple@gmail.com",
+    "name": "Tarot Orula | Los mejores videntes y tarotistas fiables",
+    "segment": "tarot",
+    "country_hint": "",
+    "source_url": "https://tarotorula.com/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-04-29",
+    "last_seen": "2026-04-29",
+    "score": 22
   }
 ]
