@@ -1,14 +1,25 @@
 {
   "site": "carta-astral",
-  "lastRun": "2026-04-28T07:14:07.487Z",
-  "lastQuery": "casas astrales significado",
+  "lastRun": "2026-04-29T07:08:47.598Z",
+  "lastQuery": "carta astral",
   "results": [
     {
-      "query": "casas astrales significado",
+      "query": "carta astral",
       "matchedSignals": [
+        "top_keyword_exact",
         "token_overlap_2"
       ],
       "file": "public/index.html",
+      "changed": true,
+      "reason": "optimized"
+    },
+    {
+      "query": "carta astral",
+      "matchedSignals": [
+        "top_keyword_exact",
+        "token_overlap_2"
+      ],
+      "file": "scripts/gen-sign-pages.sh",
       "changed": true,
       "reason": "optimized"
     }
