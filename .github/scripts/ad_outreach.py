@@ -50,6 +50,8 @@ RECENT_BOUNCE_DAYS = env_int("AD_OUTREACH_RECENT_BOUNCE_DAYS", 7, minimum=1)
 RECENT_BOUNCE_PAUSE_MIN = env_int("AD_OUTREACH_RECENT_BOUNCE_PAUSE_MIN", 2, minimum=1)
 POST_SEND_BOUNCE_WAIT_SECONDS = env_int("AD_OUTREACH_POST_SEND_BOUNCE_WAIT_SECONDS", 0, minimum=0, maximum=180)
 MIN_SENT_FOR_RATE_GUARDRAILS = env_int("AD_OUTREACH_MIN_SENT_FOR_RATE_GUARDRAILS", 10, minimum=1)
+MIN_BOUNCES_FOR_RATE_PAUSE = env_int("AD_OUTREACH_MIN_BOUNCES_FOR_RATE_PAUSE", 2, minimum=1)
+MIN_NOT_INTERESTED_FOR_RATE_PAUSE = env_int("AD_OUTREACH_MIN_NOT_INTERESTED_FOR_RATE_PAUSE", 2, minimum=1)
 MAX_BOUNCE_RATE = float(os.environ.get("AD_OUTREACH_MAX_BOUNCE_RATE", "0.05"))
 MAX_NOT_INTERESTED_RATE = float(os.environ.get("AD_OUTREACH_MAX_NOT_INTERESTED_RATE", "0.10"))
 MAIL_TRANSPORT = os.environ.get("AD_OUTREACH_MAIL_TRANSPORT", "auto").lower()
@@ -808,11 +810,14 @@ def guardrail_decision(prospects):
         )
 
     if metrics["sent"] >= MIN_SENT_FOR_RATE_GUARDRAILS:
-        if metrics["bounce_rate"] > MAX_BOUNCE_RATE:
+        if metrics["bounced"] >= MIN_BOUNCES_FOR_RATE_PAUSE and metrics["bounce_rate"] > MAX_BOUNCE_RATE:
             reasons.append(
                 f"tasa de rebote {metrics['bounce_rate']:.1%} superior al umbral {MAX_BOUNCE_RATE:.1%}"
             )
-        if metrics["not_interested_rate"] > MAX_NOT_INTERESTED_RATE:
+        if (
+            metrics["not_interested"] >= MIN_NOT_INTERESTED_FOR_RATE_PAUSE
+            and metrics["not_interested_rate"] > MAX_NOT_INTERESTED_RATE
+        ):
             reasons.append(
                 "tasa de no interes "
                 f"{metrics['not_interested_rate']:.1%} superior al umbral {MAX_NOT_INTERESTED_RATE:.1%}"
@@ -1065,6 +1070,8 @@ def render_report(prospects, sent, changed, validated, mailbox_report=None, guar
         f"- Pausar por rebote reciente: **{'sí' if PAUSE_ON_RECENT_BOUNCE else 'no'}**",
         f"- Ventana rebote reciente: **{RECENT_BOUNCE_DAYS} días**",
         f"- Rebotes recientes para pausar: **{RECENT_BOUNCE_PAUSE_MIN}**",
+        f"- Rebotes mínimos para pausa por tasa: **{MIN_BOUNCES_FOR_RATE_PAUSE}**",
+        f"- No interés mínimos para pausa por tasa: **{MIN_NOT_INTERESTED_FOR_RATE_PAUSE}**",
         f"- Espera post-envío para rebotes: **{POST_SEND_BOUNCE_WAIT_SECONDS}s**",
         f"- Transporte email: **{active_transport()}**",
         f"- Usuario Gmail delegado: **{IMPERSONATE}**",

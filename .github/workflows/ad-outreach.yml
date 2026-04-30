@@ -51,9 +51,9 @@ jobs:
           GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
           ASTRO_MAIL_FROM: "publicidad@carta-astral-gratis.es"
           ASTRO_MAIL_FROM_NAME: "Astro Cluster"
-          AD_OUTREACH_MAIL_TRANSPORT: "gmail_api"
+          AD_OUTREACH_MAIL_TRANSPORT: "auto"
           AD_OUTREACH_DISPATCH_MODE: ${{ inputs.mode || 'dry-run' }}
-          AD_OUTREACH_SCHEDULE_SEND: ${{ vars.AD_OUTREACH_SCHEDULE_SEND || '0' }}
+          AD_OUTREACH_SCHEDULE_SEND: ${{ vars.AD_OUTREACH_SCHEDULE_SEND || '1' }}
           AD_OUTREACH_MAX_SEND: "2"
           AD_OUTREACH_HARD_MAX_SEND: "2"
           AD_OUTREACH_PAUSE_ON_OPEN_REPLIES: "1"
@@ -62,6 +62,8 @@ jobs:
           AD_OUTREACH_RECENT_BOUNCE_PAUSE_MIN: "1"
           AD_OUTREACH_POST_SEND_BOUNCE_WAIT_SECONDS: "90"
           AD_OUTREACH_MIN_SENT_FOR_RATE_GUARDRAILS: "10"
+          AD_OUTREACH_MIN_BOUNCES_FOR_RATE_PAUSE: "2"
+          AD_OUTREACH_MIN_NOT_INTERESTED_FOR_RATE_PAUSE: "2"
           AD_OUTREACH_MAX_BOUNCE_RATE: "0.05"
           AD_OUTREACH_MAX_NOT_INTERESTED_RATE: "0.10"
           AD_OUTREACH_AUTO_APPROVE_VALIDATED: "1"
@@ -117,16 +119,43 @@ jobs:
 
           if [ "$outreach_exit" -ne 0 ]; then
             if grep -qi "Gmail API DWD no esta autorizado" /tmp/ad-outreach-error.log; then
-              {
-                echo "## Captación de anunciantes"
-                echo
-                echo "Aviso: Gmail API DWD no autorizado para la service account."
-                echo
-                echo "La ejecución continúa sin envío para no romper el run programado."
-                echo "Detalle técnico:" 
-                echo
-                sed 's/^/- /' /tmp/ad-outreach-error.log
-              } > /tmp/ad-outreach-report.md
+              if [ -n "${GMAIL_USER:-}" ] && [ -n "${GMAIL_PASS:-}" ]; then
+                echo "Gmail API DWD no autorizado; reintentando por SMTP/IMAP." >&2
+                set +e
+                AD_OUTREACH_MAIL_TRANSPORT="smtp" python3 .github/scripts/ad_outreach.py "${outreach_args[@]}" 2> /tmp/ad-outreach-smtp-error.log
+                smtp_exit=$?
+                set -e
+                if [ "$smtp_exit" -ne 0 ]; then
+                  {
+                    echo "## Captación de anunciantes"
+                    echo
+                    echo "Error: Gmail API DWD no autorizado y el reintento SMTP/IMAP también falló."
+                    echo
+                    echo "Detalle DWD:"
+                    echo
+                    sed 's/^/- /' /tmp/ad-outreach-error.log
+                    echo
+                    echo "Detalle SMTP/IMAP:"
+                    echo
+                    sed 's/^/- /' /tmp/ad-outreach-smtp-error.log
+                  } > /tmp/ad-outreach-report.md
+                  cat /tmp/ad-outreach-report.md
+                  exit "$smtp_exit"
+                fi
+              else
+                {
+                  echo "## Captación de anunciantes"
+                  echo
+                  echo "Error: Gmail API DWD no autorizado para la service account y no hay credenciales SMTP/IMAP de contingencia."
+                  echo
+                  echo "Acción requerida: autorizar el Client ID de la service account en Google Workspace Admin o configurar GMAIL_USER/GMAIL_PASS."
+                  echo "Detalle técnico:"
+                  echo
+                  sed 's/^/- /' /tmp/ad-outreach-error.log
+                } > /tmp/ad-outreach-report.md
+                cat /tmp/ad-outreach-report.md
+                exit "$outreach_exit"
+              fi
             else
               cat /tmp/ad-outreach-error.log >&2
               exit "$outreach_exit"
