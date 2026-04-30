@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T15:33:22Z",
+  "generatedAt": "2026-04-30T09:39:13Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
@@ -8,17 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 12.0,
-    "bounceRate": 1.0,
-    "averageSessionDuration": 0.0
+    "views": 13.0,
+    "bounceRate": 0.9230769230769231,
+    "averageSessionDuration": 1.9736798461538463
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 12.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 0.0
+      "views": 13.0,
+      "bounceRate": 0.9230769230769231,
+      "averageSessionDuration": 1.9736798461538463
     }
   ]
 }

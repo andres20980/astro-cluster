@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T15:33:22Z",
+  "generatedAt": "2026-04-30T09:39:13Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "range": {
@@ -8,17 +8,23 @@
   },
   "homepage": {
     "path": "/",
-    "views": 17.0,
-    "bounceRate": 0.9411764705882353,
-    "averageSessionDuration": 1.0266390588235295
+    "views": 7.0,
+    "bounceRate": 0.7142857142857143,
+    "averageSessionDuration": 2.912919714285714
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 17.0,
-      "bounceRate": 0.9411764705882353,
-      "averageSessionDuration": 1.0266390588235295
+      "views": 7.0,
+      "bounceRate": 0.7142857142857143,
+      "averageSessionDuration": 2.912919714285714
+    },
+    {
+      "path": "/numero-de-vida/5",
+      "views": 1.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 5.130824
     }
   ]
 }

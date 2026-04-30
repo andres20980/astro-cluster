@@ -1,6 +1,6 @@
 {
   "version": "1.2",
-  "updated": "2026-04-23",
+  "updated": "2026-04-30",
   "goal": "Operar el cluster como una suite unica de herramientas esotericas con medicion y monetizacion unificadas",
   "expansion_policy": {
     "principle": "Ampliar el cluster solo cuando la suite actual ya demuestre traccion y monetizacion suficiente",
@@ -75,13 +75,13 @@
         "avg_duration_min_s": 40
       },
       "auto": {
-        "completed_actions": 4,
+        "completed_actions": 3,
         "total_actions": 4,
         "actions": [
           {
             "label": "Verificar las 5 propiedades de GSC por DNS",
-            "done": true,
-            "evidence": "Propiedades GSC verificadas: 5/5"
+            "done": false,
+            "evidence": "Propiedades GSC verificadas: 0/5"
           },
           {
             "label": "Extender reporting GSC por dominio dentro del informe semanal",
@@ -91,7 +91,7 @@
           {
             "label": "Ampliar landings long-tail por cada herramienta",
             "done": true,
-            "evidence": "227 páginas HTML públicas en el cluster"
+            "evidence": "239 páginas HTML públicas en el cluster"
           },
           {
             "label": "Refinar interlinking interno por intencion",
@@ -179,7 +179,7 @@
           {
             "label": "Ampliar comparativas y contenidos evergreen con E-E-A-T",
             "done": true,
-            "evidence": "227 páginas + FAQ/Breadcrumb presentes en todos los sitios"
+            "evidence": "239 páginas + FAQ/Breadcrumb presentes en todos los sitios"
           },
           {
             "label": "Abrir afiliacion y patrocinios recurrentes",
@@ -271,19 +271,19 @@
     ]
   },
   "auto": {
-    "last_eval": "2026-04-23",
+    "last_eval": "2026-04-30",
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
-      "sessions": 81,
-      "users": 79,
-      "views": 82,
-      "organic_sessions": 1,
-      "organic_share": 0.0123,
-      "bounce_rate": 0.9259,
-      "avg_duration_s": 6.4,
-      "chart_calculated": 2,
-      "interpretation_generated": 0
+      "sessions": 63,
+      "users": 51,
+      "views": 73,
+      "organic_sessions": 9,
+      "organic_share": 0.1429,
+      "bounce_rate": 0.6984,
+      "avg_duration_s": 77.4,
+      "chart_calculated": 8,
+      "interpretation_generated": 6
     },
     "capability_signals": {
       "ga4_unified": true,
@@ -292,20 +292,20 @@
       "seo_autopatch_rotatory": true,
       "gsc_cluster_reporting": true,
       "gsc_sitemap_submit": true,
-      "gsc_verified_site_count": 5,
+      "gsc_verified_site_count": 0,
       "internal_traffic_optout": true,
-      "ga4_tagged_pages": 207,
-      "ga4_optout_pages": 207,
+      "ga4_tagged_pages": 219,
+      "ga4_optout_pages": 219,
       "cluster_media_kits": true,
       "cluster_recirculation": true,
       "premium_slots_by_site": true,
-      "total_html_pages": 227,
+      "total_html_pages": 239,
       "long_tail_coverage": true,
       "eeat_schema_coverage": true
     },
     "site_page_counts": {
       "carta-astral": 18,
-      "compatibilidad-signos": 149,
+      "compatibilidad-signos": 161,
       "tarot-del-dia": 28,
       "calcular-numerologia": 15,
       "horoscopo-de-hoy": 17

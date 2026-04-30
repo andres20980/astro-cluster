@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T15:33:22Z",
+  "generatedAt": "2026-04-30T09:39:13Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "range": {
@@ -8,17 +8,29 @@
   },
   "homepage": {
     "path": "/",
-    "views": 12.0,
-    "bounceRate": 1.0,
-    "averageSessionDuration": 0.0
+    "views": 8.0,
+    "bounceRate": 0.75,
+    "averageSessionDuration": 0.418653
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 12.0,
-      "bounceRate": 1.0,
-      "averageSessionDuration": 0.0
+      "views": 8.0,
+      "bounceRate": 0.75,
+      "averageSessionDuration": 0.418653
+    },
+    {
+      "path": "/leo",
+      "views": 1.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 5.037012
+    },
+    {
+      "path": "/virgo",
+      "views": 1.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 4.881597
     }
   ]
 }

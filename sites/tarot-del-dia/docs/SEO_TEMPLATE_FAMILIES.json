@@ -1,13 +1,28 @@
 {
-  "generatedAt": "2026-04-23T15:33:22Z",
+  "generatedAt": "2026-04-30T09:39:13Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
+      "family": "major_arcana",
+      "score": 39.0,
+      "ga4Views": 4.0,
+      "ga4LowEngagementViews": 1.0,
+      "gscImpressions": 6.0,
+      "gscOpportunity": 6.0,
+      "paths": [
+        "/arcanos-mayores/el-sol",
+        "/arcanos-mayores/el-sumo-sacerdote",
+        "/arcanos-mayores/la-emperatriz",
+        "/arcanos-mayores/la-estrella",
+        "/arcanos-mayores/la-sacerdotisa"
+      ]
+    },
+    {
       "family": "home",
-      "score": 355.0,
-      "ga4Views": 13.0,
-      "ga4LowEngagementViews": 13.0,
+      "score": 28.0,
+      "ga4Views": 12.0,
+      "ga4LowEngagementViews": 0.0,
       "gscImpressions": 4.0,
       "gscOpportunity": 4.0,
       "paths": [
@@ -26,18 +41,6 @@
       ]
     },
     {
-      "family": "major_arcana",
-      "score": 6.0,
-      "ga4Views": 0.0,
-      "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 6.0,
-      "gscOpportunity": 6.0,
-      "paths": [
-        "/arcanos-mayores/la-emperatriz",
-        "/arcanos-mayores/la-estrella"
-      ]
-    },
-    {
       "family": "major_arcana_hub",
       "score": 1.0,
       "ga4Views": 0.0,
@@ -50,14 +53,18 @@
     }
   ],
   "topFamily": {
-    "family": "home",
-    "score": 355.0,
-    "ga4Views": 13.0,
-    "ga4LowEngagementViews": 13.0,
-    "gscImpressions": 4.0,
-    "gscOpportunity": 4.0,
+    "family": "major_arcana",
+    "score": 39.0,
+    "ga4Views": 4.0,
+    "ga4LowEngagementViews": 1.0,
+    "gscImpressions": 6.0,
+    "gscOpportunity": 6.0,
     "paths": [
-      "/"
+      "/arcanos-mayores/el-sol",
+      "/arcanos-mayores/el-sumo-sacerdote",
+      "/arcanos-mayores/la-emperatriz",
+      "/arcanos-mayores/la-estrella",
+      "/arcanos-mayores/la-sacerdotisa"
     ]
   }
 }

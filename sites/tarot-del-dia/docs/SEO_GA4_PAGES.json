@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-23T15:33:22Z",
+  "generatedAt": "2026-04-30T09:39:13Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "range": {
@@ -8,17 +8,35 @@
   },
   "homepage": {
     "path": "/",
-    "views": 13.0,
-    "bounceRate": 0.9230769230769231,
-    "averageSessionDuration": 1.2216318461538462
+    "views": 12.0,
+    "bounceRate": 0.5,
+    "averageSessionDuration": 58.78872435714286
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 13.0,
-      "bounceRate": 0.9230769230769231,
-      "averageSessionDuration": 1.2216318461538462
+      "views": 12.0,
+      "bounceRate": 0.5,
+      "averageSessionDuration": 58.78872435714286
+    },
+    {
+      "path": "/arcanos-mayores/la-sacerdotisa",
+      "views": 2.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 72.944792
+    },
+    {
+      "path": "/arcanos-mayores/el-sol",
+      "views": 1.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 60.59115
+    },
+    {
+      "path": "/arcanos-mayores/el-sumo-sacerdote",
+      "views": 1.0,
+      "bounceRate": 0.0,
+      "averageSessionDuration": 0.80085
     }
   ]
 }
