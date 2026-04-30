@@ -860,7 +860,7 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "review_required",
+    "status": "approved",
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 4,
@@ -872,8 +872,10 @@
       "domain_mx_ok",
       "public_source_visible"
     ],
-    "validation_status": "manual_review",
-    "validation_reason": "personal_mailbox_requires_explicit_approval"
+    "validation_status": "valid",
+    "validation_reason": "personal_mailbox_explicitly_approved",
+    "approved_at": "2026-04-30T15:34:36+00:00",
+    "approved_by": "manual"
   },
   {
     "email": "hola@cosmograma.com",
@@ -956,7 +958,7 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "review_required",
+    "status": "rejected",
     "first_seen": "2026-04-29",
     "last_seen": "2026-04-29",
     "score": 22,
@@ -968,7 +970,9 @@
       "domain_mx_ok",
       "public_source_visible"
     ],
-    "validation_status": "manual_review",
-    "validation_reason": "personal_mailbox_requires_explicit_approval"
+    "validation_status": "invalid",
+    "validation_reason": "example_mailbox_rejected_manual",
+    "rejected_at": "2026-04-30T15:34:36+00:00",
+    "rejected_by": "manual"
   }
 ]
