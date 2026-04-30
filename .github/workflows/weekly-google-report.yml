@@ -22,6 +22,49 @@ jobs:
         with:
           credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
 
+      - name: "🔐 Obtener token OAuth para GSC y AdSense"
+        id: oauth
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
+            {
+              echo "missing=true"
+              echo "detail=Faltan GOOGLE_OAUTH_*"
+            } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          token_json=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
+            -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
+            -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
+            -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
+            -d "grant_type=refresh_token" || true)
+
+          access_token=$(echo "$token_json" | jq -r '.access_token // empty')
+          if [ -z "$access_token" ]; then
+            detail=$(echo "$token_json" | jq -r '.error_description // .error // "No se pudo intercambiar GOOGLE_OAUTH_REFRESH_TOKEN por access token"' 2>/dev/null || echo "No se pudo intercambiar GOOGLE_OAUTH_REFRESH_TOKEN por access token")
+            {
+              echo "missing=true"
+              echo "detail<<EOF"
+              echo "$detail"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "::warning::$detail"
+            exit 0
+          fi
+
+          {
+            echo "missing=false"
+            echo "detail=OK"
+            echo "token<<EOF"
+            echo "$access_token"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: "📊 Generar informe"
         env:
           GA4_PROPERTY: "properties/531527723"
@@ -29,9 +72,8 @@ jobs:
           GSC_SITES_JSON: >-
             [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
-          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
-          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          OAUTH_STATUS_DETAIL: ${{ steps.oauth.outputs.detail }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
@@ -45,16 +87,12 @@ jobs:
           print(creds.token)
           ")
 
-          # OAuth token for GSC + AdSense (requires user credentials, not SA)
-          OAUTH_TOKEN=""
-          if [ -n "$GOOGLE_OAUTH_REFRESH_TOKEN" ] && [ -n "$GOOGLE_OAUTH_CLIENT_ID" ]; then
-            OAUTH_TOKEN=$(curl -s -X POST https://oauth2.googleapis.com/token \
-              -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
-              -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
-              -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
-              -d "grant_type=refresh_token" | python3 -c "import sys,json;print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
-          fi
+          # OAuth token for GSC + AdSense comes from a dedicated step so auth
+          # failures are visible and use the same hardened exchange as watchdogs.
+          OAUTH_TOKEN="${OAUTH_TOKEN:-}"
+          OAUTH_STATUS_DETAIL="${OAUTH_STATUS_DETAIL:-Faltan GOOGLE_OAUTH_*}"
 
+          # shellcheck disable=SC2129
           echo "## 📊 Informe semanal del cluster — $(date +%Y-%m-%d)" > /tmp/report.md
           echo "" >> /tmp/report.md
 
@@ -312,7 +350,7 @@ jobs:
             GOOGLE_CLOUD_QUOTA_PROJECT="$GOOGLE_CLOUD_QUOTA_PROJECT" \
             python3 .github/scripts/weekly_gsc_report.py >> /tmp/report.md
           else
-            echo "> GSC no disponible (faltan los secretos GOOGLE_OAUTH_*)" >> /tmp/report.md
+            echo "> GSC no disponible: $OAUTH_STATUS_DETAIL" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
@@ -343,11 +381,13 @@ jobs:
             else:
               print('| Estado | Sin datos de ingresos aún |')
             " 2>/dev/null || echo "| Estado | API no disponible |")
-            echo "| Métrica | Valor |" >> /tmp/report.md
-            echo "|---------|-------|" >> /tmp/report.md
-            echo "$AD_EARNINGS" >> /tmp/report.md
+            {
+              echo "| Métrica | Valor |"
+              echo "|---------|-------|"
+              echo "$AD_EARNINGS"
+            } >> /tmp/report.md
           else
-            echo "> AdSense/OAuth no configurado (falta GOOGLE_OAUTH_REFRESH_TOKEN)" >> /tmp/report.md
+            echo "> AdSense/OAuth no disponible: $OAUTH_STATUS_DETAIL" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
@@ -363,7 +403,7 @@ jobs:
             python3 .github/scripts/adsense_site_watch.py >> /tmp/report.md
           else
             echo "### Estado de sitios en AdSense" >> /tmp/report.md
-            echo "> AdSense no disponible porque falta OAuth de usuario. El refresh token debe incluir el scope \`https://www.googleapis.com/auth/adsense.readonly\`." >> /tmp/report.md
+            echo "> AdSense no disponible: $OAUTH_STATUS_DETAIL. El refresh token debe incluir el scope \`https://www.googleapis.com/auth/adsense.readonly\`." >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
@@ -376,8 +416,9 @@ jobs:
             sites/horoscopo-de-hoy/scripts/gen-pages.sh
           do
             if [ -x "$generator" ]; then
+              growth_log="/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log"
               ADSENSE_AUTO_ADS_ENABLED="${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}" \
-                bash "$generator" >/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log
+                bash "$generator" > "$growth_log"
             fi
           done
 
