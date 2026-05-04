@@ -1,6 +1,6 @@
 {
   "version": "1.2",
-  "updated": "2026-04-30",
+  "updated": "2026-05-04",
   "goal": "Operar el cluster como una suite unica de herramientas esotericas con medicion y monetizacion unificadas",
   "expansion_policy": {
     "principle": "Ampliar el cluster solo cuando la suite actual ya demuestre traccion y monetizacion suficiente",
@@ -271,19 +271,19 @@
     ]
   },
   "auto": {
-    "last_eval": "2026-04-30",
+    "last_eval": "2026-05-04",
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
       "sessions": 63,
-      "users": 51,
-      "views": 73,
-      "organic_sessions": 9,
-      "organic_share": 0.1429,
-      "bounce_rate": 0.6984,
-      "avg_duration_s": 77.4,
-      "chart_calculated": 8,
-      "interpretation_generated": 6
+      "users": 56,
+      "views": 77,
+      "organic_sessions": 12,
+      "organic_share": 0.1905,
+      "bounce_rate": 0.7143,
+      "avg_duration_s": 66.1,
+      "chart_calculated": 5,
+      "interpretation_generated": 2
     },
     "capability_signals": {
       "ga4_unified": true,

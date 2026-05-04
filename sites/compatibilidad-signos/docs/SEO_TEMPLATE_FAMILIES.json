@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-30T09:39:13Z",
+  "generatedAt": "2026-05-04T09:57:32Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "families": [
     {
       "family": "home",
-      "score": 382.0,
-      "ga4Views": 13.0,
-      "ga4LowEngagementViews": 13.0,
+      "score": 463.0,
+      "ga4Views": 16.0,
+      "ga4LowEngagementViews": 16.0,
       "gscImpressions": 31.0,
       "gscOpportunity": 31.0,
       "paths": [
@@ -16,21 +16,22 @@
     },
     {
       "family": "pair_pages",
-      "score": 8.0,
-      "ga4Views": 0.0,
+      "score": 10.0,
+      "ga4Views": 1.0,
       "ga4LowEngagementViews": 0.0,
       "gscImpressions": 8.0,
       "gscOpportunity": 8.0,
       "paths": [
+        "/sagitario-acuario",
         "http://compatibilidad-signos.es/"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 382.0,
-    "ga4Views": 13.0,
-    "ga4LowEngagementViews": 13.0,
+    "score": 463.0,
+    "ga4Views": 16.0,
+    "ga4LowEngagementViews": 16.0,
     "gscImpressions": 31.0,
     "gscOpportunity": 31.0,
     "paths": [

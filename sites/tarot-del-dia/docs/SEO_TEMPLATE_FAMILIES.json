@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-04-30T09:39:13Z",
+  "generatedAt": "2026-05-04T09:57:32Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
       "family": "major_arcana",
-      "score": 39.0,
-      "ga4Views": 4.0,
+      "score": 37.0,
+      "ga4Views": 3.0,
       "ga4LowEngagementViews": 1.0,
       "gscImpressions": 6.0,
       "gscOpportunity": 6.0,
@@ -20,8 +20,8 @@
     },
     {
       "family": "home",
-      "score": 28.0,
-      "ga4Views": 12.0,
+      "score": 30.0,
+      "ga4Views": 13.0,
       "ga4LowEngagementViews": 0.0,
       "gscImpressions": 4.0,
       "gscOpportunity": 4.0,
@@ -54,8 +54,8 @@
   ],
   "topFamily": {
     "family": "major_arcana",
-    "score": 39.0,
-    "ga4Views": 4.0,
+    "score": 37.0,
+    "ga4Views": 3.0,
     "ga4LowEngagementViews": 1.0,
     "gscImpressions": 6.0,
     "gscOpportunity": 6.0,

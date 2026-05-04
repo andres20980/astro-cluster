@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-30T09:39:13Z",
+  "generatedAt": "2026-05-04T09:57:32Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "families": [
     {
       "family": "home",
-      "score": 192.0,
-      "ga4Views": 7.0,
-      "ga4LowEngagementViews": 7.0,
+      "score": 300.0,
+      "ga4Views": 11.0,
+      "ga4LowEngagementViews": 11.0,
       "gscImpressions": 4.0,
       "gscOpportunity": 3.0,
       "paths": [
@@ -39,9 +39,9 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 192.0,
-    "ga4Views": 7.0,
-    "ga4LowEngagementViews": 7.0,
+    "score": 300.0,
+    "ga4Views": 11.0,
+    "ga4LowEngagementViews": 11.0,
     "gscImpressions": 4.0,
     "gscOpportunity": 3.0,
     "paths": [
