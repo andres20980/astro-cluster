@@ -25,15 +25,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          cid_hash=$(printf '%s' "${GOOGLE_OAUTH_CLIENT_ID:-}" | sha256sum | cut -d' ' -f1)
-          csec_hash=$(printf '%s' "${GOOGLE_OAUTH_CLIENT_SECRET:-}" | sha256sum | cut -d' ' -f1)
-          rtok_hash=$(printf '%s' "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" | sha256sum | cut -d' ' -f1)
-          {
-            echo "cid_hash=$cid_hash"
-            echo "csec_hash=$csec_hash"
-            echo "rtok_hash=$rtok_hash"
-          } >> "$GITHUB_OUTPUT"
-
           if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
             echo "missing=true" >> "$GITHUB_OUTPUT"
             echo "detail=Faltan GOOGLE_OAUTH_*" >> "$GITHUB_OUTPUT"
@@ -121,9 +112,6 @@ jobs:
         env:
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
           OAUTH_STATUS_DETAIL: ${{ steps.oauth.outputs.detail }}
-          OAUTH_CID_HASH: ${{ steps.oauth.outputs.cid_hash }}
-          OAUTH_CSEC_HASH: ${{ steps.oauth.outputs.csec_hash }}
-          OAUTH_RTOK_HASH: ${{ steps.oauth.outputs.rtok_hash }}
           ANALYTICS_SA_STATUS: ${{ steps.analytics.outputs.status }}
         run: |
           set -euo pipefail
@@ -139,19 +127,6 @@ jobs:
           OAUTH_TOKEN="${OAUTH_TOKEN:-}" \
           ANALYTICS_SA_STATUS="$status" \
           python3 .github/scripts/google_auth_audit.py > /tmp/google-auth-audit.md
-
-          {
-            echo ""
-            echo "### Huellas OAuth (diagnóstico CI)"
-            echo ""
-            echo "| Campo | SHA-256 |"
-            echo "|-------|---------|"
-            echo "| CLIENT_ID | ${OAUTH_CID_HASH:-n/a} |"
-            echo "| CLIENT_SECRET | ${OAUTH_CSEC_HASH:-n/a} |"
-            echo "| REFRESH_TOKEN | ${OAUTH_RTOK_HASH:-n/a} |"
-            echo ""
-            echo "Detalle OAuth step: ${OAUTH_STATUS_DETAIL:-sin detalle}"
-          } >> /tmp/google-auth-audit.md
 
           cat /tmp/google-auth-audit.md
 
