@@ -280,14 +280,7 @@ jobs:
             sa_file="$RUNNER_TEMP/gsc-submit-sa-${{ matrix.site }}.json"
             printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$sa_file"
             chmod 600 "$sa_file"
-            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$sa_file" python3 - <<'PY' 2>/dev/null || true
-import google.auth
-import google.auth.transport.requests
-creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/webmasters'])
-creds.refresh(google.auth.transport.requests.Request())
-print(creds.token)
-PY
-)
+            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$sa_file" python3 -c "import google.auth,google.auth.transport.requests;creds,_=google.auth.default(scopes=['https://www.googleapis.com/auth/webmasters']);creds.refresh(google.auth.transport.requests.Request());print(creds.token)" 2>/dev/null || true)
           fi
 
           if [ -z "$access_token" ]; then
