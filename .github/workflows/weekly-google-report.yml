@@ -146,7 +146,7 @@ jobs:
           TOKEN=$(python3 -c "
           import google.auth
           import google.auth.transport.requests
-          creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/analytics.readonly','https://www.googleapis.com/auth/cloud-platform'])
+          creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/analytics.readonly','https://www.googleapis.com/auth/cloud-platform','https://www.googleapis.com/auth/webmasters'])
           creds.refresh(google.auth.transport.requests.Request())
           print(creds.token)
           ")
@@ -156,6 +156,12 @@ jobs:
           OAUTH_TOKEN="${OAUTH_TOKEN:-}"
           OAUTH_MISSING="${OAUTH_MISSING:-true}"
           OAUTH_STATUS_DETAIL="${OAUTH_STATUS_DETAIL:-Faltan GOOGLE_OAUTH_*}"
+          GSC_TOKEN="$OAUTH_TOKEN"
+          GSC_TOKEN_SOURCE="oauth"
+          if [ -z "$GSC_TOKEN" ] && [ -n "$TOKEN" ]; then
+            GSC_TOKEN="$TOKEN"
+            GSC_TOKEN_SOURCE="service-account"
+          fi
           DATA_QUALITY_STATUS="complete"
           if [ -z "$TOKEN" ] || [ -z "$OAUTH_TOKEN" ]; then
             DATA_QUALITY_STATUS="partial"
@@ -196,6 +202,11 @@ jobs:
             echo "| OAuth usuario (GSC/AdSense) | ✅ disponible |" >> /tmp/report.md
           else
             echo "| OAuth usuario (GSC/AdSense) | ⚠️ no disponible |" >> /tmp/report.md
+          fi
+          if [ -n "$GSC_TOKEN" ]; then
+            echo "| GSC token efectivo | ✅ $GSC_TOKEN_SOURCE |" >> /tmp/report.md
+          else
+            echo "| GSC token efectivo | ⚠️ no disponible |" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 
@@ -436,28 +447,37 @@ jobs:
           " 2>/dev/null || echo "0")
 
           GSC_VERIFIED_SITE_COUNT=
-          if [ -n "$OAUTH_TOKEN" ]; then
-            GSC_HEADERS=(-H "Authorization: Bearer $OAUTH_TOKEN")
+          GSC_API_ERROR=""
+          if [ -n "$GSC_TOKEN" ]; then
+            GSC_HEADERS=(-H "Authorization: Bearer $GSC_TOKEN")
             if [ -n "${GOOGLE_CLOUD_QUOTA_PROJECT:-}" ]; then
               GSC_HEADERS+=(-H "X-Goog-User-Project: $GOOGLE_CLOUD_QUOTA_PROJECT")
             fi
             GSC_SITES_API=$(curl -s "${GSC_HEADERS[@]}" \
               "https://searchconsole.googleapis.com/webmasters/v3/sites" 2>/dev/null || echo "{}")
+            GSC_API_ERROR=$(echo "$GSC_SITES_API" | python3 -c "import json,sys; data=json.load(sys.stdin); print((data.get('error') or {}).get('message',''))" 2>/dev/null || echo "")
             GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "import json, os, sys; cluster={entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}; data=json.load(sys.stdin); valid={'siteOwner','siteFullUser','siteRestrictedUser'}; print(sum(1 for entry in data.get('siteEntry', []) if entry.get('siteUrl') in cluster and entry.get('permissionLevel') in valid))" 2>/dev/null || echo "")
           fi
 
           # Google Search Console — search performance (requires OAuth)
           echo "### 🔎 Google Search Console (últimos 28 días)" >> /tmp/report.md
-          if [ -n "$OAUTH_TOKEN" ]; then
+          if [ -n "$GSC_TOKEN" ] && [ -z "$GSC_API_ERROR" ]; then
             GSC_START=$(date -d '28 days ago' +%Y-%m-%d)
             GSC_END=$(date -d '3 days ago' +%Y-%m-%d)
             GSC_GENERATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-            OAUTH_TOKEN="$OAUTH_TOKEN" GSC_START="$GSC_START" GSC_END="$GSC_END" GSC_SITES_JSON="$GSC_SITES_JSON" \
+            if [ "$GSC_TOKEN_SOURCE" = "service-account" ]; then
+              echo "> GSC en modo fallback con service account (OAuth de usuario no disponible)." >> /tmp/report.md
+            fi
+            OAUTH_TOKEN="$GSC_TOKEN" GSC_START="$GSC_START" GSC_END="$GSC_END" GSC_SITES_JSON="$GSC_SITES_JSON" \
             GSC_OUTPUT_DIR="sites" GSC_GENERATED_AT="$GSC_GENERATED_AT" \
             GOOGLE_CLOUD_QUOTA_PROJECT="$GOOGLE_CLOUD_QUOTA_PROJECT" \
             python3 .github/scripts/weekly_gsc_report.py >> /tmp/report.md
           else
-            echo "> GSC no disponible: $OAUTH_STATUS_DETAIL" >> /tmp/report.md
+            if [ -n "$GSC_API_ERROR" ]; then
+              echo "> GSC no disponible: $GSC_API_ERROR" >> /tmp/report.md
+            else
+              echo "> GSC no disponible: $OAUTH_STATUS_DETAIL" >> /tmp/report.md
+            fi
           fi
           echo "" >> /tmp/report.md
 

@@ -16,6 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: "🔑 Autenticación de Google"
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+
       - name: "🔐 Obtener token OAuth"
         id: oauth
         env:
@@ -50,22 +56,55 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: "🔎 Inspeccionar portadas del cluster"
-        if: steps.oauth.outputs.missing == 'false'
+        id: inspect
         env:
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
           GSC_SITES_JSON: >-
             [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
         run: |
           set -euo pipefail
-          python3 .github/scripts/gsc_index_watch.py > /tmp/gsc-index-watch.md
+
+          pip -q install google-auth
+
+          adc_token=$(python3 -c "
+          import google.auth
+          import google.auth.transport.requests
+          creds, _ = google.auth.default(scopes=['https://www.googleapis.com/auth/webmasters'])
+          creds.refresh(google.auth.transport.requests.Request())
+          print(creds.token)
+          " 2>/dev/null || true)
+
+          gsc_token="${OAUTH_TOKEN:-}"
+          source_mode="oauth"
+          if [ -z "$gsc_token" ] && [ -n "$adc_token" ]; then
+            gsc_token="$adc_token"
+            source_mode="service-account"
+          fi
+
+          if [ -z "$gsc_token" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            echo "No se pudo obtener token para Search Console (OAuth ni service account)." > /tmp/gsc-index-watch.md
+            exit 0
+          fi
+
+          echo "missing=false" >> "$GITHUB_OUTPUT"
+          echo "token_source=$source_mode" >> "$GITHUB_OUTPUT"
+          OAUTH_TOKEN="$gsc_token" python3 .github/scripts/gsc_index_watch.py > /tmp/gsc-index-watch.md
+          if [ "$source_mode" = "service-account" ]; then
+            {
+              echo ""
+              echo "> Nota: se usó fallback con service account por degradación de OAuth de usuario."
+            } >> /tmp/gsc-index-watch.md
+          fi
           cat /tmp/gsc-index-watch.md
 
       - name: "📝 Sincronizar issue de indexación"
         uses: actions/github-script@v8
         env:
           REPORT_PATH: /tmp/gsc-index-watch.md
-          MISSING_OAUTH: ${{ steps.oauth.outputs.missing }}
+          MISSING_GSC_TOKEN: ${{ steps.inspect.outputs.missing }}
         with:
           script: |
             const fs = require('fs');
@@ -75,8 +114,8 @@ jobs:
               '🔎 Vigilancia de indexación GSC'
             ];
             const today = new Date().toISOString().slice(0, 10);
-            const body = process.env.MISSING_OAUTH === 'true'
-              ? 'No se pudo ejecutar la vigilancia de indexación porque faltan los secretos GOOGLE_OAUTH_* necesarios para Search Console.'
+            const body = process.env.MISSING_GSC_TOKEN === 'true'
+              ? 'No se pudo ejecutar la vigilancia de indexación porque no hay token utilizable para Search Console (OAuth de usuario ni fallback service account).'
               : fs.readFileSync(process.env.REPORT_PATH, 'utf8');
 
             const issues = await github.paginate(github.rest.issues.listForRepo, {
