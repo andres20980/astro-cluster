@@ -751,7 +751,7 @@
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 6,
-    "validated_at": "2026-04-30T15:22:56+00:00",
+    "validated_at": "2026-05-04T09:07:54+00:00",
     "validation_status": "temporary_error",
     "validation_reason": "source_check_failed: HTTP Error 403: Forbidden"
   },
@@ -811,7 +811,7 @@
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 4,
-    "validated_at": "2026-04-30T15:22:56+00:00",
+    "validated_at": "2026-05-04T09:07:54+00:00",
     "validation_status": "temporary_error",
     "validation_reason": "source_check_failed: HTTP Error 404: Not Found"
   },
@@ -891,7 +891,7 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "approved",
+    "status": "sent",
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 4,
@@ -909,7 +909,11 @@
     "validation_status": "valid",
     "validation_reason": "mx_and_public_source_ok",
     "approved_at": "2026-04-30T15:22:58+00:00",
-    "approved_by": "automation"
+    "approved_by": "automation",
+    "sent_at": "2026-05-04T09:07:54+00:00",
+    "last_contacted_at": "2026-05-04T09:07:54+00:00",
+    "message_id": "19df23e85c8ff32e",
+    "thread_id": "19df23e85c8ff32e"
   },
   {
     "email": "lluisgisbert@geocosmos.es",
@@ -925,7 +929,7 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "approved",
+    "status": "sent",
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 4,
@@ -942,7 +946,11 @@
     "validation_status": "valid",
     "validation_reason": "mx_and_public_source_ok",
     "approved_at": "2026-04-30T15:22:59+00:00",
-    "approved_by": "automation"
+    "approved_by": "automation",
+    "sent_at": "2026-05-04T09:07:54+00:00",
+    "last_contacted_at": "2026-05-04T09:07:54+00:00",
+    "message_id": "19df23e86ba8fda6",
+    "thread_id": "19df23e86ba8fda6"
   },
   {
     "email": "exemple@gmail.com",
@@ -989,9 +997,23 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "new",
+    "status": "approved",
     "first_seen": "2026-04-30",
     "last_seen": "2026-04-30",
-    "score": 5
+    "score": 5,
+    "validated_at": "2026-05-04T09:07:55+00:00",
+    "validation_score": 95,
+    "validation_confidence": "high",
+    "validation_signals": [
+      "email_syntax_ok",
+      "domain_mx_ok",
+      "public_source_visible",
+      "source_domain_matches_email_domain",
+      "public_contact_local_part"
+    ],
+    "validation_status": "valid",
+    "validation_reason": "mx_and_public_source_ok",
+    "approved_at": "2026-05-04T09:07:55+00:00",
+    "approved_by": "automation"
   }
 ]
