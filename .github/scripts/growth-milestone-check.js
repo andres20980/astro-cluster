@@ -32,6 +32,15 @@ function envNum(name) {
   return Number.isFinite(v) ? v : 0;
 }
 
+function envOptionalNum(name) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === null || String(raw).trim() === '') {
+    return undefined;
+  }
+  const value = Number(raw);
+  return Number.isFinite(value) ? value : undefined;
+}
+
 function exists(relPath) {
   return fs.existsSync(repoPath(relPath));
 }
@@ -314,7 +323,10 @@ function main() {
   const organicSessions = envNum('ORGANIC_SESSIONS');
   const chartCalc = envNum('CHART_CALCULATED');
   const interpGen = envNum('INTERPRETATION_GENERATED');
-  const gscVerifiedSiteCount = envNum('GSC_VERIFIED_SITE_COUNT');
+  const internalToolClick = envNum('INTERNAL_TOOL_CLICK');
+  const advertiserCtaClick = envNum('ADVERTISER_CTA_CLICK');
+  const oauthMissing = String(process.env.OAUTH_MISSING || '').toLowerCase() === 'true';
+  const gscVerifiedSiteCountRaw = envOptionalNum('GSC_VERIFIED_SITE_COUNT');
 
   let milestones;
   try {
@@ -331,6 +343,12 @@ function main() {
   }
 
   const signals = repoSignals();
+  const prevGscVerifiedSiteCount = Number(
+    milestones?.auto?.capability_signals?.gsc_verified_site_count,
+  );
+  const gscVerifiedSiteCount = gscVerifiedSiteCountRaw !== undefined
+    ? gscVerifiedSiteCountRaw
+    : (Number.isFinite(prevGscVerifiedSiteCount) ? prevGscVerifiedSiteCount : 0);
   const benchmarks = milestones.revenue_benchmarks_spain_esoteric || {};
 
   let currentIdx = 0;
@@ -390,6 +408,41 @@ function main() {
     ? next.actions.map((label) => ({ label, ...actionStatus(label, signals, gscVerifiedSiteCount) }))
     : [];
 
+  const phasePlan = [
+    {
+      id: 'F0',
+      title: 'Observabilidad y autenticación',
+      done: !oauthMissing,
+      detail: !oauthMissing
+        ? 'OAuth operativo para GSC/AdSense en la ejecución semanal'
+        : 'Renovar refresh token OAuth y recuperar scopes de GSC/AdSense',
+    },
+    {
+      id: 'F1',
+      title: 'Tracción orgánica',
+      done: organicShare >= 0.25 && sessions >= 120,
+      detail: `Objetivo táctico: organic_share >= 25% y >=120 sesiones/semana (actual ${fmtPct(organicShare)}, ${sessions})`,
+    },
+    {
+      id: 'F2',
+      title: 'Recirculación interna',
+      done: internalToolClick >= 6,
+      detail: `Subir internal_tool_click semanal (actual ${internalToolClick}, objetivo >=6)`,
+    },
+    {
+      id: 'F3',
+      title: 'Monetización directa validada',
+      done: advertiserCtaClick >= 2,
+      detail: `Incrementar advertiser_cta_click semanal (actual ${advertiserCtaClick}, objetivo >=2)`,
+    },
+    {
+      id: 'F4',
+      title: 'Gobernanza free-tier',
+      done: signals.deploySelective && signals.seoSmokeCluster,
+      detail: 'Mantener automatizaciones selectivas y evitar ejecuciones/commits sin señal confiable',
+    },
+  ];
+
   const lines = [
     '### 🚀 Progreso de hitos de crecimiento',
     '',
@@ -436,6 +489,12 @@ function main() {
     lines.push('');
   }
 
+  lines.push('#### 🧭 Plan por fases (auto)');
+  for (const phase of phasePlan) {
+    lines.push(`- [${phase.done ? 'x' : ' '}] ${phase.id} · ${phase.title} — ${phase.detail}`);
+  }
+  lines.push('');
+
   if (currentIdx > 0 && sessions >= current.target_weekly_sessions &&
       sessions < current.target_weekly_sessions * 1.2) {
     lines.push(`> 🎉 **Milestone ${current.id} alcanzado.** Has superado ${current.target_weekly_sessions} sessions/week.`);
@@ -481,6 +540,8 @@ function main() {
       avg_duration_s: Number(duration.toFixed(1)),
       chart_calculated: chartCalc,
       interpretation_generated: interpGen,
+      internal_tool_click: internalToolClick,
+      advertiser_cta_click: advertiserCtaClick,
     },
     capability_signals: {
       ga4_unified: signals.ga4Unified,
@@ -499,6 +560,7 @@ function main() {
       total_html_pages: signals.totalHtmlPages,
       long_tail_coverage: signals.longTailCoverage,
       eeat_schema_coverage: signals.eeatSchemasPresent,
+      oauth_missing: oauthMissing,
     },
     site_page_counts: signals.publicHtmlBySite,
   };

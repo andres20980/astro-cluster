@@ -65,6 +65,69 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: "🚨 Vigilar degradación OAuth"
+        uses: actions/github-script@v8
+        env:
+          OAUTH_MISSING: ${{ steps.oauth.outputs.missing }}
+          OAUTH_DETAIL: ${{ steps.oauth.outputs.detail }}
+        with:
+          script: |
+            const titlePrefix = '🔐 OAuth degradado (GSC/AdSense)';
+            const missing = String(process.env.OAUTH_MISSING || '').toLowerCase() === 'true';
+            const detail = process.env.OAUTH_DETAIL || 'Sin detalle';
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+            const matching = issues.filter((issue) => issue.title.startsWith(titlePrefix));
+
+            if (missing) {
+              const body = [
+                'La ejecución semanal detectó degradación de OAuth de usuario para GSC/AdSense.',
+                '',
+                `Detalle: ${detail}`,
+                '',
+                'Acción sugerida:',
+                '- Renovar GOOGLE_OAUTH_REFRESH_TOKEN con scopes de Search Console y AdSense.',
+                '- Reejecutar el workflow semanal para validar recuperación.'
+              ].join('\n');
+
+              if (matching.length > 0) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: matching[0].number,
+                  title: `${titlePrefix} — ${new Date().toISOString().slice(0, 10)}`,
+                  body,
+                });
+              } else {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `${titlePrefix} — ${new Date().toISOString().slice(0, 10)}`,
+                  body,
+                });
+              }
+              return;
+            }
+
+            for (const issue of matching) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: 'OAuth recuperado en la última ejecución semanal. Cerrando incidencia.',
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed',
+              });
+            }
+
       - name: "📊 Generar informe"
         env:
           GA4_PROPERTY: "properties/531527723"
@@ -73,6 +136,7 @@ jobs:
             [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          OAUTH_MISSING: ${{ steps.oauth.outputs.missing }}
           OAUTH_STATUS_DETAIL: ${{ steps.oauth.outputs.detail }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
@@ -90,7 +154,12 @@ jobs:
           # OAuth token for GSC + AdSense comes from a dedicated step so auth
           # failures are visible and use the same hardened exchange as watchdogs.
           OAUTH_TOKEN="${OAUTH_TOKEN:-}"
+          OAUTH_MISSING="${OAUTH_MISSING:-true}"
           OAUTH_STATUS_DETAIL="${OAUTH_STATUS_DETAIL:-Faltan GOOGLE_OAUTH_*}"
+          DATA_QUALITY_STATUS="complete"
+          if [ -z "$TOKEN" ] || [ -z "$OAUTH_TOKEN" ]; then
+            DATA_QUALITY_STATUS="partial"
+          fi
 
           # shellcheck disable=SC2129
           echo "## 📊 Informe semanal del cluster — $(date +%Y-%m-%d)" > /tmp/report.md
@@ -108,6 +177,26 @@ jobs:
           GOOGLE_AUTH_HEADING_LEVEL="###" \
           GOOGLE_AUTH_REPORT_TITLE="Estado de autenticación Google" \
           python3 .github/scripts/google_auth_audit.py >> /tmp/report.md
+          echo "" >> /tmp/report.md
+
+          echo "### 🧪 Calidad de datos del informe" >> /tmp/report.md
+          echo "| Control | Estado |" >> /tmp/report.md
+          echo "|---------|--------|" >> /tmp/report.md
+          if [ "$DATA_QUALITY_STATUS" = "complete" ]; then
+            echo "| Estado global del dataset | ✅ completo |" >> /tmp/report.md
+          else
+            echo "| Estado global del dataset | ⚠️ parcial |" >> /tmp/report.md
+          fi
+          if [ -n "$TOKEN" ]; then
+            echo "| GA4 (service account) | ✅ disponible |" >> /tmp/report.md
+          else
+            echo "| GA4 (service account) | ⚠️ no disponible |" >> /tmp/report.md
+          fi
+          if [ -n "$OAUTH_TOKEN" ]; then
+            echo "| OAuth usuario (GSC/AdSense) | ✅ disponible |" >> /tmp/report.md
+          else
+            echo "| OAuth usuario (GSC/AdSense) | ⚠️ no disponible |" >> /tmp/report.md
+          fi
           echo "" >> /tmp/report.md
 
           if [ -n "$TOKEN" ]; then
@@ -272,6 +361,24 @@ jobs:
           " >> /tmp/report.md 2>/dev/null || echo "| Sin datos aún | — |" >> /tmp/report.md
           echo "" >> /tmp/report.md
 
+          INTERNAL_TOOL_CLICK=$(echo "$CLUSTER_ACTIONS" | python3 -c "
+          import sys,json
+          r=json.load(sys.stdin)
+          for row in r.get('rows',[]):
+            if row['dimensionValues'][0]['value']=='internal_tool_click':
+              print(row['metricValues'][0]['value']); break
+          else: print('0')
+          " 2>/dev/null || echo "0")
+
+          ADVERTISER_CTA_CLICK=$(echo "$CLUSTER_ACTIONS" | python3 -c "
+          import sys,json
+          r=json.load(sys.stdin)
+          for row in r.get('rows',[]):
+            if row['dimensionValues'][0]['value']=='advertiser_cta_click':
+              print(row['metricValues'][0]['value']); break
+          else: print('0')
+          " 2>/dev/null || echo "0")
+
           # GA4 traffic sources
           echo "### 📈 Fuentes de tráfico" >> /tmp/report.md
           SOURCES=$(curl -s -H "Authorization: Bearer $TOKEN" \
@@ -328,7 +435,7 @@ jobs:
           else: print('0')
           " 2>/dev/null || echo "0")
 
-          GSC_VERIFIED_SITE_COUNT=0
+          GSC_VERIFIED_SITE_COUNT=
           if [ -n "$OAUTH_TOKEN" ]; then
             GSC_HEADERS=(-H "Authorization: Bearer $OAUTH_TOKEN")
             if [ -n "${GOOGLE_CLOUD_QUOTA_PROJECT:-}" ]; then
@@ -336,7 +443,7 @@ jobs:
             fi
             GSC_SITES_API=$(curl -s "${GSC_HEADERS[@]}" \
               "https://searchconsole.googleapis.com/webmasters/v3/sites" 2>/dev/null || echo "{}")
-            GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "import json, os, sys; cluster={entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}; data=json.load(sys.stdin); print(sum(1 for entry in data.get('siteEntry', []) if entry.get('siteUrl') in cluster and entry.get('permissionLevel') == 'siteOwner'))" 2>/dev/null || echo "0")
+            GSC_VERIFIED_SITE_COUNT=$(echo "$GSC_SITES_API" | python3 -c "import json, os, sys; cluster={entry[2] for entry in json.loads(os.environ['GSC_SITES_JSON'])}; data=json.load(sys.stdin); valid={'siteOwner','siteFullUser','siteRestrictedUser'}; print(sum(1 for entry in data.get('siteEntry', []) if entry.get('siteUrl') in cluster and entry.get('permissionLevel') in valid))" 2>/dev/null || echo "")
           fi
 
           # Google Search Console — search performance (requires OAuth)
@@ -430,10 +537,15 @@ jobs:
           ORGANIC_SESSIONS=$ORGANIC_SESSIONS \
           CHART_CALCULATED=$CHART_CALC \
           INTERPRETATION_GENERATED=$INTERP_GEN \
+          INTERNAL_TOOL_CLICK=$INTERNAL_TOOL_CLICK \
+          ADVERTISER_CTA_CLICK=$ADVERTISER_CTA_CLICK \
+          OAUTH_MISSING=$OAUTH_MISSING \
           GSC_VERIFIED_SITE_COUNT=$GSC_VERIFIED_SITE_COUNT \
           node .github/scripts/growth-milestone-check.js >> /tmp/report.md
 
           cat /tmp/report.md
+
+          echo "WEEKLY_DATA_QUALITY=$DATA_QUALITY_STATUS" >> "$GITHUB_ENV"
 
       - name: "📝 Sincronizar issue del informe semanal"
         uses: actions/github-script@v8
@@ -492,6 +604,8 @@ jobs:
         env:
           GA4_PROPERTY: "properties/531527723"
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          WEEKLY_DATA_QUALITY: ${{ env.WEEKLY_DATA_QUALITY }}
+          SKIP_PUSH_ON_PARTIAL_DATA: "1"
         run: |
           set -euo pipefail
           bash .github/scripts/update_weekly_public_stats.sh

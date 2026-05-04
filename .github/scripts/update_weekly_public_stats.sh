@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+WEEKLY_DATA_QUALITY="${WEEKLY_DATA_QUALITY:-complete}"
+SKIP_PUSH_ON_PARTIAL_DATA="${SKIP_PUSH_ON_PARTIAL_DATA:-1}"
+
 pip -q install google-auth 2>/dev/null
 TOKEN=$(python3 -c "
 import google.auth, google.auth.transport.requests
@@ -55,5 +58,9 @@ if git diff --cached --quiet; then
   echo "No weekly public stats changes to commit."
 else
   git commit -m "chore: update growth milestone + public stats"
-  git push
+  if [ "$WEEKLY_DATA_QUALITY" = "partial" ] && [ "$SKIP_PUSH_ON_PARTIAL_DATA" = "1" ]; then
+    echo "Partial data detected; skipping git push to keep master clean."
+  else
+    git push
+  fi
 fi
