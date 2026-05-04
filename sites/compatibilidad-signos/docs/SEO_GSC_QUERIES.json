@@ -1,19 +1,155 @@
 {
-  "generatedAt": "2026-04-23T15:33:23Z",
+  "generatedAt": "2026-05-04T12:20:15Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
-    "start": "2026-03-26",
-    "end": "2026-04-20"
+    "start": "2026-04-06",
+    "end": "2026-05-01"
   },
   "queries": [
     {
-      "query": "tabla compatibilidad geminis",
+      "query": "tabla compatibilidad signos",
+      "clicks": 1.0,
+      "impressions": 14.0,
+      "ctr": 0.07142857142857142,
+      "position": 8.285714285714285,
+      "opportunity": 13.0
+    },
+    {
+      "query": "acuario y leo",
+      "clicks": 0.0,
+      "impressions": 5.0,
+      "ctr": 0.0,
+      "position": 76.0,
+      "opportunity": 5.0
+    },
+    {
+      "query": "acuario y leo son compatibles",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 63.25,
+      "opportunity": 4.0
+    },
+    {
+      "query": "cancer escorpio",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 94.0,
+      "opportunity": 3.0
+    },
+    {
+      "query": "compatibilidad de signos gratis",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 17.333333333333332,
+      "opportunity": 3.0
+    },
+    {
+      "query": "compatibilidad entre signos gratis",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 26.0,
+      "opportunity": 3.0
+    },
+    {
+      "query": "compatibilidad leo geminis",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 62.666666666666664,
+      "opportunity": 3.0
+    },
+    {
+      "query": "compatibilidad piscis cancer",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 89.33333333333333,
+      "opportunity": 3.0
+    },
+    {
+      "query": "compatibilidad escorpio cancer",
       "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
-      "position": 9.5,
+      "position": 89.0,
       "opportunity": 2.0
+    },
+    {
+      "query": "acuario compatible con acuario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 76.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "acuario con acuario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 100.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "acuario con geminis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 90.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "acuario es compatible con leo",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 87.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "acuario vs acuario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 57.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "acuario y acuario son compatibles",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 84.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "cancer geminis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 94.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "capricornio con sagitario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 79.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad acuario y leo",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 75.0,
+      "opportunity": 1.0
     },
     {
       "query": "compatibilidad astral gratis",
@@ -24,19 +160,43 @@
       "opportunity": 1.0
     },
     {
-      "query": "compatibilidad de signos gratis",
+      "query": "compatibilidad de acuario y leo",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 23.0,
+      "position": 71.0,
       "opportunity": 1.0
     },
     {
-      "query": "compatibilidad entre signos gratis",
+      "query": "compatibilidad de geminis y cancer",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 23.0,
+      "position": 79.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad entre leo y virgo",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 69.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad leo y virgo",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 59.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "compatibilidad sagitario y géminis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 58.0,
       "opportunity": 1.0
     },
     {
@@ -51,61 +211,185 @@
   "pages": [
     {
       "path": "/",
-      "clicks": 0.0,
-      "impressions": 31.0,
-      "ctr": 0.0,
-      "position": 10.96774193548387,
-      "opportunity": 31.0
+      "clicks": 1.0,
+      "impressions": 127.0,
+      "ctr": 0.007874015748031496,
+      "position": 9.5748031496063,
+      "opportunity": 126.0
     },
     {
-      "path": "http://compatibilidad-signos.es/",
+      "path": "/acuario-leo",
+      "clicks": 0.0,
+      "impressions": 19.0,
+      "ctr": 0.0,
+      "position": 60.21052631578947,
+      "opportunity": 19.0
+    },
+    {
+      "path": "/",
+      "clicks": 0.0,
+      "impressions": 11.0,
+      "ctr": 0.0,
+      "position": 9.090909090909092,
+      "opportunity": 11.0
+    },
+    {
+      "path": "/sagitario-escorpio",
+      "clicks": 0.0,
+      "impressions": 10.0,
+      "ctr": 0.0,
+      "position": 58.1,
+      "opportunity": 10.0
+    },
+    {
+      "path": "/geminis-leo",
+      "clicks": 0.0,
+      "impressions": 9.0,
+      "ctr": 0.0,
+      "position": 60.22222222222222,
+      "opportunity": 9.0
+    },
+    {
+      "path": "/sagitario-geminis",
+      "clicks": 0.0,
+      "impressions": 9.0,
+      "ctr": 0.0,
+      "position": 51.44444444444444,
+      "opportunity": 9.0
+    },
+    {
+      "path": "/piscis-cancer",
       "clicks": 0.0,
       "impressions": 8.0,
       "ctr": 0.0,
-      "position": 8.875,
+      "position": 91.125,
       "opportunity": 8.0
+    },
+    {
+      "path": "/leo-virgo",
+      "clicks": 0.0,
+      "impressions": 7.0,
+      "ctr": 0.0,
+      "position": 64.42857142857143,
+      "opportunity": 7.0
+    },
+    {
+      "path": "/cancer-escorpio",
+      "clicks": 0.0,
+      "impressions": 6.0,
+      "ctr": 0.0,
+      "position": 91.33333333333333,
+      "opportunity": 6.0
+    },
+    {
+      "path": "/leo-leo",
+      "clicks": 0.0,
+      "impressions": 6.0,
+      "ctr": 0.0,
+      "position": 41.833333333333336,
+      "opportunity": 6.0
+    },
+    {
+      "path": "/sagitario-sagitario",
+      "clicks": 0.0,
+      "impressions": 5.0,
+      "ctr": 0.0,
+      "position": 68.0,
+      "opportunity": 5.0
+    },
+    {
+      "path": "/acuario-acuario",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 79.25,
+      "opportunity": 4.0
+    },
+    {
+      "path": "/acuario-geminis",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 64.5,
+      "opportunity": 4.0
+    },
+    {
+      "path": "/cancer-geminis",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 88.33333333333333,
+      "opportunity": 3.0
+    },
+    {
+      "path": "/capricornio-sagitario",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 79.0,
+      "opportunity": 1.0
     }
   ],
   "topOpportunities": [
     {
-      "query": "tabla compatibilidad geminis",
-      "clicks": 0.0,
-      "impressions": 2.0,
-      "ctr": 0.0,
-      "position": 9.5,
-      "opportunity": 2.0
+      "query": "tabla compatibilidad signos",
+      "clicks": 1.0,
+      "impressions": 14.0,
+      "ctr": 0.07142857142857142,
+      "position": 8.285714285714285,
+      "opportunity": 13.0
     },
     {
-      "query": "compatibilidad astral gratis",
+      "query": "acuario y leo",
       "clicks": 0.0,
-      "impressions": 1.0,
+      "impressions": 5.0,
       "ctr": 0.0,
-      "position": 27.0,
-      "opportunity": 1.0
+      "position": 76.0,
+      "opportunity": 5.0
+    },
+    {
+      "query": "acuario y leo son compatibles",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 63.25,
+      "opportunity": 4.0
+    },
+    {
+      "query": "cancer escorpio",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 94.0,
+      "opportunity": 3.0
     },
     {
       "query": "compatibilidad de signos gratis",
       "clicks": 0.0,
-      "impressions": 1.0,
+      "impressions": 3.0,
       "ctr": 0.0,
-      "position": 23.0,
-      "opportunity": 1.0
-    },
+      "position": 17.333333333333332,
+      "opportunity": 3.0
+    }
+  ],
+  "strikingDistanceQueries": [
     {
-      "query": "compatibilidad entre signos gratis",
+      "query": "compatibilidad de signos gratis",
       "clicks": 0.0,
-      "impressions": 1.0,
+      "impressions": 3.0,
       "ctr": 0.0,
-      "position": 23.0,
-      "opportunity": 1.0
-    },
+      "position": 17.333333333333332,
+      "opportunity": 3.0
+    }
+  ],
+  "strikingDistancePages": [
     {
-      "query": "compatibilidad signos zodiacales tabla completa",
+      "path": "/",
       "clicks": 0.0,
-      "impressions": 1.0,
+      "impressions": 11.0,
       "ctr": 0.0,
-      "position": 15.0,
-      "opportunity": 1.0
+      "position": 9.090909090909092,
+      "opportunity": 11.0
     }
   ]
 }

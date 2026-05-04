@@ -75,13 +75,13 @@
         "avg_duration_min_s": 40
       },
       "auto": {
-        "completed_actions": 3,
+        "completed_actions": 4,
         "total_actions": 4,
         "actions": [
           {
             "label": "Verificar las 5 propiedades de GSC por DNS",
-            "done": false,
-            "evidence": "Propiedades GSC verificadas: 0/5"
+            "done": true,
+            "evidence": "Propiedades GSC verificadas: 5/5"
           },
           {
             "label": "Extender reporting GSC por dominio dentro del informe semanal",
@@ -283,7 +283,9 @@
       "bounce_rate": 0.7143,
       "avg_duration_s": 66.1,
       "chart_calculated": 5,
-      "interpretation_generated": 2
+      "interpretation_generated": 2,
+      "internal_tool_click": 2,
+      "advertiser_cta_click": 0
     },
     "capability_signals": {
       "ga4_unified": true,
@@ -292,7 +294,7 @@
       "seo_autopatch_rotatory": true,
       "gsc_cluster_reporting": true,
       "gsc_sitemap_submit": true,
-      "gsc_verified_site_count": 0,
+      "gsc_verified_site_count": 5,
       "internal_traffic_optout": true,
       "ga4_tagged_pages": 219,
       "ga4_optout_pages": 219,
@@ -301,7 +303,8 @@
       "premium_slots_by_site": true,
       "total_html_pages": 239,
       "long_tail_coverage": true,
-      "eeat_schema_coverage": true
+      "eeat_schema_coverage": true,
+      "oauth_missing": false
     },
     "site_page_counts": {
       "carta-astral": 18,
