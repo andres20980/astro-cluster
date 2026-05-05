@@ -138,7 +138,7 @@ jobs:
               service_account="${FIREBASE_SA_HOROSCOPO_DE_HOY:-$FIREBASE_SERVICE_ACCOUNT}"
               ;;
             meditacion-chakras)
-              project_id="licitago-spain"
+              project_id="meditacion-chakras-es"
               domain="meditacion-chakras.es"
               gsc_site_url="sc-domain:meditacion-chakras.es"
               service_account="${FIREBASE_SA_MEDITACION_CHAKRAS:-$FIREBASE_SERVICE_ACCOUNT}"
