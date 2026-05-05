@@ -37,6 +37,58 @@
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
     window.clusterSitesByDomain={'carta-astral-gratis.es':'carta-astral','compatibilidad-signos.es':'compatibilidad-signos','tarot-del-dia.es':'tarot-del-dia','calcular-numerologia.es':'calcular-numerologia','horoscopo-de-hoy.es':'horoscopo-de-hoy','meditacion-chakras.es':'meditacion-chakras'};
+    window.clusterAnalyticsState=(function(){
+      const prefix='astro_cluster_';
+      const randomId=function(){
+        return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+      };
+      const read=function(key,fallback){
+        try{return localStorage.getItem(prefix+key)||fallback;}catch(e){return fallback;}
+      };
+      const write=function(key,value){
+        try{localStorage.setItem(prefix+key,String(value));}catch(e){}
+      };
+      const metaSite='horoscopo-de-hoy';
+      let sessionId=read('session_id','');
+      if(!sessionId){
+        sessionId=randomId();
+        write('session_id',sessionId);
+      }
+      let firstSite=read('first_site_seen','');
+      if(!firstSite){
+        firstSite=metaSite;
+        write('first_site_seen',firstSite);
+      }
+      let toolsSeen=parseInt(read('tools_seen_count','0'),10)||0;
+      const seenKey='tool_seen_'+metaSite;
+      if(read(seenKey,'0')!=='1'){
+        toolsSeen+=1;
+        write(seenKey,'1');
+        write('tools_seen_count',toolsSeen);
+      }
+      return {
+        sessionId:sessionId,
+        firstSiteSeen:firstSite,
+        toolsSeenCount:toolsSeen,
+        completedToolsCount:parseInt(read('completed_tools_count','0'),10)||0,
+        lastToolCompleted:read('last_tool_completed',''),
+        markComplete:function(tool){
+          const completionKey='tool_completed_'+(tool||metaSite);
+          if(read(completionKey,'0')==='1'){
+            this.completedToolsCount=parseInt(read('completed_tools_count','0'),10)||0;
+            this.lastToolCompleted=read('last_tool_completed','')||this.lastToolCompleted;
+            return;
+          }
+          const current=parseInt(read('completed_tools_count','0'),10)||0;
+          const next=current+1;
+          write(completionKey,'1');
+          write('completed_tools_count',next);
+          write('last_tool_completed',tool||metaSite);
+          this.completedToolsCount=next;
+          this.lastToolCompleted=tool||metaSite;
+        }
+      };
+    })();
     window.clusterAnalyticsMeta={
       cluster_name:'astro-cluster',
       site_key:'horoscopo-de-hoy',
@@ -44,11 +96,22 @@
       tool_type:'daily_horoscope',
       page_type:'daily_sign',
       content_group:'daily_content',
-      entity_slug:'piscis'
+      entity_slug:'piscis',
+      origin_site:window.clusterAnalyticsState.firstSiteSeen,
+      cluster_session_id:window.clusterAnalyticsState.sessionId,
+      tools_seen_count:window.clusterAnalyticsState.toolsSeenCount,
+      completed_tools_count:window.clusterAnalyticsState.completedToolsCount,
+      last_tool_completed:window.clusterAnalyticsState.lastToolCompleted
     };
     window.clusterTrack=function(eventName,params){
       if(window.clusterAnalyticsOptedOut)return;
+      if(eventName==='tool_complete'||eventName==='chart_calculated'||eventName==='compatibility_view'||eventName==='tarot_reading_complete'||eventName==='numerology_calculated'||eventName==='interpretation_generated'){
+        window.clusterAnalyticsState.markComplete(window.clusterAnalyticsMeta.site_key);
+      }
       const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
+      payload.tools_seen_count=window.clusterAnalyticsState.toolsSeenCount;
+      payload.completed_tools_count=window.clusterAnalyticsState.completedToolsCount;
+      payload.last_tool_completed=window.clusterAnalyticsState.lastToolCompleted;
       Object.keys(payload).forEach(key=>{
         if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
       });
@@ -86,20 +149,59 @@
           link_url:url.href,
           link_text:linkText,
           link_context:linkContext||'advertiser_cta',
-          ad_slot:adSlot||'direct_advertiser_cta'
+          ad_slot:adSlot||'direct_advertiser_cta',
+          journey_stage:'commercial'
         });
         return;
       }
       if(destinationSite&&destinationDomain!==currentDomain){
-        window.clusterTrack('internal_tool_click',{
+        const isResultContext=(linkContext||'').indexOf('result')!==-1||(linkContext||'').indexOf('recirculation')!==-1;
+        window.clusterTrack(isResultContext?'result_to_next_tool_click':'internal_tool_click',{
           link_url:url.href,
           link_text:linkText,
           link_context:linkContext||'cluster_crosslink',
           destination_site:destinationSite,
-          destination_domain:destinationDomain
+          destination_domain:destinationDomain,
+          journey_stage:isResultContext?'recirculation':'navigation',
+          recirculation_variant:anchor.dataset.recirculationVariant||''
         });
       }
     },{capture:true});
+    document.addEventListener('DOMContentLoaded',function(){
+      const seen=new WeakSet();
+      const trackBlock=function(block){
+        if(!block||seen.has(block))return;
+        seen.add(block);
+        window.clusterTrack(block.dataset.analyticsEvent||'cluster_recirculation_impression',{
+          journey_stage:block.dataset.journeyStage||'recirculation',
+          link_context:block.dataset.linkContext||'cluster_recirculation',
+          recirculation_variant:block.dataset.recirculationVariant||'default',
+          destination_site:block.dataset.primaryDestinationSite||''
+        });
+      };
+      document.querySelectorAll('[data-track-impression="cluster_recirculation"]').forEach(function(block){
+        if('IntersectionObserver' in window){
+          const observer=new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              if(entry.isIntersecting){
+                trackBlock(entry.target);
+                observer.unobserve(entry.target);
+              }
+            });
+          },{threshold:.35});
+          observer.observe(block);
+        }else{
+          trackBlock(block);
+        }
+      });
+      document.querySelectorAll('[data-track-impression="advertiser_cta"]').forEach(function(block){
+        window.clusterTrack('advertiser_cta_impression',{
+          journey_stage:'commercial',
+          link_context:block.dataset.linkContext||'advertiser_cta',
+          ad_slot:block.dataset.adSlot||'direct_advertiser_cta'
+        });
+      });
+    });
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Article","headline":"Horóscopo Piscis Hoy","description":"Horóscopo de Piscis para hoy 05 de mayo de 2026. Predicciones de amor, trabajo y salud. Números de la suerte: 6, 12, 27. Color del día: Amarillo.","datePublished":"2026-05-05","dateModified":"2026-05-05","author":{"@type":"Organization","name":"Horóscopo de Hoy"},"publisher":{"@type":"Organization","name":"Horóscopo de Hoy","url":"https://horoscopo-de-hoy.es/"},"mainEntityOfPage":"https://horoscopo-de-hoy.es/piscis","inLanguage":"es"}
@@ -199,7 +301,7 @@
     <span class="tag">🎨 Amarillo</span>
   </div>
 
-<div class="ad-h">
+<div class="ad-h" data-track-impression="advertiser_cta" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
   <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
     <span class="ad-kicker">Espacio publicitario destacado</span>
     <span class="ad-icon">⭐</span>
@@ -244,7 +346,7 @@
     <p>Evita tomar el texto como una orden literal. Úsalo como una lista de comprobación: qué conviene cuidar, qué puede esperar y dónde necesitas más claridad. Ese enfoque reduce decisiones impulsivas y hace que la lectura diaria tenga valor incluso cuando el día cambia de rumbo.</p>
   </div>
 
-<div class="ad-h">
+<div class="ad-h" data-track-impression="advertiser_cta" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
   <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
     <span class="ad-kicker">Espacio publicitario destacado</span>
     <span class="ad-icon">🌙</span>
@@ -272,29 +374,29 @@
     <a href="https://compatibilidad-signos.es/">Ver compatibilidad →</a>
   </div>
 
-<section class="cluster-journey">
-  <div class="cluster-kicker">✦ Más herramientas para ti</div>
-  <h2>También te puede interesar</h2>
-  <p>Si quieres seguir profundizando, aquí tienes otras herramientas relacionadas para conocer mejor tu situación.</p>
+<section class="cluster-journey" data-track-impression="cluster_recirculation" data-analytics-event="cluster_recirculation_impression" data-journey-stage="recirculation" data-link-context="result_recirculation" data-recirculation-variant="default" data-primary-destination-site="tarot-del-dia">
+  <div class="cluster-kicker">Mas herramientas para ti · Energia del dia</div>
+  <h2>Completa tu lectura</h2>
+  <p>El horoscopo marca el clima general del dia. Si quieres una senal concreta, una practica o personalizacion, continua aqui.</p>
   <div class="cluster-grid">
-    <a class="cluster-card" href="https://carta-astral-gratis.es/" data-link-context="cluster_recirculation" data-destination-site="carta-astral" data-destination-domain="carta-astral-gratis.es">
-  <span class="cluster-label">Personalizado</span>
-  <span class="cluster-title">Carta Astral Gratis</span>
-  <span class="cluster-copy">Pasa de una predicción general a una lectura personalizada con fecha, hora y lugar de nacimiento.</span>
-  <span class="cluster-cta">Calcular ahora →</span>
-</a><a class="cluster-card" href="https://meditacion-chakras.es/" data-link-context="cluster_recirculation" data-destination-site="meditacion-chakras" data-destination-domain="meditacion-chakras.es">
-  <span class="cluster-label">Energía del día</span>
-  <span class="cluster-title">Meditación de Chakras</span>
-  <span class="cluster-copy">Complementa tu horóscopo con una meditación en el chakra que más necesita atención hoy.</span>
-  <span class="cluster-cta">Meditar ahora →</span>
-</a><a class="cluster-card" href="https://tarot-del-dia.es/" data-link-context="cluster_recirculation" data-destination-site="tarot-del-dia" data-destination-domain="tarot-del-dia.es">
-  <span class="cluster-label">Consulta breve</span>
+    <a class="cluster-card" href="https://tarot-del-dia.es/" rel="noopener" data-link-context="result_recirculation" data-destination-site="tarot-del-dia" data-destination-domain="tarot-del-dia.es" data-recirculation-variant="primary">
+  <span class="cluster-label">Paso principal</span>
   <span class="cluster-title">Tarot del Día</span>
-  <span class="cluster-copy">Haz una tirada rápida si buscas una señal adicional para tomar una decisión hoy.</span>
-  <span class="cluster-cta">Abrir tirada →</span>
+  <span class="cluster-copy">Haz una tirada rapida si buscas una senal adicional para decidir hoy.</span>
+  <span class="cluster-cta">Abrir tirada</span>
+</a><a class="cluster-card" href="https://meditacion-chakras.es/" rel="noopener" data-link-context="result_recirculation" data-destination-site="meditacion-chakras" data-destination-domain="meditacion-chakras.es" data-recirculation-variant="secondary">
+  <span class="cluster-label">Energia del dia</span>
+  <span class="cluster-title">Meditación de Chakras</span>
+  <span class="cluster-copy">Complementa tu signo con una practica en el centro que mas necesita atencion.</span>
+  <span class="cluster-cta">Meditar ahora</span>
+</a><a class="cluster-card" href="https://carta-astral-gratis.es/" rel="noopener" data-link-context="result_recirculation" data-destination-site="carta-astral" data-destination-domain="carta-astral-gratis.es" data-recirculation-variant="secondary">
+  <span class="cluster-label">Personalizacion</span>
+  <span class="cluster-title">Carta Astral Gratis</span>
+  <span class="cluster-copy">Pasa de prediccion general a lectura con fecha, hora y lugar.</span>
+  <span class="cluster-cta">Calcular carta</span>
 </a>
   </div>
-  <p class="cluster-note">Explora otras herramientas del grupo si quieres ampliar la lectura desde otro ángulo.</p>
+  <p class="cluster-note">Usa otra herramienta solo si quieres ampliar esta lectura desde otro angulo.</p>
 </section>
 
 <footer>

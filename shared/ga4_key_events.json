@@ -20,6 +20,22 @@
     "displayName": "Interpretacion generada"
   },
   {
+    "eventName": "tool_complete",
+    "displayName": "Herramienta completada"
+  },
+  {
+    "eventName": "result_to_next_tool_click",
+    "displayName": "Click de resultado a siguiente herramienta"
+  },
+  {
+    "eventName": "cluster_recirculation_impression",
+    "displayName": "Impresion de recirculacion cluster"
+  },
+  {
+    "eventName": "advertiser_cta_impression",
+    "displayName": "Impresion CTA anunciante"
+  },
+  {
     "eventName": "advertiser_cta_click",
     "displayName": "CTA anunciante"
   }

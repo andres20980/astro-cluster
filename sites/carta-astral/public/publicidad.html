@@ -16,6 +16,193 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
   <script>if(location.protocol!=='https:'||location.hostname==='www.carta-astral-gratis.es'||location.hostname.endsWith('.web.app'))location.replace('https://carta-astral-gratis.es'+location.pathname+location.search);</script>
+  <script>
+    (function(){
+      const measurementId='G-DEWMQ73FH5';
+      const storageKey='astro_cluster_analytics_optout';
+      let optedOut=false;
+      try{
+        const params=new URLSearchParams(location.search);
+        const value=params.get('analytics_optout');
+        if(value==='1'||value==='true')localStorage.setItem(storageKey,'1');
+        if(value==='0'||value==='false')localStorage.removeItem(storageKey);
+        optedOut=localStorage.getItem(storageKey)==='1';
+      }catch(e){}
+      window.clusterAnalyticsOptedOut=optedOut;
+      window['ga-disable-'+measurementId]=window.clusterAnalyticsOptedOut;
+    })();
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
+  <script>
+    window.dataLayer=window.dataLayer||[];
+    function gtag(){dataLayer.push(arguments);}
+    window.clusterSitesByDomain={'carta-astral-gratis.es':'carta-astral','compatibilidad-signos.es':'compatibilidad-signos','tarot-del-dia.es':'tarot-del-dia','calcular-numerologia.es':'calcular-numerologia','horoscopo-de-hoy.es':'horoscopo-de-hoy','meditacion-chakras.es':'meditacion-chakras'};
+    window.clusterAnalyticsState=(function(){
+      const prefix='astro_cluster_';
+      const randomId=function(){
+        return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+      };
+      const read=function(key,fallback){
+        try{return localStorage.getItem(prefix+key)||fallback;}catch(e){return fallback;}
+      };
+      const write=function(key,value){
+        try{localStorage.setItem(prefix+key,String(value));}catch(e){}
+      };
+      const metaSite='carta-astral';
+      let sessionId=read('session_id','');
+      if(!sessionId){
+        sessionId=randomId();
+        write('session_id',sessionId);
+      }
+      let firstSite=read('first_site_seen','');
+      if(!firstSite){
+        firstSite=metaSite;
+        write('first_site_seen',firstSite);
+      }
+      let toolsSeen=parseInt(read('tools_seen_count','0'),10)||0;
+      const seenKey='tool_seen_'+metaSite;
+      if(read(seenKey,'0')!=='1'){
+        toolsSeen+=1;
+        write(seenKey,'1');
+        write('tools_seen_count',toolsSeen);
+      }
+      return {
+        sessionId:sessionId,
+        firstSiteSeen:firstSite,
+        toolsSeenCount:toolsSeen,
+        completedToolsCount:parseInt(read('completed_tools_count','0'),10)||0,
+        lastToolCompleted:read('last_tool_completed',''),
+        markComplete:function(tool){
+          const completionKey='tool_completed_'+(tool||metaSite);
+          if(read(completionKey,'0')==='1'){
+            this.completedToolsCount=parseInt(read('completed_tools_count','0'),10)||0;
+            this.lastToolCompleted=read('last_tool_completed','')||this.lastToolCompleted;
+            return;
+          }
+          const current=parseInt(read('completed_tools_count','0'),10)||0;
+          const next=current+1;
+          write(completionKey,'1');
+          write('completed_tools_count',next);
+          write('last_tool_completed',tool||metaSite);
+          this.completedToolsCount=next;
+          this.lastToolCompleted=tool||metaSite;
+        }
+      };
+    })();
+    window.clusterAnalyticsMeta={
+      cluster_name:'astro-cluster',
+      site_key:'carta-astral',
+      site_domain:'carta-astral-gratis.es',
+      tool_type:'astrology_chart',
+      page_type:'commercial_landing',
+      content_group:'advertising',
+      entity_slug:'publicidad',
+      origin_site:window.clusterAnalyticsState.firstSiteSeen,
+      cluster_session_id:window.clusterAnalyticsState.sessionId,
+      tools_seen_count:window.clusterAnalyticsState.toolsSeenCount,
+      completed_tools_count:window.clusterAnalyticsState.completedToolsCount,
+      last_tool_completed:window.clusterAnalyticsState.lastToolCompleted
+    };
+    window.clusterTrack=function(eventName,params){
+      if(window.clusterAnalyticsOptedOut)return;
+      if(eventName==='tool_complete'||eventName==='chart_calculated'||eventName==='compatibility_view'||eventName==='tarot_reading_complete'||eventName==='numerology_calculated'||eventName==='interpretation_generated'){
+        window.clusterAnalyticsState.markComplete(window.clusterAnalyticsMeta.site_key);
+      }
+      const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
+      payload.tools_seen_count=window.clusterAnalyticsState.toolsSeenCount;
+      payload.completed_tools_count=window.clusterAnalyticsState.completedToolsCount;
+      payload.last_tool_completed=window.clusterAnalyticsState.lastToolCompleted;
+      Object.keys(payload).forEach(key=>{
+        if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
+      });
+      payload.transport_type='beacon';
+      gtag('event',eventName,payload);
+    };
+    gtag('js',new Date());
+    gtag('config','G-DEWMQ73FH5',{
+      send_page_view:false,
+      linker:{domains:['carta-astral-gratis.es','compatibilidad-signos.es','tarot-del-dia.es','calcular-numerologia.es','horoscopo-de-hoy.es','meditacion-chakras.es']}
+    });
+    window.clusterTrack('page_view',{
+      page_title:document.title,
+      page_location:location.href,
+      page_path:location.pathname,
+      page_hostname:location.hostname,
+      page_referrer:document.referrer||undefined
+    });
+    document.addEventListener('click',function(event){
+      const anchor=event.target.closest('a[href]');
+      if(!anchor||anchor.dataset.analyticsIgnore==='1')return;
+      const rawHref=anchor.getAttribute('href')||'';
+      if(!rawHref||rawHref.startsWith('#')||rawHref.startsWith('mailto:')||rawHref.startsWith('tel:'))return;
+      let url;
+      try{url=new URL(anchor.href,location.href);}catch{return;}
+      const normalizeHost=host=>(host||'').replace(/^www\./,'');
+      const destinationDomain=normalizeHost(url.hostname);
+      const currentDomain=normalizeHost(location.hostname);
+      const destinationSite=anchor.dataset.destinationSite||window.clusterSitesByDomain[destinationDomain]||'';
+      const linkText=(anchor.textContent||'').replace(/\s+/g,' ').trim().slice(0,120);
+      const linkContext=anchor.dataset.linkContext||'';
+      const adSlot=anchor.dataset.adSlot||'';
+      if(anchor.matches('.ad-ph,.ad-link,[data-ad-slot]')||url.pathname==='/publicidad'){
+        window.clusterTrack('advertiser_cta_click',{
+          link_url:url.href,
+          link_text:linkText,
+          link_context:linkContext||'advertiser_cta',
+          ad_slot:adSlot||'direct_advertiser_cta',
+          journey_stage:'commercial'
+        });
+        return;
+      }
+      if(destinationSite&&destinationDomain!==currentDomain){
+        const isResultContext=(linkContext||'').indexOf('result')!==-1||(linkContext||'').indexOf('recirculation')!==-1;
+        window.clusterTrack(isResultContext?'result_to_next_tool_click':'internal_tool_click',{
+          link_url:url.href,
+          link_text:linkText,
+          link_context:linkContext||'cluster_crosslink',
+          destination_site:destinationSite,
+          destination_domain:destinationDomain,
+          journey_stage:isResultContext?'recirculation':'navigation',
+          recirculation_variant:anchor.dataset.recirculationVariant||''
+        });
+      }
+    },{capture:true});
+    document.addEventListener('DOMContentLoaded',function(){
+      const seen=new WeakSet();
+      const trackBlock=function(block){
+        if(!block||seen.has(block))return;
+        seen.add(block);
+        window.clusterTrack(block.dataset.analyticsEvent||'cluster_recirculation_impression',{
+          journey_stage:block.dataset.journeyStage||'recirculation',
+          link_context:block.dataset.linkContext||'cluster_recirculation',
+          recirculation_variant:block.dataset.recirculationVariant||'default',
+          destination_site:block.dataset.primaryDestinationSite||''
+        });
+      };
+      document.querySelectorAll('[data-track-impression="cluster_recirculation"]').forEach(function(block){
+        if('IntersectionObserver' in window){
+          const observer=new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              if(entry.isIntersecting){
+                trackBlock(entry.target);
+                observer.unobserve(entry.target);
+              }
+            });
+          },{threshold:.35});
+          observer.observe(block);
+        }else{
+          trackBlock(block);
+        }
+      });
+      document.querySelectorAll('[data-track-impression="advertiser_cta"]').forEach(function(block){
+        window.clusterTrack('advertiser_cta_impression',{
+          journey_stage:'commercial',
+          link_context:block.dataset.linkContext||'advertiser_cta',
+          ad_slot:block.dataset.adSlot||'direct_advertiser_cta'
+        });
+      });
+    });
+  </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Publicidad en Carta Astral Gratis","url":"https://carta-astral-gratis.es/publicidad","description":"Dosier comercial y espacios destacados para anunciantes en carta-astral-gratis.es","inLanguage":"es"}
   </script>
@@ -90,7 +277,26 @@
       <div class="card">
         <div class="icon">📦</div>
         <h3>Compra por red</h3>
-        <p>Una misma creatividad puede aparecer en las 5 herramientas para cubrir astrología, tarot, numerología, horóscopo y compatibilidad.</p>
+        <p>Una misma creatividad puede aparecer en las 6 herramientas para cubrir astrologia, tarot, numerologia, horoscopo, compatibilidad y bienestar energetico.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Paquetes por intencion</h2>
+    <p>La red se vende tambien por recorridos de usuario, no solo por dominios. Esto permite que una marca aparezca donde el contexto tiene mas sentido y evita impactos automaticos poco relevantes.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Amor y pareja</h3>
+        <p>Compatibilidad, carta astral y tarot para marcas de citas, regalos, joyeria, terapia de pareja o consultas sentimentales.</p>
+      </div>
+      <div class="card">
+        <h3>Energia del dia</h3>
+        <p>Horoscopo, tarot y chakras para campañas de consumo recurrente, bienestar, rituales o productos espirituales.</p>
+      </div>
+      <div class="card">
+        <h3>Autoconocimiento</h3>
+        <p>Carta astral, numerologia y chakras para formacion, membresias, libros, cursos y herramientas de crecimiento personal.</p>
       </div>
     </div>
   </section>
@@ -133,13 +339,14 @@
         <tr><td>Banner previo al pie</td><td>Frecuencia extra</td><td>15 EUR / mes</td></tr>
         <tr><td>Paquete del sitio</td><td>Superior + contenido</td><td>45 EUR / mes</td></tr>
         <tr><td>Exclusividad del sitio</td><td>3 espacios + exclusividad del dominio</td><td>75 EUR / mes</td></tr>
-        <tr><td>Paquete de la red</td><td>Presencia estática en 5 dominios</td><td>120 EUR / mes</td></tr>
+        <tr><td>Paquete de la red</td><td>Presencia estatica en 6 dominios</td><td>120 EUR / mes</td></tr>
         <tr><td>Exclusividad de la red</td><td>Espacios destacados + exclusividad de categoría</td><td>250 EUR / mes</td></tr>
       </tbody>
     </table>
     <p style="margin-top:.75rem">Datos de tráfico, capturas de GA4, creatividades admitidas, paquetes trimestrales y opciones de patrocinio ampliado disponibles bajo solicitud.</p>
     <p style="margin-top:.75rem">Los formatos se venden como espacios estáticos: texto, imagen ligera o enlace patrocinado integrado con el contexto de la página. Antes de publicar revisamos que la página de destino, el mensaje y la categoría encajen con la audiencia para proteger tanto al anunciante como la experiencia del usuario.</p>
     <p style="margin-top:.75rem">La venta directa nos permite evitar anuncios automáticos poco relevantes y priorizar marcas que aporten valor real: consultas profesionales, formación seria, productos de bienestar, herramientas de autoconocimiento y servicios afines. Si una campaña no encaja con la temática o puede generar desconfianza, no la publicamos.</p>
+    <p style="margin-top:.75rem">Tratamos la red como un único cluster comercial: se puede reservar un dominio concreto, combinar varias webs o plantear presencia en las cinco propiedades con un mismo mensaje adaptado a cada intención de búsqueda.</p>
   </section>
 
   <section>

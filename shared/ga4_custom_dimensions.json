@@ -60,6 +60,48 @@
     "scope": "EVENT"
   },
   {
+    "parameterName": "journey_stage",
+    "displayName": "Journey stage",
+    "description": "Fase del journey cluster: entry, in_flow, result, recirculation, navigation o commercial.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "origin_site",
+    "displayName": "Origin site",
+    "description": "Primer site visto por la sesion local del cluster.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "recirculation_variant",
+    "displayName": "Recirculation variant",
+    "description": "Variante estatica del modulo de recirculacion.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "cluster_session_id",
+    "displayName": "Cluster session id",
+    "description": "Identificador local no personal para continuidad ligera de cluster.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "tools_seen_count",
+    "displayName": "Tools seen count",
+    "description": "Numero de herramientas distintas vistas en la sesion local del cluster.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "completed_tools_count",
+    "displayName": "Completed tools count",
+    "description": "Numero de herramientas completadas segun eventos clave del cluster.",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "last_tool_completed",
+    "displayName": "Last tool completed",
+    "description": "Ultima herramienta completada dentro del cluster.",
+    "scope": "EVENT"
+  },
+  {
     "parameterName": "input_mode",
     "displayName": "Input mode",
     "description": "Modo de entrada del usuario en la herramienta.",

@@ -125,6 +125,15 @@ declare -A SITE_COMMERCIAL_CONTEXT=(
   [meditacion-chakras]="aparece en un funnel de 23 pasos de alta atención sobre bienestar y equilibrio energético"
 )
 
+declare -A CLUSTER_JOURNEY_NAME=(
+  [carta-astral]="Perfil personal"
+  [compatibilidad-signos]="Amor y pareja"
+  [tarot-del-dia]="Decision puntual"
+  [calcular-numerologia]="Autoconocimiento profundo"
+  [horoscopo-de-hoy]="Energia del dia"
+  [meditacion-chakras]="Integracion emocional"
+)
+
 # Helper: generate cross-link footer HTML for a given site key
 crosslink_footer() {
   local current="$1"
@@ -183,6 +192,58 @@ ga4_head_snippet() {
     window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
     window.clusterSitesByDomain={${site_map_js}};
+    window.clusterAnalyticsState=(function(){
+      const prefix='astro_cluster_';
+      const randomId=function(){
+        return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+      };
+      const read=function(key,fallback){
+        try{return localStorage.getItem(prefix+key)||fallback;}catch(e){return fallback;}
+      };
+      const write=function(key,value){
+        try{localStorage.setItem(prefix+key,String(value));}catch(e){}
+      };
+      const metaSite='${site_key}';
+      let sessionId=read('session_id','');
+      if(!sessionId){
+        sessionId=randomId();
+        write('session_id',sessionId);
+      }
+      let firstSite=read('first_site_seen','');
+      if(!firstSite){
+        firstSite=metaSite;
+        write('first_site_seen',firstSite);
+      }
+      let toolsSeen=parseInt(read('tools_seen_count','0'),10)||0;
+      const seenKey='tool_seen_'+metaSite;
+      if(read(seenKey,'0')!=='1'){
+        toolsSeen+=1;
+        write(seenKey,'1');
+        write('tools_seen_count',toolsSeen);
+      }
+      return {
+        sessionId:sessionId,
+        firstSiteSeen:firstSite,
+        toolsSeenCount:toolsSeen,
+        completedToolsCount:parseInt(read('completed_tools_count','0'),10)||0,
+        lastToolCompleted:read('last_tool_completed',''),
+        markComplete:function(tool){
+          const completionKey='tool_completed_'+(tool||metaSite);
+          if(read(completionKey,'0')==='1'){
+            this.completedToolsCount=parseInt(read('completed_tools_count','0'),10)||0;
+            this.lastToolCompleted=read('last_tool_completed','')||this.lastToolCompleted;
+            return;
+          }
+          const current=parseInt(read('completed_tools_count','0'),10)||0;
+          const next=current+1;
+          write(completionKey,'1');
+          write('completed_tools_count',next);
+          write('last_tool_completed',tool||metaSite);
+          this.completedToolsCount=next;
+          this.lastToolCompleted=tool||metaSite;
+        }
+      };
+    })();
     window.clusterAnalyticsMeta={
       cluster_name:'astro-cluster',
       site_key:'${site_key}',
@@ -190,11 +251,22 @@ ga4_head_snippet() {
       tool_type:'${TOOL_TYPES[$site_key]}',
       page_type:'${page_type}',
       content_group:'${content_group}',
-      entity_slug:'${entity_slug}'
+      entity_slug:'${entity_slug}',
+      origin_site:window.clusterAnalyticsState.firstSiteSeen,
+      cluster_session_id:window.clusterAnalyticsState.sessionId,
+      tools_seen_count:window.clusterAnalyticsState.toolsSeenCount,
+      completed_tools_count:window.clusterAnalyticsState.completedToolsCount,
+      last_tool_completed:window.clusterAnalyticsState.lastToolCompleted
     };
     window.clusterTrack=function(eventName,params){
       if(window.clusterAnalyticsOptedOut)return;
+      if(eventName==='tool_complete'||eventName==='chart_calculated'||eventName==='compatibility_view'||eventName==='tarot_reading_complete'||eventName==='numerology_calculated'||eventName==='interpretation_generated'){
+        window.clusterAnalyticsState.markComplete(window.clusterAnalyticsMeta.site_key);
+      }
       const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
+      payload.tools_seen_count=window.clusterAnalyticsState.toolsSeenCount;
+      payload.completed_tools_count=window.clusterAnalyticsState.completedToolsCount;
+      payload.last_tool_completed=window.clusterAnalyticsState.lastToolCompleted;
       Object.keys(payload).forEach(key=>{
         if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
       });
@@ -232,20 +304,59 @@ ga4_head_snippet() {
           link_url:url.href,
           link_text:linkText,
           link_context:linkContext||'advertiser_cta',
-          ad_slot:adSlot||'direct_advertiser_cta'
+          ad_slot:adSlot||'direct_advertiser_cta',
+          journey_stage:'commercial'
         });
         return;
       }
       if(destinationSite&&destinationDomain!==currentDomain){
-        window.clusterTrack('internal_tool_click',{
+        const isResultContext=(linkContext||'').indexOf('result')!==-1||(linkContext||'').indexOf('recirculation')!==-1;
+        window.clusterTrack(isResultContext?'result_to_next_tool_click':'internal_tool_click',{
           link_url:url.href,
           link_text:linkText,
           link_context:linkContext||'cluster_crosslink',
           destination_site:destinationSite,
-          destination_domain:destinationDomain
+          destination_domain:destinationDomain,
+          journey_stage:isResultContext?'recirculation':'navigation',
+          recirculation_variant:anchor.dataset.recirculationVariant||''
         });
       }
     },{capture:true});
+    document.addEventListener('DOMContentLoaded',function(){
+      const seen=new WeakSet();
+      const trackBlock=function(block){
+        if(!block||seen.has(block))return;
+        seen.add(block);
+        window.clusterTrack(block.dataset.analyticsEvent||'cluster_recirculation_impression',{
+          journey_stage:block.dataset.journeyStage||'recirculation',
+          link_context:block.dataset.linkContext||'cluster_recirculation',
+          recirculation_variant:block.dataset.recirculationVariant||'default',
+          destination_site:block.dataset.primaryDestinationSite||''
+        });
+      };
+      document.querySelectorAll('[data-track-impression="cluster_recirculation"]').forEach(function(block){
+        if('IntersectionObserver' in window){
+          const observer=new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              if(entry.isIntersecting){
+                trackBlock(entry.target);
+                observer.unobserve(entry.target);
+              }
+            });
+          },{threshold:.35});
+          observer.observe(block);
+        }else{
+          trackBlock(block);
+        }
+      });
+      document.querySelectorAll('[data-track-impression="advertiser_cta"]').forEach(function(block){
+        window.clusterTrack('advertiser_cta_impression',{
+          journey_stage:'commercial',
+          link_context:block.dataset.linkContext||'advertiser_cta',
+          ad_slot:block.dataset.adSlot||'direct_advertiser_cta'
+        });
+      });
+    });
   </script>
 EOF
 }
@@ -319,7 +430,7 @@ ad_block() {
   local copy="$3"
   local cta="${4:-Ver espacios y tarifas →}"
   cat <<EOF
-<div class="ad-h">
+<div class="ad-h" data-track-impression="advertiser_cta" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
   <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
     <span class="ad-kicker">Espacio publicitario destacado</span>
     <span class="ad-icon">${icon}</span>
@@ -364,9 +475,10 @@ cluster_card() {
   local title="$3"
   local copy="$4"
   local cta="$5"
+  local variant="${6:-default}"
   local domain="${DOMAINS[$site_key]}"
 cat <<EOF
-<a class="cluster-card" href="https://${domain}/" data-link-context="cluster_recirculation" data-destination-site="${site_key}" data-destination-domain="${domain}">
+<a class="cluster-card" href="https://${domain}/" rel="noopener" data-link-context="result_recirculation" data-destination-site="${site_key}" data-destination-domain="${domain}" data-recirculation-variant="${variant}">
   <span class="cluster-label">${label}</span>
   <span class="cluster-title">${title}</span>
   <span class="cluster-copy">${copy}</span>
@@ -377,40 +489,54 @@ EOF
 
 cluster_recirculation_block() {
   local current="$1"
-  local heading="También te puede interesar"
-  local intro="Si quieres seguir profundizando, aquí tienes otras herramientas relacionadas para conocer mejor tu situación."
+  local heading="Completa tu lectura"
+  local intro="Siguiente capa recomendada segun lo que estas consultando ahora."
   local cards=""
+  local primary=""
+  local journey="${CLUSTER_JOURNEY_NAME[$current]:-Cluster astro}"
 
   case "$current" in
     carta-astral)
-      cards+=$(cluster_card "compatibilidad-signos" "Relaciones" "Compatibilidad de Signos" "Descubre cómo encajan dos signos y consulta combinaciones concretas en amor, amistad y convivencia." "Ver combinaciones →")
-      cards+=$(cluster_card "tarot-del-dia" "Guía rápida" "Tarot del Día" "Haz una tirada breve si buscas una orientación inmediata para el momento que estás viviendo." "Hacer una tirada →")
-      cards+=$(cluster_card "meditacion-chakras" "Energía interior" "Meditación de Chakras" "Trabaja con tus centros de energía para equilibrar lo que tu carta natal te muestra." "Empezar meditación →")
+      primary="compatibilidad-signos"
+      intro="Tu carta es el mapa base. Ahora puedes llevarla a relaciones, identidad simbolica o practica interior."
+      cards+=$(cluster_card "compatibilidad-signos" "Paso principal" "Compatibilidad de Signos" "Cruza la lectura personal con la afinidad de pareja, amistad o convivencia." "Ver compatibilidad" "primary")
+      cards+=$(cluster_card "calcular-numerologia" "Capa simbolica" "Calcular Numerología" "Contrasta tu carta con tu numero de vida y patrones personales." "Calcular mi numero" "secondary")
+      cards+=$(cluster_card "meditacion-chakras" "Integracion" "Meditación de Chakras" "Convierte lo que muestra la carta en una practica breve de equilibrio." "Empezar practica" "secondary")
       ;;
     compatibilidad-signos)
-      cards+=$(cluster_card "carta-astral" "Profundizar" "Carta Astral Gratis" "Completa la compatibilidad con Venus, Luna, Marte y ascendente usando tus datos de nacimiento." "Calcular carta astral →")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horóscopo de Hoy" "Mira el clima del día para tu signo y suma una lectura rápida sobre amor, trabajo y salud." "Ver predicciones →")
-      cards+=$(cluster_card "meditacion-chakras" "Equilibrio" "Meditación de Chakras" "Trabaja el chakra del corazón y la energía de tus relaciones con una meditación guiada." "Abrir meditación →")
+      primary="carta-astral"
+      intro="La compatibilidad por signo es una primera capa. Para afinar, conviene mirar carta natal, una consulta puntual o integracion emocional."
+      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Personaliza la afinidad con Luna, Venus, Marte y ascendente." "Calcular carta" "primary")
+      cards+=$(cluster_card "tarot-del-dia" "Duda concreta" "Tarot del Día" "Haz una tirada breve si necesitas orientar una decision sentimental." "Hacer tirada" "secondary")
+      cards+=$(cluster_card "meditacion-chakras" "Equilibrio" "Meditación de Chakras" "Trabaja el chakra del corazon antes de sacar conclusiones." "Abrir practica" "secondary")
       ;;
     tarot-del-dia)
-      cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "Amplía la lectura del tarot con una visión más completa de tu personalidad, ciclos y relaciones." "Ir a mi carta →")
-      cards+=$(cluster_card "meditacion-chakras" "Integrar la lectura" "Meditación de Chakras" "Después de tu tirada, trabaja con meditación el mensaje que recibiste y actívalo internamente." "Meditar ahora →")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Rutina" "Horóscopo de Hoy" "Consulta tu signo para completar la lectura con una predicción breve del día." "Leer mi signo →")
+      primary="meditacion-chakras"
+      intro="El tarot da una senal inmediata. El siguiente paso es integrarla, contrastarla con el dia o llevarla a una lectura personal."
+      cards+=$(cluster_card "meditacion-chakras" "Paso principal" "Meditación de Chakras" "Aterriza el mensaje de la tirada con una practica guiada." "Integrar ahora" "primary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Contexto diario" "Horóscopo de Hoy" "Consulta la energia de tu signo para completar la lectura del dia." "Ver mi signo" "secondary")
+      cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "Amplia la tirada con personalidad, ciclos y relaciones." "Calcular carta" "secondary")
       ;;
     calcular-numerologia)
-      cards+=$(cluster_card "carta-astral" "Perfil completo" "Carta Astral Gratis" "Combina tu número de vida con planetas, casas y ascendente para obtener una lectura más completa." "Completar análisis →")
-      cards+=$(cluster_card "meditacion-chakras" "Activar tu número" "Meditación de Chakras" "Cada número de vida tiene un chakra dominante. Actívalo con una meditación guiada personalizada." "Descubrir mi chakra →")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Predicción diaria" "Horóscopo de Hoy" "Añade una lectura ligera del día para complementar tu perfil personal." "Ver hoy →")
+      primary="carta-astral"
+      intro="Tu numero describe un patron. Puedes completarlo con carta natal, practica energetica o seguimiento diario."
+      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Combina numero de vida con planetas, casas y ascendente." "Completar perfil" "primary")
+      cards+=$(cluster_card "meditacion-chakras" "Activacion" "Meditación de Chakras" "Lleva el patron numerologico a una practica corporal sencilla." "Activar energia" "secondary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horóscopo de Hoy" "Anade una lectura ligera del dia para observar tendencias." "Ver hoy" "secondary")
       ;;
     horoscopo-de-hoy)
-      cards+=$(cluster_card "carta-astral" "Personalizado" "Carta Astral Gratis" "Pasa de una predicción general a una lectura personalizada con fecha, hora y lugar de nacimiento." "Calcular ahora →")
-      cards+=$(cluster_card "meditacion-chakras" "Energía del día" "Meditación de Chakras" "Complementa tu horóscopo con una meditación en el chakra que más necesita atención hoy." "Meditar ahora →")
-      cards+=$(cluster_card "tarot-del-dia" "Consulta breve" "Tarot del Día" "Haz una tirada rápida si buscas una señal adicional para tomar una decisión hoy." "Abrir tirada →")
+      primary="tarot-del-dia"
+      intro="El horoscopo marca el clima general del dia. Si quieres una senal concreta, una practica o personalizacion, continua aqui."
+      cards+=$(cluster_card "tarot-del-dia" "Paso principal" "Tarot del Día" "Haz una tirada rapida si buscas una senal adicional para decidir hoy." "Abrir tirada" "primary")
+      cards+=$(cluster_card "meditacion-chakras" "Energia del dia" "Meditación de Chakras" "Complementa tu signo con una practica en el centro que mas necesita atencion." "Meditar ahora" "secondary")
+      cards+=$(cluster_card "carta-astral" "Personalizacion" "Carta Astral Gratis" "Pasa de prediccion general a lectura con fecha, hora y lugar." "Calcular carta" "secondary")
       ;;
     meditacion-chakras)
-      cards+=$(cluster_card "carta-astral" "Tu energía natal" "Carta Astral Gratis" "Descubre los planetas que rigen tu energía y cómo influyen en tus chakras y bienestar." "Ver mi carta →")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Energía del día" "Horóscopo de Hoy" "Consulta qué energía domina hoy según tu signo para orientar tu práctica de meditación." "Leer mi horóscopo →")
-      cards+=$(cluster_card "tarot-del-dia" "Mensaje interior" "Tarot del Día" "Haz una tirada rápida para conectar con tu intuición antes o después de meditar." "Tirar las cartas →")
+      primary="carta-astral"
+      intro="Tu practica muestra un estado actual. Puedes cruzarlo con energia natal, clima del dia o una senal intuitiva."
+      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Descubre los planetas que rigen tu energia y como influyen en tu bienestar." "Ver carta" "primary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Energia diaria" "Horóscopo de Hoy" "Consulta que energia domina hoy segun tu signo para orientar la practica." "Leer horoscopo" "secondary")
+      cards+=$(cluster_card "tarot-del-dia" "Mensaje interior" "Tarot del Día" "Haz una tirada breve antes o despues de meditar." "Tirar cartas" "secondary")
       ;;
     *)
       cards+=$(cluster_card "carta-astral" "Astrología" "Carta Astral Gratis" "Descubre tu carta natal completa con una interpretación personalizada." "Abrir →")
@@ -420,14 +546,14 @@ cluster_recirculation_block() {
   esac
 
   cat <<EOF
-<section class="cluster-journey">
-  <div class="cluster-kicker">✦ Más herramientas para ti</div>
+<section class="cluster-journey" data-track-impression="cluster_recirculation" data-analytics-event="cluster_recirculation_impression" data-journey-stage="recirculation" data-link-context="result_recirculation" data-recirculation-variant="default" data-primary-destination-site="${primary}">
+  <div class="cluster-kicker">Mas herramientas para ti · ${journey}</div>
   <h2>${heading}</h2>
   <p>${intro}</p>
   <div class="cluster-grid">
     ${cards}
   </div>
-  <p class="cluster-note">Explora otras herramientas del grupo si quieres ampliar la lectura desde otro ángulo.</p>
+  <p class="cluster-note">Usa otra herramienta solo si quieres ampliar esta lectura desde otro angulo.</p>
 </section>
 EOF
 }
@@ -460,6 +586,7 @@ gen_publicidad_page() {
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
 $(canonical_host_redirect_script "$domain")
+$(ga4_head_snippet "${GA4_IDS[$current]}" "$current" "commercial_landing" "advertising" "publicidad")
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebPage","name":"Publicidad en ${name}","url":"https://${domain}/publicidad","description":"Dosier comercial y espacios destacados para anunciantes en ${domain}","inLanguage":"es"}
   </script>
@@ -534,7 +661,26 @@ $(canonical_host_redirect_script "$domain")
       <div class="card">
         <div class="icon">📦</div>
         <h3>Compra por red</h3>
-        <p>Una misma creatividad puede aparecer en las 5 herramientas para cubrir astrología, tarot, numerología, horóscopo y compatibilidad.</p>
+        <p>Una misma creatividad puede aparecer en las 6 herramientas para cubrir astrologia, tarot, numerologia, horoscopo, compatibilidad y bienestar energetico.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Paquetes por intencion</h2>
+    <p>La red se vende tambien por recorridos de usuario, no solo por dominios. Esto permite que una marca aparezca donde el contexto tiene mas sentido y evita impactos automaticos poco relevantes.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Amor y pareja</h3>
+        <p>Compatibilidad, carta astral y tarot para marcas de citas, regalos, joyeria, terapia de pareja o consultas sentimentales.</p>
+      </div>
+      <div class="card">
+        <h3>Energia del dia</h3>
+        <p>Horoscopo, tarot y chakras para campañas de consumo recurrente, bienestar, rituales o productos espirituales.</p>
+      </div>
+      <div class="card">
+        <h3>Autoconocimiento</h3>
+        <p>Carta astral, numerologia y chakras para formacion, membresias, libros, cursos y herramientas de crecimiento personal.</p>
       </div>
     </div>
   </section>
@@ -577,7 +723,7 @@ $(canonical_host_redirect_script "$domain")
         <tr><td>Banner previo al pie</td><td>Frecuencia extra</td><td>15 EUR / mes</td></tr>
         <tr><td>Paquete del sitio</td><td>Superior + contenido</td><td>45 EUR / mes</td></tr>
         <tr><td>Exclusividad del sitio</td><td>3 espacios + exclusividad del dominio</td><td>75 EUR / mes</td></tr>
-        <tr><td>Paquete de la red</td><td>Presencia estática en 5 dominios</td><td>120 EUR / mes</td></tr>
+        <tr><td>Paquete de la red</td><td>Presencia estatica en 6 dominios</td><td>120 EUR / mes</td></tr>
         <tr><td>Exclusividad de la red</td><td>Espacios destacados + exclusividad de categoría</td><td>250 EUR / mes</td></tr>
       </tbody>
     </table>

@@ -55,13 +55,28 @@
       cluster_name:'astro-cluster',
       site_key:'meditacion-chakras',
       site_domain:'meditacion-chakras.es',
-      tool_type:'chakra-quiz',
+      tool_type:'mindfulness_quiz',
       page_type:'tool_home',
       content_group:'tool',
-      entity_slug:''
+      entity_slug:'',
+      journey_stage:'entry',
+      origin_site:(function(){try{let v=localStorage.getItem('astro_cluster_first_site_seen');if(!v){v='meditacion-chakras';localStorage.setItem('astro_cluster_first_site_seen',v);}return v;}catch(e){return 'meditacion-chakras';}})(),
+      cluster_session_id:(function(){try{let v=localStorage.getItem('astro_cluster_session_id');if(!v){v=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);localStorage.setItem('astro_cluster_session_id',v);}return v;}catch(e){return '';}})(),
+      tools_seen_count:(function(){try{if(localStorage.getItem('astro_cluster_tool_seen_meditacion-chakras')!=='1'){const n=(parseInt(localStorage.getItem('astro_cluster_tools_seen_count')||'0',10)||0)+1;localStorage.setItem('astro_cluster_tools_seen_count',String(n));localStorage.setItem('astro_cluster_tool_seen_meditacion-chakras','1');return n;}return parseInt(localStorage.getItem('astro_cluster_tools_seen_count')||'1',10)||1;}catch(e){return 1;}})(),
+      completed_tools_count:(function(){try{return parseInt(localStorage.getItem('astro_cluster_completed_tools_count')||'0',10)||0;}catch(e){return 0;}})(),
+      last_tool_completed:(function(){try{return localStorage.getItem('astro_cluster_last_tool_completed')||'';}catch(e){return '';}})()
     };
     window.clusterTrack=function(eventName,params){
       if(window.clusterAnalyticsOptedOut)return;
+      if(eventName==='tool_complete'||eventName==='interpretation_generated'){
+        try{
+          const n=(parseInt(localStorage.getItem('astro_cluster_completed_tools_count')||'0',10)||0)+1;
+          localStorage.setItem('astro_cluster_completed_tools_count',String(n));
+          localStorage.setItem('astro_cluster_last_tool_completed','meditacion-chakras');
+          window.clusterAnalyticsMeta.completed_tools_count=n;
+          window.clusterAnalyticsMeta.last_tool_completed='meditacion-chakras';
+        }catch(e){}
+      }
       const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
       Object.keys(payload).forEach(key=>{
         if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
@@ -182,7 +197,7 @@
       </div>
     </section>
 
-    <div class="ad-h">
+    <div class="ad-h" data-track-impression="advertiser_cta" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
       <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
         <span class="ad-kicker">Espacio publicitario destacado</span>
         <span class="ad-label">¿Tienes una app de bienestar, yoga o nutrición?</span>
@@ -193,7 +208,7 @@
 
     <section class="card" id="quizCard"></section>
 
-    <div class="ad-h" id="midAd" style="display:none">
+    <div class="ad-h" id="midAd" style="display:none" data-track-impression="advertiser_cta" data-ad-slot="mid_quiz" data-link-context="ad_block">
       <a class="ad-ph ad-ph-h" href="/publicidad" title="Publicidad directa" data-ad-slot="mid_quiz" data-link-context="ad_block">
         <span class="ad-kicker">Publicidad contextual</span>
         <span class="ad-label">Impacta al usuario en mitad del flujo</span>
@@ -202,27 +217,28 @@
       </a>
     </div>
 
-    <section class="cluster-journey">
-      <p style="margin:.1rem 0 .2rem;color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Siguiente paso recomendado</p>
-      <p style="margin:.1rem 0 .8rem;color:var(--muted)">Si quieres profundizar en tu proceso personal, estas herramientas te pueden ayudar:</p>
+    <section class="cluster-journey" data-track-impression="cluster_recirculation" data-analytics-event="cluster_recirculation_impression" data-journey-stage="recirculation" data-link-context="result_recirculation" data-recirculation-variant="default" data-primary-destination-site="carta-astral">
+      <p style="margin:.1rem 0 .2rem;color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Mas herramientas para ti · Integracion emocional</p>
+      <h2>Completa tu lectura</h2>
+      <p style="margin:.1rem 0 .8rem;color:var(--muted)">Tu practica muestra un estado actual. Puedes cruzarlo con energia natal, clima del dia o una senal intuitiva.</p>
       <div class="cluster-grid">
-        <a class="cluster-card" href="https://carta-astral-gratis.es/" data-destination-site="carta-astral" data-destination-domain="carta-astral-gratis.es" data-link-context="cluster_crosslink">
-          <span class="cluster-label">Carta Astral</span>
-          <span class="cluster-title">Entiende tu energía de base</span>
-          <span class="cluster-copy">Descubre cómo tu carta natal influye en tus emociones, decisiones y relaciones.</span>
-          <span class="cluster-cta">Ver mi carta →</span>
+        <a class="cluster-card" href="https://carta-astral-gratis.es/" rel="noopener" data-destination-site="carta-astral" data-destination-domain="carta-astral-gratis.es" data-link-context="result_recirculation" data-recirculation-variant="primary">
+          <span class="cluster-label">Paso principal</span>
+          <span class="cluster-title">Carta Astral Gratis</span>
+          <span class="cluster-copy">Descubre los planetas que rigen tu energia y como influyen en tu bienestar.</span>
+          <span class="cluster-cta">Ver carta</span>
         </a>
-        <a class="cluster-card" href="https://horoscopo-de-hoy.es/" data-destination-site="horoscopo-de-hoy" data-destination-domain="horoscopo-de-hoy.es" data-link-context="cluster_crosslink">
-          <span class="cluster-label">Horóscopo</span>
-          <span class="cluster-title">Energía del día según tu signo</span>
-          <span class="cluster-copy">Consulta qué energía domina hoy para orientar tu práctica de meditación.</span>
-          <span class="cluster-cta">Leer mi horóscopo →</span>
+        <a class="cluster-card" href="https://horoscopo-de-hoy.es/" rel="noopener" data-destination-site="horoscopo-de-hoy" data-destination-domain="horoscopo-de-hoy.es" data-link-context="result_recirculation" data-recirculation-variant="secondary">
+          <span class="cluster-label">Energia diaria</span>
+          <span class="cluster-title">Horoscopo de Hoy</span>
+          <span class="cluster-copy">Consulta que energia domina hoy segun tu signo para orientar la practica.</span>
+          <span class="cluster-cta">Leer horoscopo</span>
         </a>
-        <a class="cluster-card" href="https://tarot-del-dia.es/" data-destination-site="tarot-del-dia" data-destination-domain="tarot-del-dia.es" data-link-context="cluster_crosslink">
-          <span class="cluster-label">Tarot</span>
-          <span class="cluster-title">Mensaje interior para hoy</span>
-          <span class="cluster-copy">Haz una tirada rápida para conectar con tu intuición antes o después de meditar.</span>
-          <span class="cluster-cta">Tirar las cartas →</span>
+        <a class="cluster-card" href="https://tarot-del-dia.es/" rel="noopener" data-destination-site="tarot-del-dia" data-destination-domain="tarot-del-dia.es" data-link-context="result_recirculation" data-recirculation-variant="secondary">
+          <span class="cluster-label">Mensaje interior</span>
+          <span class="cluster-title">Tarot del Dia</span>
+          <span class="cluster-copy">Haz una tirada breve antes o despues de meditar.</span>
+          <span class="cluster-cta">Tirar cartas</span>
         </a>
       </div>
     </section>
@@ -399,9 +415,15 @@
       if(step.type==='result'){
         if(!state.profile||!state.profile.scores) state.profile=buildProfile();
         html+=renderResult(state.profile);
+        window.clusterTrack('result_view',{journey_stage:'result',tool_action:'chakra_result_view'});
       }
 
       if(step.type==='final'){
+        if(!state.finalTracked){
+          state.finalTracked=true;
+          save();
+          window.clusterTrack('tool_complete',{journey_stage:'result',tool_action:'chakra_quiz_complete'});
+        }
         const priority=state.answers.priority_detail?state.answers.priority_detail.replace(/</g,'&lt;'):'';
         html+='<div class="plan-grid">'+
           '<div class="plan-card"><strong>Semana 1 · Bajar el ruido interno</strong><p>Rutina fija de 10 minutos para estabilizar respiración, sueño y tensión corporal.</p></div>'+
@@ -504,7 +526,8 @@
       if(startPlanBtn){
         startPlanBtn.addEventListener('click',()=>{
           localStorage.setItem('meditacion_chakras_plan_started_at',new Date().toISOString());
-          window.clusterTrack('plan_start_click',{plan_length_days:28,entry_step:23});
+          window.clusterTrack('tool_complete',{tool_action:'chakra_plan_start',plan_length_days:28,entry_step:23,journey_stage:'result'});
+          window.clusterTrack('plan_start_click',{plan_length_days:28,entry_step:23,journey_stage:'result'});
           startPlanBtn.textContent='Plan activado: hoy empiezas con 10 minutos';
           startPlanBtn.disabled=true;
         });
@@ -526,13 +549,36 @@
       const linkContext=anchor.dataset.linkContext||'';
       const adSlot=anchor.dataset.adSlot||'';
       if(anchor.matches('.ad-ph,.ad-link,[data-ad-slot]')||url.pathname==='/publicidad'){
-        window.clusterTrack('advertiser_cta_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'advertiser_cta',ad_slot:adSlot||'direct_advertiser_cta'});
+        window.clusterTrack('advertiser_cta_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'advertiser_cta',ad_slot:adSlot||'direct_advertiser_cta',journey_stage:'commercial'});
         return;
       }
       if(destinationSite&&destinationDomain!==currentDomain){
-        window.clusterTrack('internal_tool_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'cluster_crosslink',destination_site:destinationSite,destination_domain:destinationDomain});
+        const isResultContext=(linkContext||'').indexOf('result')!==-1||(linkContext||'').indexOf('recirculation')!==-1;
+        window.clusterTrack(isResultContext?'result_to_next_tool_click':'internal_tool_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'cluster_crosslink',destination_site:destinationSite,destination_domain:destinationDomain,journey_stage:isResultContext?'recirculation':'navigation',recirculation_variant:anchor.dataset.recirculationVariant||''});
       }
     },{capture:true});
+
+    document.addEventListener('DOMContentLoaded',function(){
+      const seen=new WeakSet();
+      const trackBlock=function(block){
+        if(!block||seen.has(block))return;
+        seen.add(block);
+        window.clusterTrack(block.dataset.analyticsEvent||'cluster_recirculation_impression',{journey_stage:block.dataset.journeyStage||'recirculation',link_context:block.dataset.linkContext||'cluster_recirculation',recirculation_variant:block.dataset.recirculationVariant||'default',destination_site:block.dataset.primaryDestinationSite||''});
+      };
+      document.querySelectorAll('[data-track-impression="cluster_recirculation"]').forEach(function(block){
+        if('IntersectionObserver' in window){
+          const observer=new IntersectionObserver(function(entries){
+            entries.forEach(function(entry){
+              if(entry.isIntersecting){trackBlock(entry.target);observer.unobserve(entry.target);}
+            });
+          },{threshold:.35});
+          observer.observe(block);
+        }else{trackBlock(block);}
+      });
+      document.querySelectorAll('[data-track-impression="advertiser_cta"]').forEach(function(block){
+        window.clusterTrack('advertiser_cta_impression',{journey_stage:'commercial',link_context:block.dataset.linkContext||'advertiser_cta',ad_slot:block.dataset.adSlot||'direct_advertiser_cta'});
+      });
+    });
 
     const startQuizBtn=document.getElementById('startQuizBtn');
     if(startQuizBtn){
