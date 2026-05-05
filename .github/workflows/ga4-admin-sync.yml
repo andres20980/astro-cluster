@@ -54,10 +54,43 @@ jobs:
           echo "missing=false" >> "$GITHUB_OUTPUT"
           echo "token_path=$token_path" >> "$GITHUB_OUTPUT"
 
+      - name: "🔐 Obtener token OAuth GA4 Admin"
+        id: oauth_ga4_admin
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          token_json=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
+            -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
+            -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
+            -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
+            -d "grant_type=refresh_token" || true)
+
+          access_token=$(echo "$token_json" | jq -r '.access_token // empty')
+          if [ -z "$access_token" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "::add-mask::$access_token"
+          token_path="$RUNNER_TEMP/ga4_oauth_admin_token"
+          printf '%s' "$access_token" > "$token_path"
+          chmod 600 "$token_path"
+          echo "missing=false" >> "$GITHUB_OUTPUT"
+          echo "token_path=$token_path" >> "$GITHUB_OUTPUT"
+
       - name: "🏷️ Sincronizar nombres de propiedad y stream"
         if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_property_stream_names.py \
@@ -71,7 +104,7 @@ jobs:
       - name: "⚙️ Sincronizar dimensiones personalizadas"
         if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_custom_definitions.py \
@@ -83,7 +116,7 @@ jobs:
       - name: "🎯 Sincronizar eventos clave"
         if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_key_events.py \
