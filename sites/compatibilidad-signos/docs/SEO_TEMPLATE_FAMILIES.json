@@ -1,39 +1,42 @@
 {
-  "generatedAt": "2026-05-04T12:20:14Z",
+  "generatedAt": "2026-05-05T14:24:34Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "families": [
     {
       "family": "home",
-      "score": 463.0,
-      "ga4Views": 16.0,
-      "ga4LowEngagementViews": 16.0,
-      "gscImpressions": 31.0,
-      "gscOpportunity": 31.0,
+      "score": 380.0,
+      "ga4Views": 9.0,
+      "ga4LowEngagementViews": 9.0,
+      "gscImpressions": 138.0,
+      "gscOpportunity": 137.0,
       "paths": [
         "/"
       ]
     },
     {
       "family": "pair_pages",
-      "score": 10.0,
+      "score": 93.0,
       "ga4Views": 1.0,
       "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 8.0,
-      "gscOpportunity": 8.0,
+      "gscImpressions": 91.0,
+      "gscOpportunity": 91.0,
       "paths": [
-        "/sagitario-acuario",
-        "http://compatibilidad-signos.es/"
+        "/acuario-acuario",
+        "/acuario-geminis",
+        "/acuario-leo",
+        "/cancer-escorpio",
+        "/cancer-geminis"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 463.0,
-    "ga4Views": 16.0,
-    "ga4LowEngagementViews": 16.0,
-    "gscImpressions": 31.0,
-    "gscOpportunity": 31.0,
+    "score": 380.0,
+    "ga4Views": 9.0,
+    "ga4LowEngagementViews": 9.0,
+    "gscImpressions": 138.0,
+    "gscOpportunity": 137.0,
     "paths": [
       "/"
     ]

@@ -1,5 +1,24 @@
 {
+  "generatedAt": "2026-05-05T14:24:34Z",
   "site": "meditacion-chakras",
   "domain": "meditacion-chakras.es",
-  "pages": []
+  "range": {
+    "start": "7daysAgo",
+    "end": "today"
+  },
+  "homepage": {
+    "path": "/",
+    "views": 11.0,
+    "bounceRate": 1.0,
+    "averageSessionDuration": 2.6148403076923077
+  },
+  "weakHomepageEngagement": false,
+  "pages": [
+    {
+      "path": "/",
+      "views": 11.0,
+      "bounceRate": 1.0,
+      "averageSessionDuration": 2.6148403076923077
+    }
+  ]
 }

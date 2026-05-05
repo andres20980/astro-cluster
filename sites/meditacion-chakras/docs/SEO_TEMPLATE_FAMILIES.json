@@ -1,9 +1,29 @@
 {
+  "generatedAt": "2026-05-05T14:24:34Z",
   "site": "meditacion-chakras",
-  "template_family": "interactive-quiz",
-  "templates": [
-    "quiz-step",
-    "result-step",
-    "legal-page"
-  ]
+  "domain": "meditacion-chakras.es",
+  "families": [
+    {
+      "family": "home",
+      "score": 297.0,
+      "ga4Views": 11.0,
+      "ga4LowEngagementViews": 11.0,
+      "gscImpressions": 0.0,
+      "gscOpportunity": 0.0,
+      "paths": [
+        "/"
+      ]
+    }
+  ],
+  "topFamily": {
+    "family": "home",
+    "score": 297.0,
+    "ga4Views": 11.0,
+    "ga4LowEngagementViews": 11.0,
+    "gscImpressions": 0.0,
+    "gscOpportunity": 0.0,
+    "paths": [
+      "/"
+    ]
+  }
 }

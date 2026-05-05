@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-04T12:20:15Z",
+  "generatedAt": "2026-05-05T14:24:41Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "range": {
-    "start": "2026-04-06",
-    "end": "2026-05-01"
+    "start": "2026-04-07",
+    "end": "2026-05-02"
   },
   "queries": [
     {
@@ -84,10 +84,10 @@
     {
       "path": "/",
       "clicks": 1.0,
-      "impressions": 19.0,
-      "ctr": 0.05263157894736842,
-      "position": 45.526315789473685,
-      "opportunity": 18.0
+      "impressions": 20.0,
+      "ctr": 0.05,
+      "position": 44.6,
+      "opportunity": 19.0
     },
     {
       "path": "/",

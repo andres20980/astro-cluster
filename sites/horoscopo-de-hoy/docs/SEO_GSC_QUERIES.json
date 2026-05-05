@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-04T12:20:15Z",
+  "generatedAt": "2026-05-05T14:24:41Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "range": {
-    "start": "2026-04-06",
-    "end": "2026-05-01"
+    "start": "2026-04-07",
+    "end": "2026-05-02"
   },
   "queries": [
     {
@@ -16,6 +16,14 @@
       "opportunity": 9.0
     },
     {
+      "query": "horoscopo cancer hoy",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 78.75,
+      "opportunity": 4.0
+    },
+    {
       "query": "cancer horoscopo hoy",
       "clicks": 0.0,
       "impressions": 2.0,
@@ -24,19 +32,19 @@
       "opportunity": 2.0
     },
     {
-      "query": "horoscopo cancer hoy",
-      "clicks": 0.0,
-      "impressions": 2.0,
-      "ctr": 0.0,
-      "position": 75.5,
-      "opportunity": 2.0
-    },
-    {
       "query": "horoscopo gratis",
       "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
       "position": 28.0,
+      "opportunity": 2.0
+    },
+    {
+      "query": "horoscopo hoy cancer",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 85.5,
       "opportunity": 2.0
     },
     {
@@ -72,11 +80,35 @@
       "opportunity": 1.0
     },
     {
+      "query": "cancer signo hoy",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 79.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo cancer",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 52.0,
+      "opportunity": 1.0
+    },
+    {
       "query": "horoscopo de cancer",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
       "position": 92.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "horoscopo de hoy cancer",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 83.0,
       "opportunity": 1.0
     },
     {
@@ -168,43 +200,11 @@
       "opportunity": 1.0
     },
     {
-      "query": "oroscopo cancer",
+      "query": "horóscopos de hoy cancer",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 84.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "paginas de astrologia",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 92.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "piscis hoy",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 91.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "que dice mi signo cancer hoy",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 78.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "signo cáncer hoy",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 67.0,
+      "position": 95.0,
       "opportunity": 1.0
     }
   ],
@@ -212,18 +212,18 @@
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 35.0,
+      "impressions": 36.0,
       "ctr": 0.0,
-      "position": 23.942857142857143,
-      "opportunity": 35.0
+      "position": 23.805555555555557,
+      "opportunity": 36.0
     },
     {
       "path": "/cancer",
       "clicks": 0.0,
-      "impressions": 16.0,
+      "impressions": 24.0,
       "ctr": 0.0,
-      "position": 81.875,
-      "opportunity": 16.0
+      "position": 81.41666666666667,
+      "opportunity": 24.0
     },
     {
       "path": "/",
@@ -260,19 +260,19 @@
       "opportunity": 9.0
     },
     {
+      "query": "horoscopo cancer hoy",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 78.75,
+      "opportunity": 4.0
+    },
+    {
       "query": "cancer horoscopo hoy",
       "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
       "position": 90.5,
-      "opportunity": 2.0
-    },
-    {
-      "query": "horoscopo cancer hoy",
-      "clicks": 0.0,
-      "impressions": 2.0,
-      "ctr": 0.0,
-      "position": 75.5,
       "opportunity": 2.0
     },
     {
@@ -284,12 +284,12 @@
       "opportunity": 2.0
     },
     {
-      "query": "astrologia horoscopo diario",
+      "query": "horoscopo hoy cancer",
       "clicks": 0.0,
-      "impressions": 1.0,
+      "impressions": 2.0,
       "ctr": 0.0,
-      "position": 68.0,
-      "opportunity": 1.0
+      "position": 85.5,
+      "opportunity": 2.0
     }
   ],
   "strikingDistanceQueries": [],

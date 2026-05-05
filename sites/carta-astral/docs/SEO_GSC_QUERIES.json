@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-04T12:20:15Z",
+  "generatedAt": "2026-05-05T14:24:41Z",
   "site": "carta-astral",
   "domain": "carta-astral-gratis.es",
   "range": {
-    "start": "2026-04-06",
-    "end": "2026-05-01"
+    "start": "2026-04-07",
+    "end": "2026-05-02"
   },
   "queries": [
     {
@@ -84,10 +84,10 @@
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 44.0,
+      "impressions": 47.0,
       "ctr": 0.0,
-      "position": 21.886363636363637,
-      "opportunity": 44.0
+      "position": 20.93617021276596,
+      "opportunity": 47.0
     }
   ],
   "topOpportunities": [

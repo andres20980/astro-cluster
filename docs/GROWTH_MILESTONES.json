@@ -47,7 +47,7 @@
       "id": "M1",
       "name": "Base comun",
       "target_weekly_sessions": 300,
-      "status": "completed",
+      "status": "in-progress",
       "actions": [
         "GA4 unificado para todo el cluster",
         "Ads.txt y AdSense consistentes en las 6 herramientas",
@@ -91,7 +91,7 @@
       "id": "M2",
       "name": "Traccion cluster",
       "target_weekly_sessions": 1500,
-      "status": "in-progress",
+      "status": "pending",
       "actions": [
         "Verificar las 6 propiedades de GSC por DNS",
         "Extender reporting GSC por dominio dentro del informe semanal",
@@ -108,13 +108,13 @@
         "avg_duration_min_s": 40
       },
       "auto": {
-        "completed_actions": 4,
+        "completed_actions": 2,
         "total_actions": 7,
         "actions": [
           {
             "label": "Verificar las 6 propiedades de GSC por DNS",
-            "done": true,
-            "evidence": "Propiedades GSC verificadas: 6/6"
+            "done": false,
+            "evidence": "Propiedades GSC verificadas: 5/6"
           },
           {
             "label": "Extender reporting GSC por dominio dentro del informe semanal",
@@ -124,27 +124,27 @@
           {
             "label": "Ampliar landings long-tail por cada herramienta",
             "done": true,
-            "evidence": "239 páginas HTML públicas en el cluster"
+            "evidence": "244 páginas HTML públicas en el cluster"
           },
           {
             "label": "Refinar interlinking interno por intencion",
-            "done": true,
+            "done": false,
             "evidence": "Bloques de recirculacion presentes en 6/6 sites"
           },
           {
             "label": "Confirmar que las 6 URLs canonicas responden 200 y que www redirige al apex",
-            "done": true,
-            "evidence": "Smoke manual 2026-05-05: 6/6 homes responden 200; www.meditacion-chakras.es redirige 301 a apex"
+            "done": false,
+            "evidence": "Sin heuristica automatica para esta accion"
           },
           {
             "label": "Priorizar autoparche SEO con senales frescas de GSC: impresiones relevantes, CTR bajo y posicion accionable",
             "done": false,
-            "evidence": "Pendiente de informe semanal GSC/GA4 fresco tras activar todo el cluster en produccion"
+            "evidence": "Sin heuristica automatica para esta accion"
           },
           {
             "label": "Medir profundidad organica de cluster con eventos GA4: internal_tool_click, result_to_next_tool_click y tools_seen_count",
             "done": false,
-            "evidence": "Eventos instrumentados; falta ventana de datos post-deploy para evaluar mejora organica y recirculacion real"
+            "evidence": "Sin heuristica automatica para esta accion"
           }
         ]
       }
@@ -216,7 +216,7 @@
         "est_monthly_revenue_eur": 500
       },
       "auto": {
-        "completed_actions": 3,
+        "completed_actions": 2,
         "total_actions": 4,
         "actions": [
           {
@@ -226,8 +226,8 @@
           },
           {
             "label": "Ampliar comparativas y contenidos evergreen con E-E-A-T",
-            "done": true,
-            "evidence": "239 páginas + FAQ/Breadcrumb presentes en todos los sitios"
+            "done": false,
+            "evidence": "244 páginas + FAQ/Breadcrumb presentes en todos los sitios"
           },
           {
             "label": "Abrir afiliacion y patrocinios recurrentes",
@@ -320,17 +320,22 @@
     ]
   },
   "auto": {
-    "last_eval": "2026-05-04",
+    "last_eval": "2026-05-05",
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
-      "sessions": 63,
-      "users": 56,
-      "views": 77,
+      "sessions": 67,
+      "active_users": 60,
+      "users": 61,
+      "new_users": 57,
+      "views": 75,
+      "event_count": 310,
+      "engaged_sessions": 16,
+      "engagement_rate": 0.2388,
       "organic_sessions": 12,
-      "organic_share": 0.1905,
-      "bounce_rate": 0.7143,
-      "avg_duration_s": 66.1,
+      "organic_share": 0.1791,
+      "bounce_rate": 0.7612,
+      "avg_duration_s": 55.6,
       "chart_calculated": 5,
       "interpretation_generated": 2,
       "internal_tool_click": 2,
@@ -345,14 +350,14 @@
       "gsc_sitemap_submit": true,
       "gsc_verified_site_count": 5,
       "internal_traffic_optout": true,
-      "ga4_tagged_pages": 219,
-      "ga4_optout_pages": 219,
+      "ga4_tagged_pages": 226,
+      "ga4_optout_pages": 226,
       "cluster_media_kits": true,
-      "cluster_recirculation": true,
+      "cluster_recirculation": false,
       "premium_slots_by_site": true,
-      "total_html_pages": 239,
+      "total_html_pages": 244,
       "long_tail_coverage": true,
-      "eeat_schema_coverage": true,
+      "eeat_schema_coverage": false,
       "oauth_missing": false
     },
     "site_page_counts": {
@@ -360,7 +365,8 @@
       "compatibilidad-signos": 161,
       "tarot-del-dia": 28,
       "calcular-numerologia": 15,
-      "horoscopo-de-hoy": 17
+      "horoscopo-de-hoy": 17,
+      "meditacion-chakras": 5
     },
     "adsense": {
       "publisher_id": "pub-9368517395014039",
@@ -385,6 +391,16 @@
       },
       "earliest_reapply_date": "2026-07-01",
       "note": "No re-solicitar antes de cumplir todas las reapply_conditions. Solicitudes repetidas sin mejoras pueden generar penalizacion de revision."
+    },
+    "ga4_ui_reconciliation_30d": {
+      "sessions": 443,
+      "active_users": 408,
+      "users": 408,
+      "new_users": 405,
+      "views": 528,
+      "event_count": 1699,
+      "engaged_sessions": 60,
+      "engagement_rate": 0.1354
     }
   }
 }

@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-04T12:20:14Z",
+  "generatedAt": "2026-05-05T14:24:34Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "families": [
     {
       "family": "home",
-      "score": 300.0,
-      "ga4Views": 11.0,
-      "ga4LowEngagementViews": 11.0,
-      "gscImpressions": 4.0,
-      "gscOpportunity": 3.0,
+      "score": 236.0,
+      "ga4Views": 8.0,
+      "ga4LowEngagementViews": 8.0,
+      "gscImpressions": 21.0,
+      "gscOpportunity": 20.0,
       "paths": [
         "/"
       ]
@@ -24,26 +24,15 @@
       "paths": [
         "/numero-de-vida/5"
       ]
-    },
-    {
-      "family": "content",
-      "score": 2.0,
-      "ga4Views": 0.0,
-      "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 2.0,
-      "gscOpportunity": 2.0,
-      "paths": [
-        "http://calcular-numerologia.es/"
-      ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 300.0,
-    "ga4Views": 11.0,
-    "ga4LowEngagementViews": 11.0,
-    "gscImpressions": 4.0,
-    "gscOpportunity": 3.0,
+    "score": 236.0,
+    "ga4Views": 8.0,
+    "ga4LowEngagementViews": 8.0,
+    "gscImpressions": 21.0,
+    "gscOpportunity": 20.0,
     "paths": [
       "/"
     ]

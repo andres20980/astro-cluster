@@ -1,5 +1,14 @@
 {
+  "generatedAt": "2026-05-05T14:24:41Z",
   "site": "meditacion-chakras",
   "domain": "meditacion-chakras.es",
-  "queries": []
+  "range": {
+    "start": "2026-04-07",
+    "end": "2026-05-02"
+  },
+  "queries": [],
+  "pages": [],
+  "topOpportunities": [],
+  "strikingDistanceQueries": [],
+  "strikingDistancePages": []
 }

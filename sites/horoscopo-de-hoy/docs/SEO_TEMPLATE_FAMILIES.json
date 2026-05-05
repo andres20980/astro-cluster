@@ -1,40 +1,42 @@
 {
-  "generatedAt": "2026-05-04T12:20:14Z",
+  "generatedAt": "2026-05-05T14:24:34Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "families": [
     {
       "family": "home",
-      "score": 291.0,
-      "ga4Views": 10.0,
-      "ga4LowEngagementViews": 10.0,
-      "gscImpressions": 21.0,
-      "gscOpportunity": 21.0,
+      "score": 252.0,
+      "ga4Views": 8.0,
+      "ga4LowEngagementViews": 8.0,
+      "gscImpressions": 36.0,
+      "gscOpportunity": 36.0,
       "paths": [
         "/"
       ]
     },
     {
       "family": "sign_pages",
-      "score": 55.0,
+      "score": 72.0,
       "ga4Views": 2.0,
       "ga4LowEngagementViews": 2.0,
-      "gscImpressions": 1.0,
-      "gscOpportunity": 1.0,
+      "gscImpressions": 18.0,
+      "gscOpportunity": 18.0,
       "paths": [
+        "/cancer",
         "/leo",
-        "/virgo",
-        "http://horoscopo-de-hoy.es/"
+        "/libra",
+        "/piscis",
+        "/virgo"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 291.0,
-    "ga4Views": 10.0,
-    "ga4LowEngagementViews": 10.0,
-    "gscImpressions": 21.0,
-    "gscOpportunity": 21.0,
+    "score": 252.0,
+    "ga4Views": 8.0,
+    "ga4LowEngagementViews": 8.0,
+    "gscImpressions": 36.0,
+    "gscOpportunity": 36.0,
     "paths": [
       "/"
     ]
