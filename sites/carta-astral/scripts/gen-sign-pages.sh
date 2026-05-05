@@ -8,6 +8,7 @@ REPO_ROOT="$(cd "$SITE_DIR/../.." && pwd)"
 DIR="$SITE_DIR/public/signos"
 source "$REPO_ROOT/shared/config.sh"
 GA4="${GA4_IDS[carta-astral]}"
+CROSSLINKS_HTML=$(crosslink_footer "carta-astral")
 mkdir -p "$DIR"
 SIGN_PAGE_TITLE_TEMPLATE="Carta Astral {{name}} {{glyph}} — Signo, rasgos y significado natal"
 SIGN_PAGE_DESC_TEMPLATE="Carta astral de {{name}} {{glyph}}: fechas ({{dates}}), elemento {{element}}, planeta regente {{ruler}} y significado en tu carta natal. Calcula tu carta astral gratis."
@@ -202,10 +203,12 @@ $(IFS=','; for w in $weaknesses; do echo "      <li>${w## }</li>"; done)
   </div>
 </div>
 
+$(cluster_recirculation_block "carta-astral")
+
 <footer>
   <p>© 2026 Carta Astral Gratis · Cálculo con Swiss Ephemeris · Sistema Placidus</p>
   <p style="margin-top:.3rem"><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/">Inicio</a></p>
-  <p style="margin-top:.5rem;font-size:.85rem">🔮 <a href="https://compatibilidad-signos.es" target="_blank" rel="noopener">Compatibilidad</a> · <a href="https://tarot-del-dia.es" target="_blank" rel="noopener">Tarot</a> · <a href="https://calcular-numerologia.es" target="_blank" rel="noopener">Numerología</a> · <a href="https://horoscopo-de-hoy.es" target="_blank" rel="noopener">Horóscopo</a></p>
+  ${CROSSLINKS_HTML}
 </footer>
 </body>
 </html>
@@ -293,10 +296,12 @@ $(adsense_head_snippet)
     <a class="sign-card" href="/signos/piscis"><span class="glyph">♓</span><span class="name">Piscis</span><span class="dates">19 feb – 20 mar</span><span class="element el-agua">Agua</span></a>
   </div>
 </div>
+$(cluster_recirculation_block "carta-astral")
+
 <footer>
   <p>© 2026 Carta Astral Gratis · Cálculo con Swiss Ephemeris · Sistema Placidus</p>
   <p style="margin-top:.3rem"><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/">Calcular carta astral</a></p>
-  <p style="margin-top:.5rem;font-size:.85rem">🔮 <a href="https://compatibilidad-signos.es" target="_blank" rel="noopener">Compatibilidad</a> · <a href="https://tarot-del-dia.es" target="_blank" rel="noopener">Tarot</a> · <a href="https://calcular-numerologia.es" target="_blank" rel="noopener">Numerología</a> · <a href="https://horoscopo-de-hoy.es" target="_blank" rel="noopener">Horóscopo</a></p>
+  ${CROSSLINKS_HTML}
 </footer>
 </body>
 </html>

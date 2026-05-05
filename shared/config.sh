@@ -385,31 +385,36 @@ cluster_recirculation_block() {
     carta-astral)
       cards+=$(cluster_card "compatibilidad-signos" "Relaciones" "Compatibilidad de Signos" "Descubre cómo encajan dos signos y consulta combinaciones concretas en amor, amistad y convivencia." "Ver combinaciones →")
       cards+=$(cluster_card "tarot-del-dia" "Guía rápida" "Tarot del Día" "Haz una tirada breve si buscas una orientación inmediata para el momento que estás viviendo." "Hacer una tirada →")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Predicción diaria" "Horóscopo de Hoy" "Consulta tu energía del día en amor, trabajo y bienestar según tu signo." "Leer el horóscopo →")
+      cards+=$(cluster_card "meditacion-chakras" "Energía interior" "Meditación de Chakras" "Trabaja con tus centros de energía para equilibrar lo que tu carta natal te muestra." "Empezar meditación →")
       ;;
     compatibilidad-signos)
       cards+=$(cluster_card "carta-astral" "Profundizar" "Carta Astral Gratis" "Completa la compatibilidad con Venus, Luna, Marte y ascendente usando tus datos de nacimiento." "Calcular carta astral →")
       cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horóscopo de Hoy" "Mira el clima del día para tu signo y suma una lectura rápida sobre amor, trabajo y salud." "Ver predicciones →")
-      cards+=$(cluster_card "tarot-del-dia" "Respuesta rápida" "Tarot del Día" "Si necesitas una señal inmediata, haz una tirada corta con una lectura simbólica fácil de entender." "Tirar las cartas →")
+      cards+=$(cluster_card "meditacion-chakras" "Equilibrio" "Meditación de Chakras" "Trabaja el chakra del corazón y la energía de tus relaciones con una meditación guiada." "Abrir meditación →")
       ;;
     tarot-del-dia)
       cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "Amplía la lectura del tarot con una visión más completa de tu personalidad, ciclos y relaciones." "Ir a mi carta →")
+      cards+=$(cluster_card "meditacion-chakras" "Integrar la lectura" "Meditación de Chakras" "Después de tu tirada, trabaja con meditación el mensaje que recibiste y actívalo internamente." "Meditar ahora →")
       cards+=$(cluster_card "horoscopo-de-hoy" "Rutina" "Horóscopo de Hoy" "Consulta tu signo para completar la lectura con una predicción breve del día." "Leer mi signo →")
-      cards+=$(cluster_card "compatibilidad-signos" "Amor y pareja" "Compatibilidad de Signos" "Compara dos signos si tu tirada toca temas de relación, afinidad o decisiones en pareja." "Comparar signos →")
       ;;
     calcular-numerologia)
       cards+=$(cluster_card "carta-astral" "Perfil completo" "Carta Astral Gratis" "Combina tu número de vida con planetas, casas y ascendente para obtener una lectura más completa." "Completar análisis →")
-      cards+=$(cluster_card "compatibilidad-signos" "Vínculos" "Compatibilidad de Signos" "Explora afinidades entre signos si quieres llevar la interpretación a relaciones y conexiones personales." "Explorar afinidad →")
+      cards+=$(cluster_card "meditacion-chakras" "Activar tu número" "Meditación de Chakras" "Cada número de vida tiene un chakra dominante. Actívalo con una meditación guiada personalizada." "Descubrir mi chakra →")
       cards+=$(cluster_card "horoscopo-de-hoy" "Predicción diaria" "Horóscopo de Hoy" "Añade una lectura ligera del día para complementar tu perfil personal." "Ver hoy →")
       ;;
     horoscopo-de-hoy)
       cards+=$(cluster_card "carta-astral" "Personalizado" "Carta Astral Gratis" "Pasa de una predicción general a una lectura personalizada con fecha, hora y lugar de nacimiento." "Calcular ahora →")
-      cards+=$(cluster_card "compatibilidad-signos" "Relaciones" "Compatibilidad de Signos" "Consulta la afinidad entre dos signos si quieres entender mejor una relación o una persona concreta." "Ver compatibilidad →")
+      cards+=$(cluster_card "meditacion-chakras" "Energía del día" "Meditación de Chakras" "Complementa tu horóscopo con una meditación en el chakra que más necesita atención hoy." "Meditar ahora →")
       cards+=$(cluster_card "tarot-del-dia" "Consulta breve" "Tarot del Día" "Haz una tirada rápida si buscas una señal adicional para tomar una decisión hoy." "Abrir tirada →")
+      ;;
+    meditacion-chakras)
+      cards+=$(cluster_card "carta-astral" "Tu energía natal" "Carta Astral Gratis" "Descubre los planetas que rigen tu energía y cómo influyen en tus chakras y bienestar." "Ver mi carta →")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Energía del día" "Horóscopo de Hoy" "Consulta qué energía domina hoy según tu signo para orientar tu práctica de meditación." "Leer mi horóscopo →")
+      cards+=$(cluster_card "tarot-del-dia" "Mensaje interior" "Tarot del Día" "Haz una tirada rápida para conectar con tu intuición antes o después de meditar." "Tirar las cartas →")
       ;;
     *)
       cards+=$(cluster_card "carta-astral" "Astrología" "Carta Astral Gratis" "Descubre tu carta natal completa con una interpretación personalizada." "Abrir →")
-      cards+=$(cluster_card "compatibilidad-signos" "Afinidad" "Compatibilidad de Signos" "Compara dos signos y explora cómo encajan en distintos planos." "Abrir →")
+      cards+=$(cluster_card "meditacion-chakras" "Bienestar" "Meditación de Chakras" "Equilibra tus centros de energía con una meditación guiada paso a paso." "Abrir →")
       cards+=$(cluster_card "horoscopo-de-hoy" "Predicción diaria" "Horóscopo de Hoy" "Lee tu horóscopo del día y consulta la energía de tu signo." "Abrir →")
       ;;
   esac
