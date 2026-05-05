@@ -124,16 +124,16 @@ Estado documentado:
 
 ## meditacion-chakras.es
 
-Firebase project: `meditacion-chakras-es`
+Firebase project: `licitago-spain` (site: `meditacion-chakras-d2276`)
 
 | Tipo | Nombre | Valor | TTL |
 |---|---|---|---|
 | `A` | `@` | `199.36.158.100` | `3600` |
-| `CNAME` | `www` | `meditacion-chakras-es.web.app` | `3600` |
+| `CNAME` | `www` | `meditacion-chakras-d2276.web.app` | `3600` |
 | `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
-| `TXT` | `@` | `hosting-site=meditacion-chakras-es` | `3600` |
+| `TXT` | `@` | `hosting-site=meditacion-chakras-d2276` | `3600` |
 
 Estado documentado:
 - DNS base preparado para Firebase Hosting

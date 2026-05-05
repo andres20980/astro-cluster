@@ -11,7 +11,7 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 | `tarot-del-dia` | `tarot-del-dia.es` | `tarot-del-dia-es` |
 | `calcular-numerologia` | `calcular-numerologia.es` | `calc-numerologia-es` |
 | `horoscopo-de-hoy` | `horoscopo-de-hoy.es` | `horoscopo-hoy-es` |
-| `meditacion-chakras` | `meditacion-chakras.es` | `meditacion-chakras-es` |
+| `meditacion-chakras` | `meditacion-chakras.es` | `licitago-spain` (site: `meditacion-chakras-d2276`) |
 
 ## Qué hay en el repo
 

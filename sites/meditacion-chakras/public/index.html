@@ -3,223 +3,539 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meditación de Chakras | Test de 23 Preguntas en Español</title>
-  <meta name="description" content="Descubre tu estado energético con un test de 23 preguntas sobre chakras y recibe una ruta guiada de meditación en español de España.">
+  <title>Meditación de Chakras en 23 Pasos | Test interactivo en español</title>
+  <meta name="description" content="Descubre tu estado energético con un test interactivo de 23 pasos sobre chakras, respiración y mindfulness. Experiencia guiada adaptada al astro-cluster.">
   <link rel="canonical" href="https://meditacion-chakras.es/">
-  <meta property="og:title" content="Meditación de Chakras | Test de 23 Preguntas">
-  <meta property="og:description" content="Funnel completo de 23 pasos sobre chakras adaptado a español de España.">
+  <meta property="og:title" content="Meditación de Chakras en 23 Pasos">
+  <meta property="og:description" content="Flujo interactivo de 23 pasos para explorar tu equilibrio energético y construir una rutina de bienestar.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://meditacion-chakras.es/">
+  <meta property="og:locale" content="es_ES">
   <meta name="robots" content="index,follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <script>
+    if (location.protocol !== 'https:') {
+      location.replace('https://'+location.host+location.pathname+location.search);
+    }
+    if (location.hostname === 'www.meditacion-chakras.es') {
+      location.replace('https://meditacion-chakras.es'+location.pathname+location.search);
+    }
+  </script>
+  <script>
+    (function(){
+      const measurementId='G-DEWMQ73FH5';
+      const storageKey='astro_cluster_analytics_optout';
+      let optedOut=false;
+      try{
+        const params=new URLSearchParams(location.search);
+        const value=params.get('analytics_optout');
+        if(value==='1'||value==='true')localStorage.setItem(storageKey,'1');
+        if(value==='0'||value==='false')localStorage.removeItem(storageKey);
+        optedOut=localStorage.getItem(storageKey)==='1';
+      }catch(e){}
+      window.clusterAnalyticsOptedOut=optedOut;
+      window['ga-disable-'+measurementId]=window.clusterAnalyticsOptedOut;
+    })();
+  </script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEWMQ73FH5"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-DEWMQ73FH5', { send_page_view: true });
+    window.clusterSitesByDomain={
+      'carta-astral-gratis.es':'carta-astral',
+      'compatibilidad-signos.es':'compatibilidad-signos',
+      'tarot-del-dia.es':'tarot-del-dia',
+      'calcular-numerologia.es':'calcular-numerologia',
+      'horoscopo-de-hoy.es':'horoscopo-de-hoy',
+      'meditacion-chakras.es':'meditacion-chakras'
+    };
+    window.clusterAnalyticsMeta={
+      cluster_name:'astro-cluster',
+      site_key:'meditacion-chakras',
+      site_domain:'meditacion-chakras.es',
+      tool_type:'chakra-quiz',
+      page_type:'tool_home',
+      content_group:'tool',
+      entity_slug:''
+    };
+    window.clusterTrack=function(eventName,params){
+      if(window.clusterAnalyticsOptedOut)return;
+      const payload=Object.assign({},window.clusterAnalyticsMeta,params||{});
+      Object.keys(payload).forEach(key=>{
+        if(payload[key]===''||payload[key]===null||payload[key]===undefined)delete payload[key];
+      });
+      payload.transport_type='beacon';
+      gtag('event',eventName,payload);
+    };
+    gtag('js',new Date());
+    gtag('config','G-DEWMQ73FH5',{send_page_view:false,linker:{domains:['carta-astral-gratis.es','compatibilidad-signos.es','tarot-del-dia.es','calcular-numerologia.es','horoscopo-de-hoy.es','meditacion-chakras.es']}});
+    window.clusterTrack('page_view',{page_title:document.title,page_location:location.href,page_path:location.pathname,page_hostname:location.hostname,page_referrer:document.referrer||undefined});
   </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9368517395014039" crossorigin="anonymous"></script>
   <style>
-    :root{--bg:#030712;--ink:#e5e7eb;--muted:#9ca3af;--card:#0b1220;--line:#1f2937;--accent:#22d3ee;--accent2:#f59e0b}
+    :root{--bg:#faf8f5;--surface:#fff;--border:#e8e0d8;--text:#2d2a26;--muted:#7a7268;--accent:#7c3aed;--accent2:#c084fc;--teal:#0f766e;--gradient:linear-gradient(135deg,#7c3aed 0%,#c084fc 55%,#d4a017 100%);--shadow:0 2px 12px rgba(124,58,237,.08)}
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 20% 10%,#0f1b34 0%,#030712 42%,#02050a 100%);color:var(--ink)}
-    .wrap{max-width:980px;margin:0 auto;padding:2rem 1rem 3rem}
-    .hero{text-align:center;margin-bottom:1.5rem}
-    .hero h1{margin:.2rem 0 0;font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15}
-    .hero p{color:var(--muted);max-width:760px;margin:.9rem auto 0;line-height:1.7}
-    .cta{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin:1rem 0 1.4rem}
-    .btn{background:linear-gradient(135deg,var(--accent),#38bdf8);border:0;color:#04111f;padding:.8rem 1.2rem;border-radius:999px;text-decoration:none;font-weight:700}
-    .btn.alt{background:#111827;color:var(--ink);border:1px solid var(--line)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.9rem}
-    .step-card{background:linear-gradient(160deg,#081226 0%,#0b1220 60%,#0a1020 100%);border:1px solid var(--line);border-radius:14px;padding:1rem;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .step-card h2{font-size:1rem;margin:.35rem 0 .65rem}
-    .step-kicker{font-size:.73rem;color:var(--accent2);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-    .step-card ul{margin:0;padding-left:1rem;color:var(--muted);line-height:1.6}
-    .foot{margin-top:2rem;color:var(--muted);font-size:.82rem;text-align:center}
-    .foot a{color:var(--accent)}
+    body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);min-height:100vh}
+    .wrap{max-width:920px;margin:0 auto;padding:1.4rem 1rem 2.6rem}
+    .hero{border:1px solid var(--border);border-radius:22px;background:linear-gradient(135deg,#ffffff 0%,#f9f5ff 62%,#fff8ea 100%);box-shadow:var(--shadow);padding:1.2rem 1.2rem 1.4rem;margin-bottom:1rem}
+    .hero-top{display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap}
+    .kicker{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+    h1{margin:.25rem 0 .35rem;font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.12;color:var(--text)}
+    .hero p{margin:0;color:var(--muted);font-size:.94rem;line-height:1.7;max-width:760px}
+    .hero-actions{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.85rem}
+    .hero-btn{display:inline-flex;align-items:center;justify-content:center;padding:.58rem 1rem;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:.84rem;font-weight:700;cursor:pointer;text-decoration:none}
+    .hero-btn.primary{background:var(--accent);color:#fff;border-color:rgba(124,58,237,.45)}
+    .chips{display:flex;gap:.45rem;flex-wrap:wrap}
+    .chip{font-size:.72rem;padding:.35rem .58rem;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--accent);font-weight:600}
+    .progress-wrap{margin-top:1rem;border-top:1px solid var(--border);padding-top:.85rem}
+    .progress-head{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:.45rem}
+    .bar{height:8px;border-radius:999px;background:#ede7df;overflow:hidden}
+    .bar>span{display:block;height:100%;width:0;background:var(--gradient);transition:width .25s ease}
+    .card{border:1px solid var(--border);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);padding:1.15rem;margin-bottom:1rem}
+    .step-tag{font-size:.74rem;color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+    .question{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3.4vw,1.9rem);line-height:1.2;margin:0 0 .75rem;color:var(--text)}
+    .desc{font-size:.9rem;color:var(--muted);line-height:1.7;margin:0 0 .9rem}
+    .options{display:grid;gap:.65rem}
+    .options.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .option{appearance:none;border:1px solid var(--border);background:#fff;color:var(--text);border-radius:14px;padding:.8rem .82rem;text-align:left;font-size:.93rem;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s}
+    .option:hover{transform:translateY(-1px);border-color:rgba(124,58,237,.4);box-shadow:0 10px 20px rgba(124,58,237,.12)}
+    .option.active{border-color:var(--accent);background:#f7f2ff;box-shadow:0 0 0 1px rgba(124,58,237,.22) inset}
+    .nav{display:flex;justify-content:space-between;gap:.7rem;margin-top:.95rem}
+    .btn{border:1px solid var(--border);background:#fff;color:var(--text);padding:.6rem .82rem;border-radius:10px;font-size:.85rem;cursor:pointer}
+    .btn:disabled{opacity:.42;cursor:not-allowed}
+    .btn.primary{border-color:rgba(124,58,237,.45);background:var(--accent);color:#fff;font-weight:700}
+    .chakra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+    .chakra-item{padding:.68rem .72rem;border:1px solid var(--border);border-radius:12px;background:#fcfbf9}
+    .chakra-item strong{display:block;font-size:.86rem;color:var(--text)}
+    .meter{margin-top:.35rem;height:8px;border-radius:999px;background:#ede7df;overflow:hidden}
+    .meter span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#38bdf8);width:0}
+    .insight{margin:.9rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.7}
+    .result-guide{margin-top:.9rem;border:1px solid var(--border);border-radius:14px;background:#fcfbf9;padding:.82rem .86rem}
+    .result-guide h3{margin:0 0 .45rem;font-size:.92rem;color:var(--text);font-family:'Inter',system-ui,sans-serif}
+    .result-guide p{margin:.32rem 0;color:var(--muted);font-size:.87rem;line-height:1.65}
+    .result-guide ul{margin:.45rem 0 0;padding-left:1.1rem}
+    .result-guide li{color:var(--muted);font-size:.86rem;line-height:1.62;margin:.15rem 0}
+    .result-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin-top:.55rem}
+    .result-step{padding:.62rem .66rem;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .result-step strong{display:block;font-size:.83rem;color:var(--accent);margin-bottom:.15rem}
+    .result-step p{margin:0;color:var(--muted);font-size:.83rem;line-height:1.58}
+    .text-entry{width:100%;min-height:140px;padding:.8rem .9rem;border-radius:12px;border:1px solid var(--border);background:#fff;color:var(--text);font:inherit;font-size:.92rem;line-height:1.6;resize:vertical}
+    .text-entry:focus{outline:none;border-color:rgba(124,58,237,.5);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+    .plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-bottom:.6rem}
+    .plan-card{padding:.72rem .76rem;border:1px solid var(--border);border-radius:12px;background:#fcfbf9}
+    .plan-card strong{display:block;font-size:.84rem;color:var(--accent);margin-bottom:.2rem}
+    .plan-card p{margin:0;color:var(--muted);font-size:.83rem;line-height:1.55}
+    .plan-list{margin:.55rem 0 0;padding-left:1.1rem}
+    .plan-list li{color:var(--muted);font-size:.86rem;line-height:1.65;margin:.15rem 0}
+    .plan-cta{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.85rem}
+    .plan-note{margin-top:.6rem;color:var(--muted);font-size:.84rem;line-height:1.6}
+    .ad-h{margin:1rem 0}
+    .ad-ph{display:flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--border);border-radius:16px;background:linear-gradient(135deg,#f9f5ff 0%,#fef9ee 100%);padding:.95rem;transition:transform .2s,border-color .2s,box-shadow .2s;color:var(--text);text-align:center;box-shadow:var(--shadow)}
+    .ad-ph:hover{transform:translateY(-2px);border-color:rgba(124,58,237,.35);box-shadow:0 10px 26px rgba(124,58,237,.14)}
+    .ad-ph-h{min-height:114px;flex-direction:column;gap:.3rem}
+    .ad-kicker{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+    .ad-label{font-family:'Playfair Display',serif;font-size:1.02rem;color:var(--text)}
+    .ad-copy{font-size:.82rem;line-height:1.55;color:var(--muted)}
+    .ad-cta{display:inline-flex;padding:.43rem .9rem;border-radius:999px;background:var(--accent);color:#fff;font-size:.75rem;font-weight:700}
+    .cluster-journey{margin:1.2rem 0;padding:1rem;border:1px solid var(--border);border-radius:16px;background:linear-gradient(135deg,#fff 0%,#f9f5ff 52%,#fef9ee 100%);box-shadow:var(--shadow)}
+    .cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.7rem}
+    .cluster-card{display:block;border:1px solid var(--border);border-radius:12px;padding:.8rem;background:#fff;text-decoration:none;color:var(--text)}
+    .cluster-card .cluster-label{display:block;font-size:.68rem;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .cluster-card .cluster-title{display:block;margin-top:.2rem;font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)}
+    .cluster-card .cluster-copy{display:block;margin-top:.25rem;color:var(--muted);font-size:.82rem;line-height:1.55}
+    footer{margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;text-align:center;color:var(--muted);font-size:.8rem}
+    footer a{color:var(--accent);text-decoration:none}
+    @media(max-width:720px){
+      .options.two{grid-template-columns:1fr}
+      .chakra-grid{grid-template-columns:1fr}
+      .result-steps{grid-template-columns:1fr}
+      .hero-top{align-items:flex-start}
+    }
   </style>
 </head>
 <body>
-  <main class="wrap">
+  <div class="wrap">
     <section class="hero">
-      <p style="color:var(--accent2);font-weight:700;letter-spacing:.05em;text-transform:uppercase">Meditación y Mindfulness</p>
-      <h1>Test de Chakras en 23 Preguntas</h1>
-      <p>
-        Versión en español de España basada en el flujo de referencia de Slowdive,
-        reconstruida en estático para SEO y rendimiento en el cluster.
-      </p>
-      <div class="cta">
-        <a class="btn" href="/chakras/1">Empezar ahora</a>
-        <a class="btn alt" href="#pasos">Ver los 23 pasos</a>
+      <div class="hero-top">
+        <div>
+          <div class="kicker">Meditación guiada para principiantes</div>
+          <h1>¿Duermes mal o vas acelerado todo el día?</h1>
+          <p>En solo 10 minutos al día durante 28 días, este plan te ayuda a bajar revoluciones, ordenar tus emociones y recuperar energía aunque nunca hayas meditado.</p>
+          <div class="hero-actions">
+            <button class="hero-btn primary" id="startQuizBtn">Empezar ahora</button>
+            <a class="hero-btn" href="#quizCard">Ver cómo funciona</a>
+          </div>
+        </div>
+        <div class="chips">
+          <span class="chip">23 pasos</span>
+          <span class="chip">Sin experiencia previa</span>
+          <span class="chip">10 min al día</span>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-head"><span id="progressText">Paso 1 de 23</span><span id="progressPct">4%</span></div>
+        <div class="bar"><span id="progressBar"></span></div>
       </div>
     </section>
 
-    <section id="pasos" class="grid">
-      <article class="step-card">
-        <p class="step-kicker">Paso 1 de 23</p>
-        <h2>Â¿Con quÃ© gÃ©nero te identificas?</h2>
-        <ul><li>Masculino</li><li>Femenino</li><li>Otro</li></ul>
-      </article>
-    
+    <div class="ad-h">
+      <a class="ad-ph ad-ph-h" href="/publicidad" title="Anúnciate aquí" data-ad-slot="premium_direct_cta" data-link-context="ad_block">
+        <span class="ad-kicker">Espacio publicitario destacado</span>
+        <span class="ad-label">¿Tienes una app de bienestar, yoga o nutrición?</span>
+        <span class="ad-copy">Aparece justo antes del cuestionario con máxima atención del usuario.</span>
+        <span class="ad-cta">Ver espacios y tarifas →</span>
+      </a>
+    </div>
 
-      <article class="step-card">
-        <p class="step-kicker">Paso 2 de 23</p>
-        <h2>Â¿QuÃ© sabes sobre los chakras?</h2>
-        <ul><li>Mucho</li><li>Un poco</li><li>He oÃ­do hablar de ellos, pero no tengo claro quÃ© son</li><li>No tengo ni idea</li></ul>
-      </article>
-    
+    <section class="card" id="quizCard"></section>
 
-      <article class="step-card">
-        <p class="step-kicker">Paso 3 de 23</p>
-        <h2>Los chakras son los centros energÃ©ticos de tu cuerpo</h2>
-        <ul></ul>
-      </article>
-    
+    <div class="ad-h" id="midAd" style="display:none">
+      <a class="ad-ph ad-ph-h" href="/publicidad" title="Publicidad directa" data-ad-slot="mid_quiz" data-link-context="ad_block">
+        <span class="ad-kicker">Publicidad contextual</span>
+        <span class="ad-label">Impacta al usuario en mitad del flujo</span>
+        <span class="ad-copy">Ideal para marcas de formación, salud natural, coaching y retiros.</span>
+        <span class="ad-cta">Solicitar propuesta →</span>
+      </a>
+    </div>
 
-      <article class="step-card">
-        <p class="step-kicker">Paso 4 de 23</p>
-        <h2>Â¿CuÃ¡ntos aÃ±os tienes?</h2>
-        <ul><li>18-27</li><li>28-37</li><li>38-47</li><li>48-57</li><li>58+</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 5 de 23</p>
-        <h2>Â¿CÃ³mo de equilibrados sientes tu cuerpo, tus emociones y tus pensamientos?</h2>
-        <ul><li>Medianamente equilibrado</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 6 de 23</p>
-        <h2>Â¿QuÃ© Ã¡rea de tu vida sientes que estÃ¡ estancada o no avanza?</h2>
-        <ul><li>Salud</li><li>Dinero</li><li>Trabajo</li><li>Amor</li><li>Espiritualidad</li><li>Salud mental</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 7 de 23</p>
-        <h2>Â¿Con quÃ© frecuencia sientes sÃ­ntomas fÃ­sicos como dolores de cabeza o tensiÃ³n corporal?</h2>
-        <ul><li>Bastante a menudo</li><li>A veces</li><li>Rara vez</li><li>No realmente</li><li>FÃ¡cil viene, fÃ¡cil se va</li><li>Tengo miedo de perder dinero</li><li>Para mÃ­, el dinero refleja el esfuerzo y el trabajo constante</li><li>Siempre ando justo de dinero</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 8 de 23</p>
-        <h2>Â¿QuÃ© color prefieres en este momento?</h2>
-        <ul></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 9 de 23</p>
-        <h2>Â¿Te sientes conectado/a con la naturaleza o con el universo?</h2>
-        <ul><li>Mucho</li><li>A veces</li><li>Rara vez</li><li>No realmente</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 10 de 23</p>
-        <h2>Â¿CuÃ¡l es tu elemento favorito?</h2>
-        <ul><li>Tierra</li><li>Agua</li><li>Fuego</li><li>Aire</li><li>Espacio</li><li>Ãter</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 11 de 23</p>
-        <h2>Â¿Tienes un propÃ³sito en la vida?</h2>
-        <ul><li>SÃ­, absolutamente</li><li>A veces</li><li>No, no creo</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 12 de 23</p>
-        <h2>Â¿QuÃ© emociones te cuesta manejar?</h2>
-        <ul><li>Ira</li><li>Miedo</li><li>Ansiedad</li><li>Tristeza</li><li>Inseguridad</li><li>Otro</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 13 de 23</p>
-        <h2>Â¿Con quÃ© frecuencia tienes pensamientos negativos?</h2>
-        <ul><li>Nunca</li><li>Rara vez</li><li>A veces</li><li>A menudo</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 14 de 23</p>
-        <h2>Â¿Has pasado por una experiencia difÃ­cil que ha afectado tu energÃ­a?</h2>
-        <ul><li>SÃ­, mÃ¡s de una vez</li><li>SÃ­, una vez</li><li>Supongo que no</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 15 de 23</p>
-        <h2>Â¿Te resulta sencillo expresar lo que piensas y sientes a los demÃ¡s?</h2>
-        <ul><li>SÃ­, muy fÃ¡cilmente</li><li>A veces</li><li>No realmente</li><li>No, es difÃ­cil</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 16 de 23</p>
-        <h2>Â¡Genial! Vamos a ver tus resultados ð</h2>
-        <ul></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 17 de 23</p>
-        <h2>Verifica <br> tus resultados</h2>
-        <ul></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 18 de 23</p>
-        <h2>Â¿QuÃ© es mÃ¡s importante para ti?</h2>
-        <ul></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 19 de 23</p>
-        <h2>Â¿QuÃ© te falta en tu vida ahora mismo?</h2>
-        <ul></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 20 de 23</p>
-        <h2>Â¿Practicas mindfulness, meditaciÃ³n o relajaciÃ³n?</h2>
-        <ul><li>Todos los dÃ­as</li><li>A veces</li><li>Rara vez</li><li>Nunca</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 21 de 23</p>
-        <h2>Â¿QuÃ© actividad te trae alegrÃ­a y paz?</h2>
-        <ul><li>Yoga</li><li>MeditaciÃ³n</li><li>Naturaleza</li><li>Amigos</li><li>Arte</li><li>Otro</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 22 de 23</p>
-        <h2>Â¿CuÃ¡l es tu objetivo principal?</h2>
-        <ul><li>Sentirme mejor en general</li><li>MÃ¡s energÃ­a y vitalidad</li><li>Pensar con claridad y concentrarme</li><li>Conectarme con mi lado espiritual</li><li>Otro</li></ul>
-      </article>
-    
-
-      <article class="step-card">
-        <p class="step-kicker">Paso 23 de 23</p>
-        <h2>Tu plan personal estÃ¡ listo</h2>
-        <ul></ul>
-      </article>
+    <section class="cluster-journey">
+      <p style="margin:.1rem 0 .2rem;color:var(--accent);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700">Siguiente paso recomendado</p>
+      <p style="margin:.1rem 0 .8rem;color:var(--muted)">Si quieres profundizar en tu proceso personal, estas herramientas te pueden ayudar:</p>
+      <div class="cluster-grid">
+        <a class="cluster-card" href="https://carta-astral-gratis.es/" data-destination-site="carta-astral" data-link-context="cluster_crosslink">
+          <span class="cluster-label">Carta Astral</span>
+          <span class="cluster-title">Entiende tu energía de base</span>
+          <span class="cluster-copy">Descubre cómo tu carta natal influye en tus emociones, decisiones y relaciones.</span>
+        </a>
+        <a class="cluster-card" href="https://horoscopo-de-hoy.es/" data-destination-site="horoscopo-de-hoy" data-link-context="cluster_crosslink">
+          <span class="cluster-label">Horóscopo</span>
+          <span class="cluster-title">Tu energía para hoy</span>
+          <span class="cluster-copy">Consulta una guía breve para tomar mejores decisiones durante el día.</span>
+        </a>
+        <a class="cluster-card" href="https://tarot-del-dia.es/" data-destination-site="tarot-del-dia" data-link-context="cluster_crosslink">
+          <span class="cluster-label">Tarot</span>
+          <span class="cluster-title">Claridad para tu próximo paso</span>
+          <span class="cluster-copy">Haz una tirada simple para ordenar lo que sientes y actuar con foco.</span>
+        </a>
+      </div>
     </section>
 
-    <section class="foot">
-      <p>Última generación: 2026-05-05</p>
-      <p><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/publicidad">Publicidad</a></p>
-    </section>
-  </main>
+    <footer>
+      <p>© 2026 Meditación Chakras · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a> · <a href="/publicidad">Publicidad</a></p>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY='meditacion_chakras_quiz_v2';
+    const totalSteps=23;
+    const chakras=['Raíz','Sacro','Plexo Solar','Corazón','Garganta','Tercer Ojo','Corona'];
+
+    const baseSteps=[
+      {id:1,type:'single',key:'gender',q:'¿Con qué género te identificas?',options:['Masculino','Femenino','Otro']},
+      {id:2,type:'single',key:'knowledge',q:'¿Qué sabes sobre los chakras?',options:['Mucho','Un poco','He oído hablar de ellos, pero no tengo claro qué son','No tengo ni idea']},
+      {id:3,type:'info',q:'Los chakras son los centros energéticos de tu cuerpo',desc:'No necesitas conocimientos previos para seguir este proceso. Te iremos guiando paso a paso para que identifiques qué te está drenando energía y cómo empezar a regularte con prácticas muy simples de respiración, pausa mental y atención corporal.'},
+      {id:4,type:'single',key:'age',q:'¿Cuántos años tienes?',options:['18-27','28-37','38-47','48-57','58+']},
+      {id:5,type:'single',key:'balance',q:'¿Cómo de equilibrados sientes tu cuerpo, tus emociones y tus pensamientos?',options:['No equilibrado','Medianamente equilibrado','Bastante equilibrado','Muy equilibrado']},
+      {id:6,type:'single',key:'main_area',q:'¿Qué área de tu vida sientes que está estancada o no avanza?',options:['Salud','Dinero','Trabajo','Amor','Espiritualidad','Salud mental']},
+      {id:7,type:'dynamic',key:'deep_area'},
+      {id:8,type:'single',key:'color',q:'¿Qué color prefieres en este momento?',options:['Rojo','Amarillo','Naranja','Azul','Verde','Morado']},
+      {id:9,type:'single',key:'nature',q:'¿Te sientes conectado/a con la naturaleza o con el universo?',options:['Mucho','A veces','Rara vez','No realmente']},
+      {id:10,type:'single',key:'element',q:'¿Cuál es tu elemento favorito?',options:['Tierra','Agua','Fuego','Aire','Espacio','Éter']},
+      {id:11,type:'single',key:'purpose',q:'¿Tienes un propósito en la vida?',options:['Sí, absolutamente','A veces','No, no creo']},
+      {id:12,type:'single',key:'emotion',q:'¿Qué emociones te cuesta manejar?',options:['Ira','Miedo','Ansiedad','Tristeza','Inseguridad','Otro']},
+      {id:13,type:'single',key:'negativity',q:'¿Con qué frecuencia tienes pensamientos negativos?',options:['Nunca','Rara vez','A veces','A menudo']},
+      {id:14,type:'single',key:'hard_experience',q:'¿Has pasado por una experiencia difícil que ha afectado tu energía?',options:['Sí, más de una vez','Sí, una vez','Supongo que no']},
+      {id:15,type:'single',key:'communication',q:'¿Te resulta sencillo expresar lo que piensas y sientes a los demás?',options:['Sí, muy fácilmente','A veces','No realmente','No, es difícil']},
+      {id:16,type:'info',q:'¡Genial! Vamos a ver tus resultados',desc:'Procesamos tus respuestas para construir una lectura orientativa de tus centros energéticos.'},
+      {id:17,type:'result',q:'Verifica tu mapa de chakras',desc:'No es un diagnóstico clínico. Úsalo como guía de autoconocimiento y práctica diaria.'},
+      {id:18,type:'text',key:'priority_detail',q:'¿Qué es lo más importante para ti ahora mismo?',desc:'Escríbelo con tus palabras. Cuanto más concreto seas, más útil te resultará el plan final (por ejemplo: "dejar de ir con ansiedad por la mañana" o "volver a dormir 7 horas seguidas").',placeholder:'Escribe aquí tu prioridad principal y qué te gustaría sentir en 28 días...'},
+      {id:19,type:'info',q:'Prepárate para cambios reales en tu rutina',desc:'No buscamos perfección, buscamos constancia. Si completas solo 10 minutos al día, tu sistema nervioso empieza a salir del modo alerta y tu mente aprende a recuperar calma con más facilidad.'},
+      {id:20,type:'single',key:'practice',q:'¿Practicas mindfulness, meditación o relajación?',options:['Todos los días','A veces','Rara vez','Nunca']},
+      {id:21,type:'single',key:'joy',q:'¿Qué actividad te trae alegría y paz?',options:['Yoga','Meditación','Naturaleza','Amigos','Arte','Otro']},
+      {id:22,type:'single',key:'goal',q:'¿Cuál es tu objetivo principal?',options:['Sentirme mejor en general','Más energía y vitalidad','Pensar con claridad y concentrarme','Conectarme con mi lado espiritual','Otro']},
+      {id:23,type:'final',q:'Tu plan personal está listo',desc:'Aquí tienes una ruta clara de 28 días para principiantes, con bloques cortos que sí puedes sostener en tu día a día.'}
+    ];
+
+    const questionByArea={
+      'Salud':{q:'¿Con qué frecuencia sientes síntomas físicos como dolores de cabeza o tensión corporal?',options:['Bastante a menudo','A veces','Rara vez','No realmente']},
+      'Dinero':{q:'¿Cuál es tu actitud hacia el dinero?',options:['Fácil viene, fácil se va','Tengo miedo de perder dinero','Para mí, el dinero refleja el esfuerzo y el trabajo constante','Siempre ando justo de dinero']},
+      'Trabajo':{q:'¿Estás viviendo el sueño de tu vida?',options:['Sí, absolutamente','A veces','No realmente','Prefiero no responder']},
+      'Amor':{q:'¿Qué significa el amor para ti?',options:['Es ayudarse mutuamente','Solo una reacción química','El amor no existe','El amor es una energía universal']},
+      'Espiritualidad':{q:'¿Crees que la vida tiene un sentido?',options:['Sí, absolutamente','A veces','No realmente','Prefiero no responder']},
+      'Salud mental':{q:'¿Con qué frecuencia sientes síntomas físicos como dolores de cabeza o tensión corporal?',options:['Bastante a menudo','A veces','Rara vez','No realmente']}
+    };
+
+    let state={step:0,answers:{},profile:null};
+    try{
+      const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
+      if(saved&&typeof saved.step==='number'&&saved.answers){state=saved;}
+    }catch(e){}
+
+    function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+
+    function currentStep(){
+      const step=baseSteps[state.step];
+      if(step.type!=='dynamic') return step;
+      const selected=state.answers.main_area||'Salud';
+      const dynamic=questionByArea[selected]||questionByArea['Salud'];
+      return {id:7,type:'single',key:'deep_area',q:dynamic.q,options:dynamic.options};
+    }
+
+    function answerHash(){
+      const txt=Object.values(state.answers).join('|');
+      let h=0;
+      for(let i=0;i<txt.length;i++) h=((h<<5)-h)+txt.charCodeAt(i);
+      return Math.abs(h||1);
+    }
+
+    function buildProfile(){
+      const hash=answerHash();
+      const scores={};
+      chakras.forEach((name,idx)=>{
+        const raw=((hash>>idx)%40)+48;
+        scores[name]=Math.max(35,Math.min(92,raw));
+      });
+      const sorted=[...chakras].sort((a,b)=>scores[a]-scores[b]);
+      const focus=sorted[0];
+      const calm=sorted[sorted.length-1];
+      return {scores,focus,calm};
+    }
+
+    function updateProgress(){
+      const step=state.step+1;
+      const pct=Math.round((step/totalSteps)*100);
+      document.getElementById('progressText').textContent='Paso '+step+' de '+totalSteps;
+      document.getElementById('progressPct').textContent=pct+'%';
+      document.getElementById('progressBar').style.width=pct+'%';
+      document.getElementById('midAd').style.display=(step>=7&&step<=18)?'block':'none';
+    }
+
+    function trackStepView(stepObj){
+      window.clusterTrack('quiz_step_view',{step_number:stepObj.id,step_type:stepObj.type,question_key:stepObj.key||''});
+    }
+
+    function selectOption(stepObj,option){
+      state.answers[stepObj.key]=option;
+      window.clusterTrack('quiz_option_select',{step_number:stepObj.id,question_key:stepObj.key||'',answer_text:option});
+      if(stepObj.id===16||stepObj.id===17) return;
+      if(state.step<totalSteps-1){
+        state.step+=1;
+        if(state.step===16&&(!state.profile||!state.profile.scores)){state.profile=buildProfile();}
+      }
+      save();
+      render();
+    }
+
+    function renderResult(profile){
+      const grid=chakras.map(name=>{
+        const value=profile.scores[name];
+        return '<div class="chakra-item"><strong>'+name+' · '+value+'%</strong><div class="meter"><span style="width:'+value+'%"></span></div></div>';
+      }).join('');
+      return '<div class="chakra-grid">'+grid+'</div>'+
+        '<p class="insight"><strong>Enfoque sugerido:</strong> '+profile.focus+'. <strong>Centro más estable:</strong> '+profile.calm+'.</p>'+
+        '<div class="result-guide">'+
+          '<h3>Tu base diaria (10 min) explicada paso a paso</h3>'+
+          '<p>Si nunca has meditado, esta rutina está diseñada para ser simple, concreta y repetible. No necesitas música, incienso ni una postura complicada: solo un lugar tranquilo y 10 minutos reales.</p>'+
+          '<div class="result-steps">'+
+            '<div class="result-step"><strong>Min 0-1 · Preparación</strong><p>Siéntate con la espalda apoyada o recta sin tensión. Apoya ambos pies en el suelo o cruza las piernas cómodamente. Suelta mandíbula y hombros.</p></div>'+
+            '<div class="result-step"><strong>Min 1-5 · Respiración diafragmática</strong><p>Inhala por nariz 4 segundos llevando aire al abdomen. Exhala por nariz o boca 6 segundos. Haz 8-10 ciclos sin forzar. Si te mareas, vuelve a ritmo natural.</p></div>'+
+            '<div class="result-step"><strong>Min 5-8 · Pausa corporal</strong><p>Revisa cuerpo en este orden: frente, mandíbula, cuello, pecho, abdomen. En cada zona pregunta: "¿hay tensión?" y afloja un 10-20% al exhalar.</p></div>'+
+            '<div class="result-step"><strong>Min 8-10 · Atención emocional + cierre</strong><p>Nombra una emoción principal (ej. ansiedad, cansancio, bloqueo). Cierra con una frase breve: "Hoy me doy 10 minutos para volver a mí".</p></div>'+
+          '</div>'+
+          '<h3 style="margin-top:.72rem">Cómo hacerlo bien si eres principiante</h3>'+
+          '<ul>'+
+            '<li><strong>Frecuencia:</strong> 1 vez al día durante 28 días, preferiblemente a la misma hora.</li>'+
+            '<li><strong>Lugar:</strong> siempre el mismo rincón para que tu cerebro lo asocie con calma.</li>'+
+            '<li><strong>Objetivo realista:</strong> no "dejar la mente en blanco", sino bajar la activación del cuerpo.</li>'+
+            '<li><strong>Señal de progreso:</strong> tardas menos en calmarte después de un momento de estrés.</li>'+
+          '</ul>'+
+          '<h3 style="margin-top:.72rem">Errores comunes y corrección rápida</h3>'+
+          '<ul>'+
+            '<li><strong>"No paro de pensar":</strong> normal. Vuelve al conteo 4-6 sin pelearte con los pensamientos.</li>'+
+            '<li><strong>"No tengo tiempo":</strong> empieza con 6 minutos (3+2+1) y sube a 10 en una semana.</li>'+
+            '<li><strong>"Me salto días":</strong> retoma al día siguiente sin compensar ni castigarte.</li>'+
+          '</ul>'+
+          '<p><strong>Regla clave:</strong> corto + diario + misma hora siempre gana a sesiones largas esporádicas.</p>'+
+        '</div>';
+    }
+
+    function render(){
+      updateProgress();
+      const step=currentStep();
+      trackStepView(step);
+
+      const card=document.getElementById('quizCard');
+      const selected=step.key?state.answers[step.key]:'';
+
+      let html='';
+      html+='<div class="step-tag">Paso '+step.id+' · Flujo de Chakras</div>';
+      html+='<h2 class="question">'+step.q+'</h2>';
+      if(step.desc) html+='<p class="desc">'+step.desc+'</p>';
+
+      if(step.type==='single'){
+        const cls=step.options.length<=4?'options':'options two';
+        html+='<div class="'+cls+'">';
+        step.options.forEach(option=>{
+          const active=selected===option?' active':'';
+          html+='<button class="option'+active+'" data-option="'+option.replace(/"/g,'&quot;')+'">'+option+'</button>';
+        });
+        html+='</div>';
+      }
+
+      if(step.type==='text'){
+        const currentText=selected||'';
+        html+='<textarea class="text-entry" id="textAnswer" maxlength="420" placeholder="'+(step.placeholder||'Escribe aquí...')+'">'+currentText.replace(/</g,'&lt;')+'</textarea>';
+        html+='<p class="desc" style="margin-top:.55rem">Mínimo recomendado: 10 caracteres.</p>';
+      }
+
+      if(step.type==='result'){
+        if(!state.profile||!state.profile.scores) state.profile=buildProfile();
+        html+=renderResult(state.profile);
+      }
+
+      if(step.type==='final'){
+        const priority=state.answers.priority_detail?state.answers.priority_detail.replace(/</g,'&lt;'):'';
+        html+='<div class="plan-grid">'+
+          '<div class="plan-card"><strong>Semana 1 · Bajar el ruido interno</strong><p>Rutina fija de 10 minutos para estabilizar respiración, sueño y tensión corporal.</p></div>'+
+          '<div class="plan-card"><strong>Semana 2 · Orden emocional</strong><p>Detectar disparadores, nombrar emociones y reducir reactividad automática.</p></div>'+
+          '<div class="plan-card"><strong>Semana 3 · Energía y foco</strong><p>Concentración en una sola prioridad diaria para dejar de ir en piloto agitado.</p></div>'+
+          '<div class="plan-card"><strong>Semana 4 · Integración</strong><p>Consolidar el hábito y crear tu protocolo personal para días difíciles.</p></div>'+
+        '</div>';
+        html+='<ul class="plan-list">'+
+          '<li><strong>Mañana (4 min):</strong> respiración diafragmática y chequeo corporal rápido.</li>'+
+          '<li><strong>Mitad del día (2 min):</strong> pausa consciente para cortar la aceleración mental.</li>'+
+          '<li><strong>Noche (4 min):</strong> descarga emocional + cierre de tensión en cuello, pecho y abdomen.</li>'+
+        '</ul>';
+        if(priority){
+          html+='<p class="plan-note"><strong>Tu prioridad declarada:</strong> '+priority+'</p>';
+        }
+        html+='<div class="plan-cta">'+
+          '<button class="btn primary" id="startPlanBtn">Empezar mi plan de 28 días</button>'+
+          '<button class="btn" id="restartBtnInline">Reiniciar test</button>'+
+        '</div>';
+        html+='<p class="plan-note">Consejo clave: no esperes motivación perfecta. Hazlo corto, diario y a la misma hora.</p>';
+      }
+
+      html+='<div class="nav">';
+      html+='<button class="btn" id="prevBtn" '+(state.step===0?'disabled':'')+'>← Paso anterior</button>';
+
+      if(step.type==='single'){
+        html+='<button class="btn primary" id="nextBtn" '+(!selected?'disabled':'')+'>Siguiente paso →</button>';
+      } else if(step.type==='text'){
+        const enabled=(selected||'').trim().length>=10;
+        html+='<button class="btn primary" id="nextBtn" '+(!enabled?'disabled':'')+'>Siguiente paso →</button>';
+      } else if(step.type==='final'){
+        html+='<button class="btn primary" id="restartBtn">Reiniciar test</button>';
+      } else {
+        html+='<button class="btn primary" id="nextBtn">Continuar →</button>';
+      }
+      html+='</div>';
+
+      card.innerHTML=html;
+
+      card.querySelectorAll('[data-option]').forEach(btn=>{
+        btn.addEventListener('click',()=>selectOption(step,btn.getAttribute('data-option')));
+      });
+
+      const textAnswer=document.getElementById('textAnswer');
+      if(textAnswer&&step.type==='text'){
+        textAnswer.addEventListener('input',()=>{
+          state.answers[step.key]=textAnswer.value;
+          save();
+          const nextBtn=document.getElementById('nextBtn');
+          if(nextBtn) nextBtn.disabled=textAnswer.value.trim().length<10;
+        });
+      }
+
+      const prev=document.getElementById('prevBtn');
+      if(prev){
+        prev.addEventListener('click',()=>{
+          if(state.step>0){state.step-=1;save();render();}
+        });
+      }
+
+      const next=document.getElementById('nextBtn');
+      if(next){
+        next.addEventListener('click',()=>{
+          if(step.type==='single'&&!selected)return;
+          if(step.type==='text'&&(state.answers[step.key]||'').trim().length<10)return;
+          if(step.type==='single'){
+            if(state.step<totalSteps-1) state.step+=1;
+          } else if(step.type==='text'){
+            if(state.step<totalSteps-1) state.step+=1;
+          } else {
+            if(state.step<totalSteps-1) state.step+=1;
+          }
+          if(state.step===16&&(!state.profile||!state.profile.scores)) state.profile=buildProfile();
+          save();
+          render();
+        });
+      }
+
+      const restart=document.getElementById('restartBtn');
+      if(restart){
+        restart.addEventListener('click',()=>{
+          state={step:0,answers:{},profile:null};
+          save();
+          window.clusterTrack('quiz_restart',{from_step:23});
+          render();
+        });
+      }
+
+      const restartInline=document.getElementById('restartBtnInline');
+      if(restartInline){
+        restartInline.addEventListener('click',()=>{
+          state={step:0,answers:{},profile:null};
+          save();
+          window.clusterTrack('quiz_restart',{from_step:23,source:'inline_plan'});
+          render();
+        });
+      }
+
+      const startPlanBtn=document.getElementById('startPlanBtn');
+      if(startPlanBtn){
+        startPlanBtn.addEventListener('click',()=>{
+          localStorage.setItem('meditacion_chakras_plan_started_at',new Date().toISOString());
+          window.clusterTrack('plan_start_click',{plan_length_days:28,entry_step:23});
+          startPlanBtn.textContent='Plan activado: hoy empiezas con 10 minutos';
+          startPlanBtn.disabled=true;
+        });
+      }
+    }
+
+    document.addEventListener('click',function(event){
+      const anchor=event.target.closest('a[href]');
+      if(!anchor||anchor.dataset.analyticsIgnore==='1')return;
+      const rawHref=anchor.getAttribute('href')||'';
+      if(!rawHref||rawHref.startsWith('#')||rawHref.startsWith('mailto:')||rawHref.startsWith('tel:'))return;
+      let url;
+      try{url=new URL(anchor.href,location.href);}catch{return;}
+      const normalizeHost=host=>(host||'').replace(/^www\./,'');
+      const destinationDomain=normalizeHost(url.hostname);
+      const currentDomain=normalizeHost(location.hostname);
+      const destinationSite=anchor.dataset.destinationSite||window.clusterSitesByDomain[destinationDomain]||'';
+      const linkText=(anchor.textContent||'').replace(/\s+/g,' ').trim().slice(0,120);
+      const linkContext=anchor.dataset.linkContext||'';
+      const adSlot=anchor.dataset.adSlot||'';
+      if(anchor.matches('.ad-ph,.ad-link,[data-ad-slot]')||url.pathname==='/publicidad'){
+        window.clusterTrack('advertiser_cta_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'advertiser_cta',ad_slot:adSlot||'direct_advertiser_cta'});
+        return;
+      }
+      if(destinationSite&&destinationDomain!==currentDomain){
+        window.clusterTrack('internal_tool_click',{link_url:url.href,link_text:linkText,link_context:linkContext||'cluster_crosslink',destination_site:destinationSite,destination_domain:destinationDomain});
+      }
+    },{capture:true});
+
+    const startQuizBtn=document.getElementById('startQuizBtn');
+    if(startQuizBtn){
+      startQuizBtn.addEventListener('click',()=>{
+        document.getElementById('quizCard').scrollIntoView({behavior:'smooth',block:'start'});
+        window.clusterTrack('hero_cta_click',{cta_label:'empezar_ahora'});
+      });
+    }
+
+    render();
+  </script>
 </body>
 </html>

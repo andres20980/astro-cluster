@@ -12,7 +12,7 @@ declare -A PROJECTS=(
   [tarot-del-dia]="tarot-del-dia-es"
   [calcular-numerologia]="calc-numerologia-es"
   [horoscopo-de-hoy]="horoscopo-hoy-es"
-  [meditacion-chakras]="meditacion-chakras-es"
+  [meditacion-chakras]="licitago-spain"
 )
 
 SITE_ORDER=(

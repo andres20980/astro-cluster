@@ -1,1 +1,12 @@
-{"projects":{"default":"meditacion-chakras-es"}}
+{
+  "projects": {
+    "default": "licitago-spain"
+  },
+  "targets": {
+    "licitago-spain": {
+      "hosting": {
+        "meditacion-chakras": ["meditacion-chakras-d2276"]
+      }
+    }
+  }
+}

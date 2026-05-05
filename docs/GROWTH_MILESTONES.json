@@ -20,7 +20,7 @@
       "status": "in-progress",
       "actions": [
         "GA4 unificado para todo el cluster",
-        "Ads.txt y AdSense consistentes en las 5 herramientas",
+        "Ads.txt y AdSense consistentes en las 6 herramientas",
         "Smoke SEO y deploy selectivo activos",
         "Autoparcheo SEO rotatorio por site"
       ],
@@ -37,12 +37,12 @@
           {
             "label": "GA4 unificado para todo el cluster",
             "done": true,
-            "evidence": "GA4 cluster + linker cross-domain en 5/5 sites"
+            "evidence": "GA4 cluster + linker cross-domain en 6/6 sites"
           },
           {
-            "label": "Ads.txt y AdSense consistentes en las 5 herramientas",
+            "label": "Ads.txt y AdSense consistentes en las 6 herramientas",
             "done": true,
-            "evidence": "Publisher compartido y ads.txt generado para 5/5 sites"
+            "evidence": "Publisher compartido y ads.txt generado para 6/6 sites"
           },
           {
             "label": "Smoke SEO y deploy selectivo activos",
@@ -125,7 +125,7 @@
           {
             "label": "Vender banners directos desde /publicidad con inventario premium",
             "done": true,
-            "evidence": "/publicidad disponible en 5/5 sites"
+            "evidence": "/publicidad disponible en 6/6 sites"
           },
           {
             "label": "Mantener AdSense como remanente",
@@ -135,7 +135,7 @@
           {
             "label": "Definir slots reservados para venta directa por site",
             "done": true,
-            "evidence": "Slots premium detectados en 5/5 sites"
+            "evidence": "Slots premium detectados en 6/6 sites"
           },
           {
             "label": "Crear paginas comerciales y media kit cluster",
@@ -174,7 +174,7 @@
           {
             "label": "Construir mas herramientas complementarias dentro del cluster",
             "done": true,
-            "evidence": "5 herramientas activas en el cluster"
+            "evidence": "6 herramientas activas en el cluster"
           },
           {
             "label": "Ampliar comparativas y contenidos evergreen con E-E-A-T",
@@ -253,7 +253,8 @@
       "compatibilidad de signos",
       "tarot del día",
       "calcular numerología",
-      "horóscopo de hoy"
+      "horóscopo de hoy",
+      "meditación chakras"
     ],
     "secondary_keywords": [
       "tirada de tarot gratis",

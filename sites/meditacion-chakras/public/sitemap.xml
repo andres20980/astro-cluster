@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://meditacion-chakras.es/</loc><lastmod>2026-05-05</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/1</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/2</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/3</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/4</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/5</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/6</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/7</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/8</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/9</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/10</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/11</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/12</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/13</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/14</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/15</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/16</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/17</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/18</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/19</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/20</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/21</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/22</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/chakras/23</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://meditacion-chakras.es/privacy</loc><lastmod>2026-05-05</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://meditacion-chakras.es/terms</loc><lastmod>2026-05-05</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://meditacion-chakras.es/publicidad</loc><lastmod>2026-05-05</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://meditacion-chakras.es/</loc></url>
+  <url><loc>https://meditacion-chakras.es/privacy</loc></url>
+  <url><loc>https://meditacion-chakras.es/terms</loc></url>
+  <url><loc>https://meditacion-chakras.es/publicidad</loc></url>
 </urlset>

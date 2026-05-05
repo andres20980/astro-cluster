@@ -1,0 +1,9 @@
+{
+  "site": "meditacion-chakras",
+  "template_family": "interactive-quiz",
+  "templates": [
+    "quiz-step",
+    "result-step",
+    "legal-page"
+  ]
+}

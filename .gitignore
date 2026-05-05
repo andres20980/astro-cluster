@@ -6,6 +6,9 @@ __pycache__/
 .firebase/
 .tmp/
 .local/
+.env
+.env.*
+!.env.example
 docs/SEO_AGENT_STATE.json
 certificado*
 *.pdf
