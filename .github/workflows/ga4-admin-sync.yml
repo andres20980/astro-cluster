@@ -66,6 +66,20 @@ jobs:
             --manifest shared/ga4_custom_dimensions.json \
             --apply
 
+      - name: "🏷️ Sincronizar nombres de propiedad y stream"
+        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
+        env:
+          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/ga4_property_stream_names.py \
+            --property properties/531527723 \
+            --property-display-name astro-cluster \
+            --stream properties/531527723/dataStreams/14325968472 \
+            --stream-display-name "astro-cluster web" \
+            --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --apply
+
       - name: "🎯 Sincronizar eventos clave"
         if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
         env:
