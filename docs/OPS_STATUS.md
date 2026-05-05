@@ -28,8 +28,11 @@ Last update: `2026-05-05T13:15Z`
 - M1 `Base comun`: completed.
 - M2 `Traccion cluster`: in-progress.
 - Latest production fix: `meditacion-chakras.es` and `www.meditacion-chakras.es` are associated with Firebase Hosting site `meditacion-chakras-a9565`; apex responds `200` and `www` redirects `301`.
-- Organic SEO status: technical base is ready for improvement across the cluster. Real improvement must be validated in the next weekly GSC/GA4 report with fresh organic clicks, impressions, CTR and cluster-depth events.
-- Next milestone path: prioritize GSC opportunities with impressions and low CTR, keep deploys selective, and review GA4 recirculation events before adding more pages or workflows.
+- Latest local GA4 check: `ga4-m2-status 7` runs without `403 ACCESS_TOKEN_SCOPE_INSUFFICIENT`.
+- Organic SEO status: 63 weekly sessions, 12 organic sessions, 19.0% organic share. This is below the M2 tactical step of 120 organic sessions/week.
+- Recirculation status: 2 `internal_tool_click` events/week, below the tactical step of 6/week.
+- Domain analytics status: `meditacion-chakras.es` is visible in GA4 with 11 sessions in the last 7 days.
+- Next milestone path: keep the current M2 plan focused on organic sessions, cluster recirculation and selective GSC opportunity fixes before adding more pages or workflows.
 
 ## Operational Sources
 

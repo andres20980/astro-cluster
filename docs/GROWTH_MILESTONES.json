@@ -5,8 +5,23 @@
   "current_state": {
     "active_milestone": "M2",
     "last_operational_fix": "meditacion-chakras.es y www.meditacion-chakras.es asociados al Firebase Hosting site meditacion-chakras-a9565, desplegados y respondiendo en produccion",
-    "seo_organic_status": "Base tecnica SEO lista para mejorar organico: 6/6 dominios activos, sitemaps canonicos, GSC por dominio, recirculacion cluster-wide y SEO smoke automatizado. La mejora organica debe confirmarse con GSC/GA4 semanal, no inferirse solo por despliegue.",
-    "next_milestone_focus": "Convertir la base tecnica en traccion medible: subir sesiones organicas, detectar queries con impresiones y CTR bajo, autoparchear landings con oportunidad real y medir profundidad de recirculacion."
+    "seo_organic_status": "Base tecnica SEO lista para mejorar organico: 6/6 dominios activos, sitemaps canonicos, GSC por dominio, recirculacion cluster-wide y SEO smoke automatizado. GA4 local ya confirma meditacion-chakras.es dentro del cluster, pero la traccion organica sigue por debajo del tramo tactico.",
+    "next_milestone_focus": "Convertir la base tecnica en traccion medible: subir sesiones organicas, detectar queries con impresiones y CTR bajo, autoparchear landings con oportunidad real y medir profundidad de recirculacion.",
+    "latest_ga4_validation": {
+      "checked_at": "2026-05-05",
+      "source": "sites/carta-astral/scripts/manage-google.sh ga4-m2-status 7",
+      "sessions": 63,
+      "m2_target_sessions": 1500,
+      "m2_progress": 0.042,
+      "organic_sessions": 12,
+      "organic_tactical_target": 120,
+      "organic_share": 0.19,
+      "internal_tool_click": 2,
+      "internal_tool_click_target": 6,
+      "meditacion_chakras_seen_in_ga4": true,
+      "meditacion_chakras_sessions": 11,
+      "plan_assessment": "El plan es suficiente como foco M2 inmediato, pero no como criterio de cierre: hay que ejecutar hasta superar 120 sesiones organicas/semana, 6+ internal_tool_click/semana y despues progresar hacia 1500 sesiones/semana."
+    }
   },
   "expansion_policy": {
     "principle": "Ampliar el cluster solo cuando la suite actual ya demuestre traccion y monetizacion suficiente",

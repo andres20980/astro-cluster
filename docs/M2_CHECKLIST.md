@@ -4,6 +4,15 @@ Checklist operativo para decidir si el cluster esta listo para empujar M2 sin ga
 
 Estado actual: M2 esta en progreso. La base tecnica queda preparada para mejorar SEO organico, pero la mejora real se confirma con datos frescos de GSC/GA4 tras el deploy completo, no solo con checks HTTP.
 
+GA4 local validado el 2026-05-05 con `sites/carta-astral/scripts/manage-google.sh ga4-m2-status 7`:
+
+- Sesiones: 63 / 1500 objetivo M2 (4.2%).
+- Organico: 12 sesiones / 120 tramo tactico (10.0%), organic share 19.0%.
+- Recirculacion: 2 `internal_tool_click` / 6 tramo tactico.
+- `meditacion-chakras.es` ya aparece en GA4 con 11 sesiones.
+
+Conclusion: el plan inmediato es suficiente como foco operativo, pero no cierra M2. Hay que ejecutar hasta superar 120 sesiones organicas/semana, 6+ clicks internos/semana y despues acercar el cluster a 1500 sesiones/semana.
+
 ## Cambio operativo reciente
 
 - [x] `meditacion-chakras.es` responde `200` en produccion.
@@ -24,6 +33,7 @@ Estado actual: M2 esta en progreso. La base tecnica queda preparada para mejorar
 - [x] SEO smoke en verde o con issue abierto y accionable.
 - [x] Lighthouse solo ejecutado manualmente cuando haga falta.
 - [x] Acciones semanales sin pico anormal de runs.
+- [x] `seo-auto-pr.yml` reutiliza el run semanal de Google con `workflow_run` y solo autoparchea si hay senales frescas.
 
 ## Monetizacion
 
@@ -42,6 +52,7 @@ Estado actual: M2 esta en progreso. La base tecnica queda preparada para mejorar
 
 ### Fase 0 - Observabilidad
 
+- [x] GA4 local consulta Analytics Data sin `403 ACCESS_TOKEN_SCOPE_INSUFFICIENT`.
 - [ ] OAuth de usuario (GSC/AdSense) vigente en el informe semanal.
 - [ ] El informe semanal marca dataset `completo` (no `parcial`) dos ejecuciones seguidas.
 - [ ] Si OAuth falla, hay issue canonico de degradacion y se cierra al recuperar.
@@ -50,6 +61,8 @@ Estado actual: M2 esta en progreso. La base tecnica queda preparada para mejorar
 
 - [ ] `organic_share` semanal >= 25% como tramo intermedio hacia M2.
 - [ ] Subir sesiones semanales a >= 120 antes de ampliar automatizaciones.
+- [x] Confirmar que `meditacion-chakras.es` aparece en GA4 tras el deploy.
+- [x] Encadenar el informe semanal GA4/GSC con el autoparche SEO sin anadir un cron nuevo.
 - [ ] Priorizar autoparche SEO en queries/paginas con oportunidad real (CTR bajo + impresiones).
 - [ ] Confirmar en el siguiente informe semanal que el trafico organico entra por varios dominios, no solo por una home aislada.
 - [ ] Comparar clicks e impresiones de las 6 home canonicas antes/despues del deploy de recirculacion.

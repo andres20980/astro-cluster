@@ -3,6 +3,9 @@ name: "🚀 Despliegue SEO automático"
 on:
   schedule:
     - cron: '20 6 * * 1-5'  # Lunes a viernes; fin de semana sin commit
+  workflow_run:
+    workflows: ["📊 Informe semanal de Google"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       site:
@@ -44,16 +47,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_run" ] && [ "${{ github.event.workflow_run.conclusion }}" != "success" ]; then
+            echo "site=" >> "$GITHUB_OUTPUT"
+            echo "Weekly Google report did not finish cleanly; skipping automatic SEO patch."
+            exit 0
+          fi
+
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
             site="${{ inputs.site }}"
+          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            site=$(python3 .github/scripts/select_seo_site.py --require-fresh-signal --min-score 0 --empty-ok)
           else
             site=$(python3 .github/scripts/select_seo_site.py)
           fi
 
           echo "site=$site" >> "$GITHUB_OUTPUT"
-          echo "Selected site: $site"
+          if [ -n "$site" ]; then
+            echo "Selected site: $site"
+          else
+            echo "No fresh weekly GA4/GSC signal qualifies for an automatic SEO patch."
+          fi
 
       - name: "🧠 Aplicar optimizaciones SEO"
+        if: steps.select.outputs.site != ''
         id: autopatch
         shell: bash
         env:
@@ -84,7 +100,7 @@ jobs:
           cat /tmp/seo-result.json
 
       - name: "📤 Subir cambios a master"
-        if: steps.autopatch.outputs.changed != '0'
+        if: steps.select.outputs.site != '' && steps.autopatch.outputs.changed != '0'
         shell: bash
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}

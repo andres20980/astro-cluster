@@ -41,7 +41,12 @@ set_current_site() {
 }
 
 _token() {
-  gcloud auth application-default print-access-token
+  local scopes="${1:-}"
+  if [[ -n "$scopes" ]]; then
+    gcloud auth application-default print-access-token --scopes="$scopes"
+  else
+    gcloud auth application-default print-access-token
+  fi
 }
 
 _oauth_token() {
@@ -96,6 +101,32 @@ _api() {
   curl -s -H "Authorization: Bearer $(_token)" "$@"
 }
 
+_api_scoped_google() {
+  local scopes token quota
+  scopes="${1:?Usage: _api_scoped_google <scopes> <curl args...>}"
+  shift
+  if _oauth_uses_adc; then
+    token="$(_token "$scopes")" || return
+    quota="$(_adc_quota_project)"
+  else
+    token="$(_oauth_token)" || return
+    quota=""
+  fi
+  if _oauth_uses_adc && [[ -n "$quota" ]]; then
+    curl -sS -H "Authorization: Bearer $token" -H "X-Goog-User-Project: $quota" "$@"
+    return
+  fi
+  curl -sS -H "Authorization: Bearer $token" "$@"
+}
+
+_api_ga4_data() {
+  _api_scoped_google "https://www.googleapis.com/auth/analytics.readonly" "$@"
+}
+
+_api_ga4_admin() {
+  _api_scoped_google "https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/analytics.edit,https://www.googleapis.com/auth/cloud-platform" "$@"
+}
+
 _api_oauth() {
   local token quota
   token="$(_oauth_token)" || return
@@ -113,31 +144,42 @@ _ga4_admin_token() {
   if [[ -n "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" && -n "${GOOGLE_OAUTH_CLIENT_ID:-}" && -n "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ]]; then
     _oauth_token
   else
-    _token
+    _token "https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/analytics.edit,https://www.googleapis.com/auth/cloud-platform"
+  fi
+}
+
+_ga4_data_token() {
+  if [[ -n "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" && -n "${GOOGLE_OAUTH_CLIENT_ID:-}" && -n "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ]]; then
+    _oauth_token
+  else
+    _token "https://www.googleapis.com/auth/analytics.readonly"
   fi
 }
 
 _analytics_status_local() {
   local resp
-  resp=$(_api "https://analyticsadmin.googleapis.com/v1beta/${GA4_PROPERTY}" 2>/dev/null || true)
+  resp=$(_api_ga4_data -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"dateRanges":[{"startDate":"1daysAgo","endDate":"today"}],"metrics":[{"name":"totalUsers"}]}' \
+    "https://analyticsdata.googleapis.com/v1beta/${GA4_PROPERTY}:runReport" 2>/dev/null || true)
   python3 -c "
 import json,sys
 raw=sys.stdin.read().strip()
 if not raw:
-  print('No comprobado localmente: sin respuesta de Analytics Admin API; el check canónico corre en GitHub Actions')
+  print('No comprobado localmente: sin respuesta de Analytics Data API')
   raise SystemExit(0)
 try:
   data=json.loads(raw)
 except Exception:
-  print('No comprobado localmente: respuesta no JSON desde Analytics Admin API')
+  print('No comprobado localmente: respuesta no JSON desde Analytics Data API')
   raise SystemExit(0)
-if data.get('name'):
-  print('OK: service account / ADC con acceso a GA4')
+if data.get('rows') is not None or data.get('rowCount') == 0:
+  print('OK: OAuth/ADC local con scope analytics.readonly y acceso a GA4 Data')
 else:
   err=data.get('error',{})
   msg=err.get('message') or 'sin detalle'
   if 'insufficient authentication scopes' in msg.lower():
-    print('No comprobado localmente: ADC sin scopes de Analytics; el check canónico corre en GitHub Actions con FIREBASE_SERVICE_ACCOUNT')
+    print('Pendiente: OAuth/ADC local sin scope https://www.googleapis.com/auth/analytics.readonly')
   else:
     print(f'Pendiente: {msg}')
 " <<< "$resp"
@@ -149,11 +191,11 @@ set_current_site "$CURRENT_SITE_KEY"
 
 cmd_status() {
   echo "━━━ GA4 Property ━━━"
-  _api "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY" | python3 -m json.tool
+  _api_ga4_admin "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY" | python3 -m json.tool
 
   echo ""
   echo "━━━ GA4 Data Streams ━━━"
-  _api "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY/dataStreams" | python3 -m json.tool
+  _api_ga4_admin "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY/dataStreams" | python3 -m json.tool
 
   echo ""
   echo "━━━ AdSense Sites ━━━"
@@ -166,7 +208,7 @@ cmd_status() {
 
 cmd_ga4_realtime() {
   echo "━━━ GA4 Realtime (last 30 min) ━━━"
-  _api -X POST \
+  _api_ga4_data -X POST \
     -H "Content-Type: application/json" \
     -d '{
       "dimensions": [{"name": "unifiedScreenName"}],
@@ -179,7 +221,7 @@ cmd_ga4_realtime() {
 cmd_ga4_report() {
   local days="${1:-7}"
   echo "━━━ GA4 Report (last ${days} days) ━━━"
-  _api -X POST \
+  _api_ga4_data -X POST \
     -H "Content-Type: application/json" \
     -d "{
       \"dateRanges\": [{\"startDate\": \"${days}daysAgo\", \"endDate\": \"today\"}],
@@ -199,10 +241,18 @@ cmd_ga4_report() {
     "https://analyticsdata.googleapis.com/v1beta/$GA4_PROPERTY:runReport" | python3 -m json.tool
 }
 
+cmd_ga4_m2_status() {
+  local days="${1:-7}"
+  python3 "${REPO_ROOT}/.github/scripts/ga4_m2_status.py" \
+    --property "$GA4_PROPERTY" \
+    --token "$(_ga4_data_token)" \
+    --days "$days"
+}
+
 cmd_ga4_top_pages() {
   local days="${1:-30}"
   echo "━━━ Top Pages (last ${days} days) ━━━"
-  _api -X POST \
+  _api_ga4_data -X POST \
     -H "Content-Type: application/json" \
     -d "{
       \"dateRanges\": [{\"startDate\": \"${days}daysAgo\", \"endDate\": \"today\"}],
@@ -220,7 +270,7 @@ cmd_ga4_top_pages() {
 
 cmd_ga4_key_events() {
   echo "━━━ GA4 Key Events ━━━"
-  _api "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY/keyEvents" | python3 -m json.tool
+  _api_ga4_admin "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY/keyEvents" | python3 -m json.tool
 }
 
 cmd_ga4_custom_dimensions() {
@@ -263,7 +313,7 @@ cmd_ga4_sync_admin() {
 cmd_ga4_create_key_event() {
   local event_name="${1:?Usage: $0 ga4-create-key-event <event_name>}"
   echo "Creating key event: $event_name"
-  _api -X POST \
+  _api_ga4_admin -X POST \
     -H "Content-Type: application/json" \
     -d "{\"eventName\": \"$event_name\"}" \
     "https://analyticsadmin.googleapis.com/v1beta/$GA4_PROPERTY/keyEvents" | python3 -m json.tool
@@ -296,7 +346,11 @@ cmd_adsense_alerts() {
 
 cmd_google_auth_audit() {
   local oauth_token analytics_status
-  oauth_token="$(_oauth_token)"
+  if _oauth_uses_adc; then
+    oauth_token="$(_token "https://www.googleapis.com/auth/analytics.readonly,https://www.googleapis.com/auth/webmasters,https://www.googleapis.com/auth/adsense.readonly")"
+  else
+    oauth_token="$(_oauth_token)"
+  fi
   analytics_status="$(_analytics_status_local)"
   OAUTH_TOKEN="$oauth_token" \
   ANALYTICS_SA_STATUS="$analytics_status" \
@@ -560,6 +614,7 @@ Usage: $(basename "$0") <command> [args]
     status              Full status (GA4 + AdSense)
     ga4-realtime        Active users right now
     ga4-report [days]   Traffic report (default: 7 days)
+    ga4-m2-status [d]   M2 KPI status from GA4 (default: 7 days)
     ga4-top-pages [d]   Top pages by views (default: 30 days)
     ga4-key-events      List key events (conversions)
     ga4-custom-dimensions      List current vs desired custom dimensions
@@ -605,6 +660,7 @@ case "${1:-help}" in
   status)               cmd_status ;;
   ga4-realtime)         cmd_ga4_realtime ;;
   ga4-report)           cmd_ga4_report "${2:-7}" ;;
+  ga4-m2-status)        cmd_ga4_m2_status "${2:-7}" ;;
   ga4-top-pages)        cmd_ga4_top_pages "${2:-30}" ;;
   ga4-key-events)       cmd_ga4_key_events ;;
   ga4-custom-dimensions) cmd_ga4_custom_dimensions ;;

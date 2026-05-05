@@ -13,6 +13,9 @@ subheading_level = heading_level + "#"
 analytics_sa_status = os.environ.get("ANALYTICS_SA_STATUS", "Sin comprobar")
 
 REQUIRED_SCOPE_GROUPS = {
+    "Analytics Data": [
+        ["https://www.googleapis.com/auth/analytics.readonly"],
+    ],
     "Search Console": [
         ["https://www.googleapis.com/auth/webmasters"],
         [
@@ -94,7 +97,7 @@ for system, scope_groups in REQUIRED_SCOPE_GROUPS.items():
 
 print("")
 print(f"{subheading_level} Modelo recomendado del cluster")
-print("- `Analytics / GA4`: service account en CI para reporting estable y sin interacción.")
+print("- `Analytics / GA4`: service account en CI para reporting estable y ADC local con `analytics.readonly` para diagnósticos.")
 print("- `Search Console`, `Site Verification` y `AdSense`: OAuth de usuario porque son APIs ligadas a la cuenta propietaria.")
 print("- `GA4 Admin`: service account en CI con permisos en la propiedad para crear dimensiones personalizadas y eventos clave.")
 

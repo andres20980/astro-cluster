@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import argparse
 import json
+import sys
 from datetime import datetime, timezone
 
 
@@ -58,11 +60,38 @@ def fallback_site():
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Select the next SEO site to patch.")
+    parser.add_argument(
+        "--require-fresh-signal",
+        action="store_true",
+        help="Only select a site when fresh GA4/GSC/template signals produce a positive score.",
+    )
+    parser.add_argument(
+        "--min-score",
+        type=float,
+        default=0.0,
+        help="Minimum signal score required before selecting a site.",
+    )
+    parser.add_argument(
+        "--empty-ok",
+        action="store_true",
+        help="Print an empty value instead of failing when no site qualifies.",
+    )
+    args = parser.parse_args()
+
     scores = sorted(((score_site(site), site) for site in SITES), reverse=True)
-    if scores and scores[0][0] > 0:
+    if scores and scores[0][0] > args.min_score:
         print(scores[0][1])
-    else:
-        print(fallback_site())
+        return
+
+    if args.require_fresh_signal:
+        if args.empty_ok:
+            print("")
+            return
+        print("No site has fresh enough SEO signals.", file=sys.stderr)
+        sys.exit(2)
+
+    print(fallback_site())
 
 
 if __name__ == "__main__":
