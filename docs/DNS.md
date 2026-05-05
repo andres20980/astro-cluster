@@ -124,20 +124,22 @@ Estado documentado:
 
 ## meditacion-chakras.es
 
-Firebase project: `licitago-spain` (site: `meditacion-chakras-d2276`)
+Firebase project: `meditacion-chakras-es` (site: `meditacion-chakras-a9565`)
 
 | Tipo | Nombre | Valor | TTL |
 |---|---|---|---|
 | `A` | `@` | `199.36.158.100` | `3600` |
-| `CNAME` | `www` | `meditacion-chakras-d2276.web.app` | `3600` |
+| `CNAME` | `www` | `meditacion-chakras-a9565.web.app` | `3600` |
 | `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
-| `TXT` | `@` | `hosting-site=meditacion-chakras-d2276` | `3600` |
+| `TXT` | `@` | `hosting-site=meditacion-chakras-a9565` | `3600` |
 
 Estado documentado:
-- DNS base preparado para Firebase Hosting
-- Pendiente confirmar/verificar tokens finales de Search Console y `_acme-challenge`
+- DNS coincide con Firebase Hosting (`DNS_MATCH`)
+- Dominio apex activo y sirviendo `200`
+- `www` activo con redireccion permanente al apex
+- Certificado en propagacion tras asociar el dominio al site correcto
 
 ## Buenas prácticas operativas
 

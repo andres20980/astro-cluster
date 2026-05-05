@@ -1,7 +1,13 @@
 {
   "version": "1.2",
-  "updated": "2026-05-04",
+  "updated": "2026-05-05",
   "goal": "Operar el cluster como una suite unica de herramientas esotericas con medicion y monetizacion unificadas",
+  "current_state": {
+    "active_milestone": "M2",
+    "last_operational_fix": "meditacion-chakras.es y www.meditacion-chakras.es asociados al Firebase Hosting site meditacion-chakras-a9565, desplegados y respondiendo en produccion",
+    "seo_organic_status": "Base tecnica SEO lista para mejorar organico: 6/6 dominios activos, sitemaps canonicos, GSC por dominio, recirculacion cluster-wide y SEO smoke automatizado. La mejora organica debe confirmarse con GSC/GA4 semanal, no inferirse solo por despliegue.",
+    "next_milestone_focus": "Convertir la base tecnica en traccion medible: subir sesiones organicas, detectar queries con impresiones y CTR bajo, autoparchear landings con oportunidad real y medir profundidad de recirculacion."
+  },
   "expansion_policy": {
     "principle": "Ampliar el cluster solo cuando la suite actual ya demuestre traccion y monetizacion suficiente",
     "rules": [
@@ -17,7 +23,7 @@
       "id": "M1",
       "name": "Base comun",
       "target_weekly_sessions": 300,
-      "status": "in-progress",
+      "status": "completed",
       "actions": [
         "GA4 unificado para todo el cluster",
         "Ads.txt y AdSense consistentes en las 6 herramientas",
@@ -61,12 +67,15 @@
       "id": "M2",
       "name": "Traccion cluster",
       "target_weekly_sessions": 1500,
-      "status": "pending",
+      "status": "in-progress",
       "actions": [
         "Verificar las 6 propiedades de GSC por DNS",
         "Extender reporting GSC por dominio dentro del informe semanal",
         "Ampliar landings long-tail por cada herramienta",
-        "Refinar interlinking interno por intencion"
+        "Refinar interlinking interno por intencion",
+        "Confirmar que las 6 URLs canonicas responden 200 y que www redirige al apex",
+        "Priorizar autoparche SEO con senales frescas de GSC: impresiones relevantes, CTR bajo y posicion accionable",
+        "Medir profundidad organica de cluster con eventos GA4: internal_tool_click, result_to_next_tool_click y tools_seen_count"
       ],
       "monetization": "adsense-only",
       "kpis": {
@@ -76,7 +85,7 @@
       },
       "auto": {
         "completed_actions": 4,
-        "total_actions": 4,
+        "total_actions": 7,
         "actions": [
           {
             "label": "Verificar las 6 propiedades de GSC por DNS",
@@ -97,6 +106,21 @@
             "label": "Refinar interlinking interno por intencion",
             "done": true,
             "evidence": "Bloques de recirculacion presentes en 6/6 sites"
+          },
+          {
+            "label": "Confirmar que las 6 URLs canonicas responden 200 y que www redirige al apex",
+            "done": true,
+            "evidence": "Smoke manual 2026-05-05: 6/6 homes responden 200; www.meditacion-chakras.es redirige 301 a apex"
+          },
+          {
+            "label": "Priorizar autoparche SEO con senales frescas de GSC: impresiones relevantes, CTR bajo y posicion accionable",
+            "done": false,
+            "evidence": "Pendiente de informe semanal GSC/GA4 fresco tras activar todo el cluster en produccion"
+          },
+          {
+            "label": "Medir profundidad organica de cluster con eventos GA4: internal_tool_click, result_to_next_tool_click y tools_seen_count",
+            "done": false,
+            "evidence": "Eventos instrumentados; falta ventana de datos post-deploy para evaluar mejora organica y recirculacion real"
           }
         ]
       }
