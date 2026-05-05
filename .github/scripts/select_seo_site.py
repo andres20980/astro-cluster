@@ -9,6 +9,7 @@ SITES = [
     "tarot-del-dia",
     "calcular-numerologia",
     "horoscopo-de-hoy",
+    "meditacion-chakras",
 ]
 MAX_AGE_DAYS = 21
 

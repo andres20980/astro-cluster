@@ -63,7 +63,7 @@
       "target_weekly_sessions": 1500,
       "status": "pending",
       "actions": [
-        "Verificar las 5 propiedades de GSC por DNS",
+        "Verificar las 6 propiedades de GSC por DNS",
         "Extender reporting GSC por dominio dentro del informe semanal",
         "Ampliar landings long-tail por cada herramienta",
         "Refinar interlinking interno por intencion"
@@ -79,9 +79,9 @@
         "total_actions": 4,
         "actions": [
           {
-            "label": "Verificar las 5 propiedades de GSC por DNS",
+            "label": "Verificar las 6 propiedades de GSC por DNS",
             "done": true,
-            "evidence": "Propiedades GSC verificadas: 5/5"
+            "evidence": "Propiedades GSC verificadas: 6/6"
           },
           {
             "label": "Extender reporting GSC por dominio dentro del informe semanal",
@@ -96,7 +96,7 @@
           {
             "label": "Refinar interlinking interno por intencion",
             "done": true,
-            "evidence": "Bloques de recirculacion presentes en 5/5 sites"
+            "evidence": "Bloques de recirculacion presentes en 6/6 sites"
           }
         ]
       }

@@ -9,6 +9,7 @@ SITES = [
     ("tarot-del-dia", "tarot-del-dia.es"),
     ("calcular-numerologia", "calcular-numerologia.es"),
     ("horoscopo-de-hoy", "horoscopo-de-hoy.es"),
+    ("meditacion-chakras", "meditacion-chakras.es"),
 ]
 
 

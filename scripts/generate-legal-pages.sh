@@ -13,6 +13,7 @@ declare -A SITE_DESC=(
   [tarot-del-dia]="tirada de tarot gratuita con los Arcanos Mayores"
   [calcular-numerologia]="cálculo de numerología (número de vida)"
   [horoscopo-de-hoy]="predicciones de horóscopo diario para los 12 signos"
+  [meditacion-chakras]="test guiado de 23 pasos sobre chakras, mindfulness y equilibrio energético"
 )
 
 declare -A SITE_DATA_COLLECTED=(
@@ -20,6 +21,7 @@ declare -A SITE_DATA_COLLECTED=(
   [tarot-del-dia]="No recopilamos datos personales. La tirada de tarot es completamente anónima y se ejecuta en tu navegador. No se envía información al servidor."
   [calcular-numerologia]="Para calcular tu número de vida, introduces tu fecha de nacimiento. Este dato se procesa íntegramente en tu navegador (JavaScript) y nunca se envía a nuestros servidores."
   [horoscopo-de-hoy]="No recopilamos datos personales. El horóscopo se genera de forma estática y se muestra igual para todos los visitantes del mismo signo."
+  [meditacion-chakras]="No recopilamos datos personales identificativos. El flujo del test de chakras se renderiza de forma estática y solo usamos métricas agregadas para analítica y mejora de producto."
 )
 
 declare -A SITE_SERVICE_DESC=(
@@ -27,6 +29,7 @@ declare -A SITE_SERVICE_DESC=(
   [tarot-del-dia]="un servicio gratuito de tirada de tarot con los 22 Arcanos Mayores. Las cartas se seleccionan aleatoriamente en tu navegador."
   [calcular-numerologia]="un servicio gratuito de numerología que calcula tu número de vida a partir de tu fecha de nacimiento. Usa el método pitagórico de reducción a un dígito."
   [horoscopo-de-hoy]="un servicio gratuito de horóscopo diario para los 12 signos del zodíaco. Las predicciones se actualizan cada día."
+  [meditacion-chakras]="un servicio gratuito de autoexploración con un test de 23 pasos sobre chakras y hábitos de bienestar."
 )
 
 CSS='
@@ -52,7 +55,7 @@ CSS='
 if [[ $# -gt 0 ]]; then
   SITE_KEYS=("$@")
 else
-  SITE_KEYS=(compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+  SITE_KEYS=(compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
 fi
 
 for site_key in "${SITE_KEYS[@]}"; do

@@ -133,7 +133,7 @@ jobs:
           GA4_PROPERTY: "properties/531527723"
           ADSENSE_ACCOUNT: "accounts/pub-9368517395014039"
           GSC_SITES_JSON: >-
-            [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
+            [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"],["meditacion-chakras","meditacion-chakras.es","sc-domain:meditacion-chakras.es"]]
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
           OAUTH_MISSING: ${{ steps.oauth.outputs.missing }}
@@ -522,7 +522,7 @@ jobs:
           if [ -n "$OAUTH_TOKEN" ]; then
             OAUTH_TOKEN="$OAUTH_TOKEN" \
             ADSENSE_ACCOUNT="$ADSENSE_ACCOUNT" \
-            EXPECTED_DOMAINS_JSON='["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]' \
+            EXPECTED_DOMAINS_JSON='["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es","meditacion-chakras.es"]' \
             GOOGLE_CLOUD_QUOTA_PROJECT="$GOOGLE_CLOUD_QUOTA_PROJECT" \
             ADSENSE_INCLUDE_RAW_JSON=0 \
             ADSENSE_HEADING_LEVEL="###" \
@@ -540,7 +540,8 @@ jobs:
             sites/compatibilidad-signos/scripts/gen-pages.sh \
             sites/tarot-del-dia/scripts/gen-pages.sh \
             sites/calcular-numerologia/scripts/gen-pages.sh \
-            sites/horoscopo-de-hoy/scripts/gen-pages.sh
+            sites/horoscopo-de-hoy/scripts/gen-pages.sh \
+            sites/meditacion-chakras/scripts/gen-pages.sh
           do
             if [ -x "$generator" ]; then
               growth_log="/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log"

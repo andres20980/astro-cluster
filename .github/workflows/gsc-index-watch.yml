@@ -62,7 +62,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
           GSC_SITES_JSON: >-
-            [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"]]
+            [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"],["meditacion-chakras","meditacion-chakras.es","sc-domain:meditacion-chakras.es"]]
         run: |
           set -euo pipefail
 

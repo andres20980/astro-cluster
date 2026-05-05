@@ -1,0 +1,218 @@
+{
+  "source": "https://meditation.slowdive.app/chakras/1",
+  "locale_chunk": "C1fRUFkz.js",
+  "steps": [
+    {
+      "step": 1,
+      "question": "Â¿Con quÃ© gÃ©nero te identificas?",
+      "answers": [
+        "Masculino",
+        "Femenino",
+        "Otro"
+      ]
+    },
+    {
+      "step": 2,
+      "question": "Â¿QuÃ© sabes sobre los chakras?",
+      "answers": [
+        "Mucho",
+        "Un poco",
+        "He oÃ­do hablar de ellos, pero no tengo claro quÃ© son",
+        "No tengo ni idea"
+      ]
+    },
+    {
+      "step": 3,
+      "question": "Los chakras son los centros energÃ©ticos de tu cuerpo",
+      "answers": []
+    },
+    {
+      "step": 4,
+      "question": "Â¿CuÃ¡ntos aÃ±os tienes?",
+      "answers": [
+        "18-27",
+        "28-37",
+        "38-47",
+        "48-57",
+        "58+"
+      ]
+    },
+    {
+      "step": 5,
+      "question": "Â¿CÃ³mo de equilibrados sientes tu cuerpo, tus emociones y tus pensamientos?",
+      "answers": [
+        "Medianamente equilibrado"
+      ]
+    },
+    {
+      "step": 6,
+      "question": "Â¿QuÃ© Ã¡rea de tu vida sientes que estÃ¡ estancada o no avanza?",
+      "answers": [
+        "Salud",
+        "Dinero",
+        "Trabajo",
+        "Amor",
+        "Espiritualidad",
+        "Salud mental"
+      ]
+    },
+    {
+      "step": 7,
+      "question": "Â¿Con quÃ© frecuencia sientes sÃ­ntomas fÃ­sicos como dolores de cabeza o tensiÃ³n corporal?",
+      "answers": [
+        "Bastante a menudo",
+        "A veces",
+        "Rara vez",
+        "No realmente",
+        "FÃ¡cil viene, fÃ¡cil se va",
+        "Tengo miedo de perder dinero",
+        "Para mÃ­, el dinero refleja el esfuerzo y el trabajo constante",
+        "Siempre ando justo de dinero",
+        "SÃ­, absolutamente",
+        "Otro",
+        "A veces",
+        "No realmente",
+        "Prefiero no responder",
+        "Es ayudarse mutuamente",
+        "Solo una reacciÃ³n quÃ­mica",
+        "El amor no existe",
+        "El amor es una energÃ­a universal"
+      ]
+    },
+    {
+      "step": 8,
+      "question": "Â¿QuÃ© color prefieres en este momento?",
+      "answers": []
+    },
+    {
+      "step": 9,
+      "question": "Â¿Te sientes conectado/a con la naturaleza o con el universo?",
+      "answers": [
+        "Mucho",
+        "A veces",
+        "Rara vez",
+        "No realmente"
+      ]
+    },
+    {
+      "step": 10,
+      "question": "Â¿CuÃ¡l es tu elemento favorito?",
+      "answers": [
+        "Tierra",
+        "Agua",
+        "Fuego",
+        "Aire",
+        "Espacio",
+        "Ãter"
+      ]
+    },
+    {
+      "step": 11,
+      "question": "Â¿Tienes un propÃ³sito en la vida?",
+      "answers": [
+        "SÃ­, absolutamente",
+        "A veces",
+        "No, no creo"
+      ]
+    },
+    {
+      "step": 12,
+      "question": "Â¿QuÃ© emociones te cuesta manejar?",
+      "answers": [
+        "Ira",
+        "Miedo",
+        "Ansiedad",
+        "Tristeza",
+        "Inseguridad",
+        "Otro"
+      ]
+    },
+    {
+      "step": 13,
+      "question": "Â¿Con quÃ© frecuencia tienes pensamientos negativos?",
+      "answers": [
+        "Nunca",
+        "Rara vez",
+        "A veces",
+        "A menudo"
+      ]
+    },
+    {
+      "step": 14,
+      "question": "Â¿Has pasado por una experiencia difÃ­cil que ha afectado tu energÃ­a?",
+      "answers": [
+        "SÃ­, mÃ¡s de una vez",
+        "SÃ­, una vez",
+        "Supongo que no"
+      ]
+    },
+    {
+      "step": 15,
+      "question": "Â¿Te resulta sencillo expresar lo que piensas y sientes a los demÃ¡s?",
+      "answers": [
+        "SÃ­, muy fÃ¡cilmente",
+        "A veces",
+        "No realmente",
+        "No, es difÃ­cil"
+      ]
+    },
+    {
+      "step": 16,
+      "question": "Â¡Genial! Vamos a ver tus resultados ð",
+      "answers": []
+    },
+    {
+      "step": 17,
+      "question": "Verifica <br> tus resultados",
+      "answers": []
+    },
+    {
+      "step": 18,
+      "question": "Â¿QuÃ© es mÃ¡s importante para ti?",
+      "answers": []
+    },
+    {
+      "step": 19,
+      "question": "Â¿QuÃ© te falta en tu vida ahora mismo?",
+      "answers": []
+    },
+    {
+      "step": 20,
+      "question": "Â¿Practicas mindfulness, meditaciÃ³n o relajaciÃ³n?",
+      "answers": [
+        "Todos los dÃ­as",
+        "A veces",
+        "Rara vez",
+        "Nunca"
+      ]
+    },
+    {
+      "step": 21,
+      "question": "Â¿QuÃ© actividad te trae alegrÃ­a y paz?",
+      "answers": [
+        "Yoga",
+        "MeditaciÃ³n",
+        "Naturaleza",
+        "Amigos",
+        "Arte",
+        "Otro"
+      ]
+    },
+    {
+      "step": 22,
+      "question": "Â¿CuÃ¡l es tu objetivo principal?",
+      "answers": [
+        "Sentirme mejor en general",
+        "MÃ¡s energÃ­a y vitalidad",
+        "Pensar con claridad y concentrarme",
+        "Conectarme con mi lado espiritual",
+        "Otro"
+      ]
+    },
+    {
+      "step": 23,
+      "question": "Tu plan personal estÃ¡ listo",
+      "answers": []
+    }
+  ]
+}

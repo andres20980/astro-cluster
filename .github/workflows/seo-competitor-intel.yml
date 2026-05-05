@@ -17,6 +17,7 @@ on:
           - tarot-del-dia
           - calcular-numerologia
           - horoscopo-de-hoy
+          - meditacion-chakras
       force:
         description: 'Forzar ejecución aunque la inteligencia competitiva sea reciente'
         required: false
@@ -47,7 +48,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+          sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
             site="${{ inputs.site }}"

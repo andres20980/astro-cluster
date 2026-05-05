@@ -30,6 +30,8 @@ jobs:
             domain: calcular-numerologia.es
           - site: horoscopo-de-hoy
             domain: horoscopo-de-hoy.es
+          - site: meditacion-chakras
+            domain: meditacion-chakras.es
       fail-fast: false
       max-parallel: 2
     steps:

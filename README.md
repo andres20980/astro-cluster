@@ -11,6 +11,7 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 | `tarot-del-dia` | `tarot-del-dia.es` | `tarot-del-dia-es` |
 | `calcular-numerologia` | `calcular-numerologia.es` | `calc-numerologia-es` |
 | `horoscopo-de-hoy` | `horoscopo-de-hoy.es` | `horoscopo-hoy-es` |
+| `meditacion-chakras` | `meditacion-chakras.es` | `meditacion-chakras-es` |
 
 ## Qué hay en el repo
 
@@ -37,7 +38,7 @@ Cluster de sitios estáticos SEO en español sobre astrología, tarot, numerolog
 
 ## Search Console
 
-- Las 5 propiedades de dominio del cluster están verificadas en GSC.
+- Las 6 propiedades de dominio del cluster están verificadas en GSC.
 - El deploy envía `sitemap.xml` a Search Console por API autenticada.
 - El cluster se gestiona por dominio en GSC y de forma unificada en Analytics.
 - `sites/carta-astral/scripts/manage-google.sh` ya admite `--site <site-key|dominio>` y operaciones GSC para todo el cluster.
@@ -91,7 +92,8 @@ astro-cluster/
 │   ├── compatibilidad-signos/
 │   ├── tarot-del-dia/
 │   ├── calcular-numerologia/
-│   └── horoscopo-de-hoy/
+│   ├── horoscopo-de-hoy/
+│   └── meditacion-chakras/
 └── deploy.sh
 ```
 

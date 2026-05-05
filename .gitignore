@@ -20,3 +20,4 @@ application_default_credentials.json
 sites/*/public/
 !sites/carta-astral/public/
 !sites/horoscopo-de-hoy/public/
+!sites/meditacion-chakras/public/

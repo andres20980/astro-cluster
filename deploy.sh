@@ -12,6 +12,16 @@ declare -A PROJECTS=(
   [tarot-del-dia]="tarot-del-dia-es"
   [calcular-numerologia]="calc-numerologia-es"
   [horoscopo-de-hoy]="horoscopo-hoy-es"
+  [meditacion-chakras]="meditacion-chakras-es"
+)
+
+SITE_ORDER=(
+  carta-astral
+  compatibilidad-signos
+  tarot-del-dia
+  calcular-numerologia
+  horoscopo-de-hoy
+  meditacion-chakras
 )
 
 deploy_site() {
@@ -42,8 +52,8 @@ if [[ $# -ge 1 && -n "$1" ]]; then
   deploy_site "$1"
 else
   # Deploy all
-  echo "🚀 Deploying all 5 sites..."
-  for site in carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy; do
+  echo "🚀 Deploying all ${#SITE_ORDER[@]} sites..."
+  for site in "${SITE_ORDER[@]}"; do
     deploy_site "$site"
   done
   echo ""

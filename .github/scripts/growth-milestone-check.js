@@ -21,6 +21,7 @@ const SITE_KEYS = [
   'tarot-del-dia',
   'calcular-numerologia',
   'horoscopo-de-hoy',
+  'meditacion-chakras',
 ];
 
 function repoPath(...parts) {
@@ -181,6 +182,7 @@ function repoSignals() {
     'tarot-del-dia.es',
     'calcular-numerologia.es',
     'horoscopo-de-hoy.es',
+    'meditacion-chakras.es',
   ];
   const trackingDomainsCoverage = trackingDomains.filter((domain) => shared.includes(`"${domain}"`)).length;
   const gscSiteConfigCoverage = SITE_KEYS.filter((site) => shared.includes(`[${site}]="sc-domain:`)).length;
@@ -245,7 +247,7 @@ function actionStatus(label, signals, gscVerifiedSiteCount) {
       evidence: 'Workflow diario con rotación de sitio y autoparche limitado',
     },
     {
-      re: /Verificar las 5 propiedades de GSC por DNS/i,
+      re: /Verificar las [0-9]+ propiedades de GSC por DNS/i,
       done: gscVerifiedSiteCount >= signals.siteCount,
       evidence: `Propiedades GSC verificadas: ${gscVerifiedSiteCount}/${signals.siteCount}`,
     },

@@ -122,6 +122,23 @@ Estado documentado:
 - DNS base configurado en Piensa
 - Search Console verificado
 
+## meditacion-chakras.es
+
+Firebase project: `meditacion-chakras-es`
+
+| Tipo | Nombre | Valor | TTL |
+|---|---|---|---|
+| `A` | `@` | `199.36.158.100` | `3600` |
+| `CNAME` | `www` | `meditacion-chakras-es.web.app` | `3600` |
+| `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
+| `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
+| `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
+| `TXT` | `@` | `hosting-site=meditacion-chakras-es` | `3600` |
+
+Estado documentado:
+- DNS base preparado para Firebase Hosting
+- Pendiente confirmar/verificar tokens finales de Search Console y `_acme-challenge`
+
 ## Buenas prácticas operativas
 
 1. Mantén `A @`, `CNAME www`, `TXT _acme-challenge` y `TXT hosting-site` alineados con Firebase Hosting.

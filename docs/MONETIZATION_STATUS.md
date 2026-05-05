@@ -9,6 +9,7 @@ Estado operativo para venta directa y AdSense. Mantener este archivo simple: sir
 | tarot-del-dia.es | OK | OK | OK | Variable `ADSENSE_AUTO_ADS_ENABLED` |
 | calcular-numerologia.es | OK | OK | OK | Variable `ADSENSE_AUTO_ADS_ENABLED` |
 | horoscopo-de-hoy.es | OK | OK | OK | Variable `ADSENSE_AUTO_ADS_ENABLED` |
+| meditacion-chakras.es | OK | OK | OK | Variable `ADSENSE_AUTO_ADS_ENABLED` |
 
 ## Guardrails
 

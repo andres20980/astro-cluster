@@ -10,6 +10,7 @@ SITES = [
     "tarot-del-dia",
     "calcular-numerologia",
     "horoscopo-de-hoy",
+    "meditacion-chakras",
 ]
 
 
@@ -53,6 +54,10 @@ def classify_family(site_key, path):
         return "content"
     if site_key == "horoscopo-de-hoy":
         return "sign_pages"
+    if site_key == "meditacion-chakras":
+        if path.startswith("/chakras/") and path != "/chakras/":
+            return "chakra_steps"
+        return "home"
     return "content"
 
 

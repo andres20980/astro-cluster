@@ -56,7 +56,7 @@ jobs:
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
           ADSENSE_ACCOUNT: "accounts/pub-9368517395014039"
           EXPECTED_DOMAINS_JSON: >-
-            ["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es"]
+            ["carta-astral-gratis.es","compatibilidad-signos.es","tarot-del-dia.es","calcular-numerologia.es","horoscopo-de-hoy.es","meditacion-chakras.es"]
         run: |
           set -euo pipefail
           python3 .github/scripts/adsense_site_watch.py > /tmp/adsense-site-watch.md

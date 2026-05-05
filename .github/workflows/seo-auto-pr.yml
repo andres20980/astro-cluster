@@ -17,6 +17,7 @@ on:
           - tarot-del-dia
           - calcular-numerologia
           - horoscopo-de-hoy
+          - meditacion-chakras
 
 concurrency:
   group: seo-auto-pr

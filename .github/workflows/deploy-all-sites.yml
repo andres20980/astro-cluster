@@ -22,6 +22,7 @@ on:
           - tarot-del-dia
           - calcular-numerologia
           - horoscopo-de-hoy
+          - meditacion-chakras
       run_lighthouse:
         description: 'Ejecutar Lighthouse tras desplegar'
         required: false
@@ -49,7 +50,7 @@ jobs:
       - id: set-matrix
         run: |
           set -euo pipefail
-          ALL_SITES=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy)
+          ALL_SITES=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             if [ "${{ inputs.site }}" = "all" ] || [ -z "${{ inputs.site }}" ]; then
@@ -101,6 +102,7 @@ jobs:
           FIREBASE_SA_TAROT_DEL_DIA: ${{ secrets.FIREBASE_SA_TAROT_DEL_DIA }}
           FIREBASE_SA_CALCULAR_NUMEROLOGIA: ${{ secrets.FIREBASE_SA_CALCULAR_NUMEROLOGIA }}
           FIREBASE_SA_HOROSCOPO_DE_HOY: ${{ secrets.FIREBASE_SA_HOROSCOPO_DE_HOY }}
+          FIREBASE_SA_MEDITACION_CHAKRAS: ${{ secrets.FIREBASE_SA_MEDITACION_CHAKRAS }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           set -euo pipefail
@@ -134,6 +136,12 @@ jobs:
               domain="horoscopo-de-hoy.es"
               gsc_site_url="sc-domain:horoscopo-de-hoy.es"
               service_account="${FIREBASE_SA_HOROSCOPO_DE_HOY:-$FIREBASE_SERVICE_ACCOUNT}"
+              ;;
+            meditacion-chakras)
+              project_id="meditacion-chakras-es"
+              domain="meditacion-chakras.es"
+              gsc_site_url="sc-domain:meditacion-chakras.es"
+              service_account="${FIREBASE_SA_MEDITACION_CHAKRAS:-$FIREBASE_SERVICE_ACCOUNT}"
               ;;
             *)
               echo "Unknown site: ${{ matrix.site }}" >&2
@@ -335,6 +343,7 @@ jobs:
             tarot-del-dia) domain="tarot-del-dia.es" ;;
             calcular-numerologia) domain="calcular-numerologia.es" ;;
             horoscopo-de-hoy) domain="horoscopo-de-hoy.es" ;;
+            meditacion-chakras) domain="meditacion-chakras.es" ;;
             *)
               echo "Unknown site: ${{ matrix.site }}" >&2
               exit 1

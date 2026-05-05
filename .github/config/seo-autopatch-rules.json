@@ -355,6 +355,30 @@
           }
         }
       }
+    },
+    "meditacion-chakras": {
+      "domain": "meditacion-chakras.es",
+      "homeUrl": "https://meditacion-chakras.es/",
+      "sitemapFile": "public/sitemap.xml",
+      "keywordContext": [
+        "meditacion chakras",
+        "test de chakras",
+        "chakras en español",
+        "equilibrio de chakras",
+        "mindfulness y chakras",
+        "meditacion guiada chakras"
+      ],
+      "competitors": [
+        "https://meditation.slowdive.app/chakras/1",
+        "https://www.gaia.com/es/article/los-7-chakras",
+        "https://www.yogajournal.com/es/vida-y-estilo/chakras/"
+      ],
+      "targetKeywords": [
+        {"query": "meditacion chakras", "priority": 1},
+        {"query": "test de chakras", "priority": 1},
+        {"query": "equilibrio de chakras", "priority": 2}
+      ],
+      "rulesByQuery": {}
     }
   }
 }

@@ -57,6 +57,7 @@ OWN_DOMAINS = {
     "tarot-del-dia.es",
     "calcular-numerologia.es",
     "horoscopo-de-hoy.es",
+    "meditacion-chakras.es",
     "licitago.es",
 }
 FIT_TERMS = {

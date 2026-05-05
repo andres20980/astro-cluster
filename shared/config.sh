@@ -14,6 +14,7 @@ declare -A GA4_IDS=(
   [tarot-del-dia]="$CLUSTER_GA4_ID"
   [calcular-numerologia]="$CLUSTER_GA4_ID"
   [horoscopo-de-hoy]="$CLUSTER_GA4_ID"
+  [meditacion-chakras]="$CLUSTER_GA4_ID"
 )
 
 # — Domains
@@ -23,6 +24,7 @@ declare -A DOMAINS=(
   [tarot-del-dia]="tarot-del-dia.es"
   [calcular-numerologia]="calcular-numerologia.es"
   [horoscopo-de-hoy]="horoscopo-de-hoy.es"
+  [meditacion-chakras]="meditacion-chakras.es"
 )
 
 declare -A TOOL_TYPES=(
@@ -31,6 +33,7 @@ declare -A TOOL_TYPES=(
   [tarot-del-dia]="tarot"
   [calcular-numerologia]="numerology"
   [horoscopo-de-hoy]="daily_horoscope"
+  [meditacion-chakras]="mindfulness_quiz"
 )
 
 declare -a CLUSTER_SITE_KEYS=(
@@ -39,6 +42,7 @@ declare -a CLUSTER_SITE_KEYS=(
   "tarot-del-dia"
   "calcular-numerologia"
   "horoscopo-de-hoy"
+  "meditacion-chakras"
 )
 
 declare -a TRACKING_DOMAINS=(
@@ -47,6 +51,7 @@ declare -a TRACKING_DOMAINS=(
   "tarot-del-dia.es"
   "calcular-numerologia.es"
   "horoscopo-de-hoy.es"
+  "meditacion-chakras.es"
 )
 
 declare -A GSC_SITE_URLS=(
@@ -55,6 +60,7 @@ declare -A GSC_SITE_URLS=(
   [tarot-del-dia]="sc-domain:tarot-del-dia.es"
   [calcular-numerologia]="sc-domain:calcular-numerologia.es"
   [horoscopo-de-hoy]="sc-domain:horoscopo-de-hoy.es"
+  [meditacion-chakras]="sc-domain:meditacion-chakras.es"
 )
 
 gsc_site_url_for() {
@@ -88,6 +94,7 @@ declare -A CROSSLINKS=(
   [tarot-del-dia]="Tarot del Día"
   [calcular-numerologia]="Calcular Numerología"
   [horoscopo-de-hoy]="Horóscopo de Hoy"
+  [meditacion-chakras]="Meditación de Chakras"
 )
 
 # — Commercial / direct advertising copy
@@ -97,6 +104,7 @@ declare -A SITE_COMMERCIAL_HOOK=(
   [tarot-del-dia]="Una audiencia que busca guía inmediata, lectura espiritual y productos del nicho esotérico."
   [calcular-numerologia]="Una audiencia que quiere respuestas personales, formación y herramientas de crecimiento interior."
   [horoscopo-de-hoy]="Una audiencia recurrente que vuelve a diario para consultar amor, trabajo y salud."
+  [meditacion-chakras]="Una audiencia interesada en mindfulness, chakras, meditación guiada y bienestar emocional."
 )
 
 declare -A SITE_COMMERCIAL_BRANDS=(
@@ -105,6 +113,7 @@ declare -A SITE_COMMERCIAL_BRANDS=(
   [tarot-del-dia]="consultas de tarot, cursos, mazos, velas, incienso, rituales y membresías espirituales"
   [calcular-numerologia]="escuelas holísticas, libros, consultoría espiritual, membresías de pago y herramientas formativas"
   [horoscopo-de-hoy]="tarot, astrología, bienestar, tiendas espirituales, suscripciones y recomendaciones afiliadas"
+  [meditacion-chakras]="apps de mindfulness, cursos de meditación, respiración, sound healing, yoga y bienestar"
 )
 
 declare -A SITE_COMMERCIAL_CONTEXT=(
@@ -113,6 +122,7 @@ declare -A SITE_COMMERCIAL_CONTEXT=(
   [tarot-del-dia]="aparece junto a la tirada interactiva y al contenido estable de arcanos"
   [calcular-numerologia]="aparece junto al cálculo del número de vida y a fichas de fuerte intención educativa"
   [horoscopo-de-hoy]="aparece junto a predicciones diarias y fichas de signos con consumo recurrente"
+  [meditacion-chakras]="aparece en un funnel de 23 pasos de alta atención sobre bienestar y equilibrio energético"
 )
 
 # Helper: generate cross-link footer HTML for a given site key
@@ -120,7 +130,7 @@ crosslink_footer() {
   local current="$1"
   local html='<div class="network">Nuestras herramientas: '
   local first=true
-  for key in carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy; do
+  for key in carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras; do
     [[ "$key" == "$current" ]] && continue
     local domain="${DOMAINS[$key]}"
     local name="${CROSSLINKS[$key]}"
