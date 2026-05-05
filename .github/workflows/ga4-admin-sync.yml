@@ -54,18 +54,6 @@ jobs:
           echo "missing=false" >> "$GITHUB_OUTPUT"
           echo "token_path=$token_path" >> "$GITHUB_OUTPUT"
 
-      - name: "⚙️ Sincronizar dimensiones personalizadas"
-        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
-        env:
-          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
-        run: |
-          set -euo pipefail
-          python3 .github/scripts/ga4_custom_definitions.py \
-            --property properties/531527723 \
-            --token "$(cat "$OAUTH_TOKEN_PATH")" \
-            --manifest shared/ga4_custom_dimensions.json \
-            --apply
-
       - name: "🏷️ Sincronizar nombres de propiedad y stream"
         if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
         env:
@@ -78,6 +66,18 @@ jobs:
             --stream properties/531527723/dataStreams/14325968472 \
             --stream-display-name "astro-cluster web" \
             --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --apply
+
+      - name: "⚙️ Sincronizar dimensiones personalizadas"
+        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
+        env:
+          OAUTH_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/ga4_custom_definitions.py \
+            --property properties/531527723 \
+            --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --manifest shared/ga4_custom_dimensions.json \
             --apply
 
       - name: "🎯 Sincronizar eventos clave"
