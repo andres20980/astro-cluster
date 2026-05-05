@@ -446,6 +446,27 @@ jobs:
           else: print('0')
           " 2>/dev/null || echo "0")
 
+          GA4_INSIGHTS_ENV="/tmp/ga4-insights.env"
+          if [ -n "$TOKEN" ]; then
+            if python3 .github/scripts/ga4_cluster_insights.py \
+              --property "$GA4_PROPERTY" \
+              --token "$TOKEN" \
+              --primary-days 7 \
+              --ui-days 30 \
+              --env-output "$GA4_INSIGHTS_ENV" >> /tmp/report.md; then
+              if [ -s "$GA4_INSIGHTS_ENV" ]; then
+                set -a
+                # shellcheck disable=SC1090
+                . "$GA4_INSIGHTS_ENV"
+                set +a
+              fi
+            else
+              echo "### Lectura ejecutiva GA4 del cluster" >> /tmp/report.md
+              echo "> No se pudo generar la lectura exhaustiva de GA4. Se mantienen las metricas basicas anteriores." >> /tmp/report.md
+              echo "" >> /tmp/report.md
+            fi
+          fi
+
           GSC_VERIFIED_SITE_COUNT=
           GSC_API_ERROR=""
           if [ -n "$GSC_TOKEN" ]; then

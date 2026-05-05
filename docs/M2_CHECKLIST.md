@@ -4,12 +4,13 @@ Checklist operativo para decidir si el cluster esta listo para empujar M2 sin ga
 
 Estado actual: M2 esta en progreso. La base tecnica queda preparada para mejorar SEO organico, pero la mejora real se confirma con datos frescos de GSC/GA4 tras el deploy completo, no solo con checks HTTP.
 
-GA4 local validado el 2026-05-05 con `sites/carta-astral/scripts/manage-google.sh ga4-m2-status 7`:
+GA4 local validado el 2026-05-05 con `sites/carta-astral/scripts/manage-google.sh ga4-cluster-insights 7 30`:
 
-- Sesiones: 63 / 1500 objetivo M2 (4.2%).
-- Organico: 12 sesiones / 120 tramo tactico (10.0%), organic share 19.0%.
+- Traccion primaria M2: 67 sesiones / 1500 objetivo M2 (4.5%), 60 usuarios activos, 75 vistas y 310 eventos en 7 dias.
+- Reconciliacion GA4 UI: 443 sesiones, 408 usuarios activos, 528 vistas/visitas de pagina y 1.699 eventos en 30 dias.
+- Organico: 12 sesiones / 120 tramo tactico (10.0%), organic share 17.9%.
 - Recirculacion: 2 `internal_tool_click` / 6 tramo tactico.
-- `meditacion-chakras.es` ya aparece en GA4 con 11 sesiones.
+- `meditacion-chakras.es` ya aparece en GA4 con 13 sesiones en 7 dias.
 
 Conclusion: el plan inmediato es suficiente como foco operativo, pero no cierra M2. Hay que ejecutar hasta superar 120 sesiones organicas/semana, 6+ clicks internos/semana y despues acercar el cluster a 1500 sesiones/semana.
 

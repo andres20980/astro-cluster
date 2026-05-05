@@ -249,6 +249,16 @@ cmd_ga4_m2_status() {
     --days "$days"
 }
 
+cmd_ga4_cluster_insights() {
+  local primary_days="${1:-7}"
+  local ui_days="${2:-30}"
+  python3 "${REPO_ROOT}/.github/scripts/ga4_cluster_insights.py" \
+    --property "$GA4_PROPERTY" \
+    --token "$(_ga4_data_token)" \
+    --primary-days "$primary_days" \
+    --ui-days "$ui_days"
+}
+
 cmd_ga4_top_pages() {
   local days="${1:-30}"
   echo "━━━ Top Pages (last ${days} days) ━━━"
@@ -615,6 +625,7 @@ Usage: $(basename "$0") <command> [args]
     ga4-realtime        Active users right now
     ga4-report [days]   Traffic report (default: 7 days)
     ga4-m2-status [d]   M2 KPI status from GA4 (default: 7 days)
+    ga4-cluster-insights [primary-days] [ui-days] Exhaustive GA4 cluster read (default: 7 30)
     ga4-top-pages [d]   Top pages by views (default: 30 days)
     ga4-key-events      List key events (conversions)
     ga4-custom-dimensions      List current vs desired custom dimensions
@@ -661,6 +672,7 @@ case "${1:-help}" in
   ga4-realtime)         cmd_ga4_realtime ;;
   ga4-report)           cmd_ga4_report "${2:-7}" ;;
   ga4-m2-status)        cmd_ga4_m2_status "${2:-7}" ;;
+  ga4-cluster-insights) cmd_ga4_cluster_insights "${2:-7}" "${3:-30}" ;;
   ga4-top-pages)        cmd_ga4_top_pages "${2:-30}" ;;
   ga4-key-events)       cmd_ga4_key_events ;;
   ga4-custom-dimensions) cmd_ga4_custom_dimensions ;;

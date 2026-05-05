@@ -9,17 +9,26 @@
     "next_milestone_focus": "Convertir la base tecnica en traccion medible: subir sesiones organicas, detectar queries con impresiones y CTR bajo, autoparchear landings con oportunidad real y medir profundidad de recirculacion.",
     "latest_ga4_validation": {
       "checked_at": "2026-05-05",
-      "source": "sites/carta-astral/scripts/manage-google.sh ga4-m2-status 7",
-      "sessions": 63,
+      "source": "sites/carta-astral/scripts/manage-google.sh ga4-cluster-insights 7 30",
+      "sessions": 67,
       "m2_target_sessions": 1500,
-      "m2_progress": 0.042,
+      "m2_progress": 0.045,
+      "active_users": 60,
+      "views": 75,
+      "event_count": 310,
+      "ga4_ui_reconciliation_30d": {
+        "sessions": 443,
+        "active_users": 408,
+        "views": 528,
+        "event_count": 1699
+      },
       "organic_sessions": 12,
       "organic_tactical_target": 120,
-      "organic_share": 0.19,
+      "organic_share": 0.179,
       "internal_tool_click": 2,
       "internal_tool_click_target": 6,
       "meditacion_chakras_seen_in_ga4": true,
-      "meditacion_chakras_sessions": 11,
+      "meditacion_chakras_sessions": 13,
       "plan_assessment": "El plan es suficiente como foco M2 inmediato, pero no como criterio de cierre: hay que ejecutar hasta superar 120 sesiones organicas/semana, 6+ internal_tool_click/semana y despues progresar hacia 1500 sesiones/semana."
     }
   },
