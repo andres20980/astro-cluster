@@ -1,6 +1,6 @@
 {
   "version": "1.2",
-  "updated": "2026-05-05",
+  "updated": "2026-05-07",
   "goal": "Operar el cluster como una suite unica de herramientas esotericas con medicion y monetizacion unificadas",
   "current_state": {
     "active_milestone": "M2",
@@ -320,24 +320,24 @@
     ]
   },
   "auto": {
-    "last_eval": "2026-05-05",
+    "last_eval": "2026-05-07",
     "current_stage_id": "M1",
     "next_stage_id": "M2",
     "weekly_metrics": {
-      "sessions": 67,
-      "active_users": 60,
-      "users": 61,
+      "sessions": 57,
+      "active_users": 57,
+      "users": 57,
       "new_users": 57,
-      "views": 75,
-      "event_count": 310,
-      "engaged_sessions": 16,
-      "engagement_rate": 0.2388,
-      "organic_sessions": 12,
-      "organic_share": 0.1791,
-      "bounce_rate": 0.7612,
-      "avg_duration_s": 55.6,
-      "chart_calculated": 5,
-      "interpretation_generated": 2,
+      "views": 57,
+      "event_count": 301,
+      "engaged_sessions": 23,
+      "engagement_rate": 0.4035,
+      "organic_sessions": 3,
+      "organic_share": 0.0526,
+      "bounce_rate": 0.5965,
+      "avg_duration_s": 7.3,
+      "chart_calculated": 2,
+      "interpretation_generated": 1,
       "internal_tool_click": 2,
       "advertiser_cta_click": 0
     },
@@ -393,14 +393,14 @@
       "note": "No re-solicitar antes de cumplir todas las reapply_conditions. Solicitudes repetidas sin mejoras pueden generar penalizacion de revision."
     },
     "ga4_ui_reconciliation_30d": {
-      "sessions": 443,
-      "active_users": 408,
-      "users": 408,
-      "new_users": 405,
-      "views": 528,
-      "event_count": 1699,
-      "engaged_sessions": 60,
-      "engagement_rate": 0.1354
+      "sessions": 455,
+      "active_users": 419,
+      "users": 419,
+      "new_users": 418,
+      "views": 536,
+      "event_count": 1784,
+      "engaged_sessions": 76,
+      "engagement_rate": 0.167
     }
   }
 }

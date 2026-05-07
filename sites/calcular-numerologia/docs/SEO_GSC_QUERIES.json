@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-05T14:24:41Z",
+  "generatedAt": "2026-05-07T09:49:22Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "range": {
-    "start": "2026-04-07",
-    "end": "2026-05-02"
+    "start": "2026-04-09",
+    "end": "2026-05-04"
   },
   "queries": [
     {
@@ -13,6 +13,14 @@
       "impressions": 2.0,
       "ctr": 0.0,
       "position": 49.0,
+      "opportunity": 2.0
+    },
+    {
+      "query": "numerologia calculadora",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 40.0,
       "opportunity": 2.0
     },
     {
@@ -30,6 +38,22 @@
       "ctr": 0.0,
       "position": 60.0,
       "opportunity": 2.0
+    },
+    {
+      "query": "calculadora de la numerologia",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 31.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "calculadora numerologia",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 73.0,
+      "opportunity": 1.0
     },
     {
       "query": "calculadora numerología",
@@ -72,6 +96,22 @@
       "opportunity": 1.0
     },
     {
+      "query": "numerologia calcular",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 39.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "numerologia nombre calcular",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 39.0,
+      "opportunity": 1.0
+    },
+    {
       "query": "numerología gratis",
       "clicks": 0.0,
       "impressions": 1.0,
@@ -84,10 +124,10 @@
     {
       "path": "/",
       "clicks": 1.0,
-      "impressions": 20.0,
-      "ctr": 0.05,
-      "position": 44.6,
-      "opportunity": 19.0
+      "impressions": 27.0,
+      "ctr": 0.037037037037037035,
+      "position": 43.48148148148148,
+      "opportunity": 26.0
     },
     {
       "path": "/",
@@ -108,6 +148,14 @@
       "opportunity": 2.0
     },
     {
+      "query": "numerologia calculadora",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 40.0,
+      "opportunity": 2.0
+    },
+    {
       "query": "numerologia gratis",
       "clicks": 0.0,
       "impressions": 2.0,
@@ -124,19 +172,11 @@
       "opportunity": 2.0
     },
     {
-      "query": "calculadora numerología",
+      "query": "calculadora de la numerologia",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 40.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "calcular numero de vida",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 75.0,
+      "position": 31.0,
       "opportunity": 1.0
     }
   ],

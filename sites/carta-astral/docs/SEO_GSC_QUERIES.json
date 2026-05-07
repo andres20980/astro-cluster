@@ -1,18 +1,50 @@
 {
-  "generatedAt": "2026-05-05T14:24:41Z",
+  "generatedAt": "2026-05-07T09:49:22Z",
   "site": "carta-astral",
   "domain": "carta-astral-gratis.es",
   "range": {
-    "start": "2026-04-07",
-    "end": "2026-05-02"
+    "start": "2026-04-09",
+    "end": "2026-05-04"
   },
   "queries": [
+    {
+      "query": "descargar carta astral gratis pdf",
+      "clicks": 0.0,
+      "impressions": 9.0,
+      "ctr": 0.0,
+      "position": 19.88888888888889,
+      "opportunity": 9.0
+    },
+    {
+      "query": "carta astral gratis",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 72.5,
+      "opportunity": 4.0
+    },
+    {
+      "query": "carta astral gratuita",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 67.0,
+      "opportunity": 3.0
+    },
     {
       "query": "cartas astral gratis",
       "clicks": 0.0,
       "impressions": 3.0,
       "ctr": 0.0,
       "position": 51.666666666666664,
+      "opportunity": 3.0
+    },
+    {
+      "query": "cartas astrales gratis",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 82.33333333333333,
       "opportunity": 3.0
     },
     {
@@ -32,11 +64,19 @@
       "opportunity": 2.0
     },
     {
-      "query": "cartas astrales gratis",
+      "query": "carta natal gratuita",
       "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
-      "position": 91.0,
+      "position": 79.0,
+      "opportunity": 2.0
+    },
+    {
+      "query": "gratis carta astral",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 75.5,
       "opportunity": 2.0
     },
     {
@@ -64,11 +104,51 @@
       "opportunity": 1.0
     },
     {
+      "query": "calcular mi carta astral",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 61.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "carta astral completa gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 66.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "carta astral explicada gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 68.0,
+      "opportunity": 1.0
+    },
+    {
       "query": "carta astral gratuita online",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
       "position": 59.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "carta astral interpretación gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 64.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "carta astral online gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 71.0,
       "opportunity": 1.0
     },
     {
@@ -78,19 +158,67 @@
       "ctr": 0.0,
       "position": 5.0,
       "opportunity": 1.0
+    },
+    {
+      "query": "cual es mi ascendente gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 95.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "hacer una carta astral gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 58.0,
+      "opportunity": 1.0
+    },
+    {
+      "query": "mi carta astral gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 78.0,
+      "opportunity": 1.0
     }
   ],
   "pages": [
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 47.0,
+      "impressions": 79.0,
       "ctr": 0.0,
-      "position": 20.93617021276596,
-      "opportunity": 47.0
+      "position": 34.10126582278481,
+      "opportunity": 79.0
     }
   ],
   "topOpportunities": [
+    {
+      "query": "descargar carta astral gratis pdf",
+      "clicks": 0.0,
+      "impressions": 9.0,
+      "ctr": 0.0,
+      "position": 19.88888888888889,
+      "opportunity": 9.0
+    },
+    {
+      "query": "carta astral gratis",
+      "clicks": 0.0,
+      "impressions": 4.0,
+      "ctr": 0.0,
+      "position": 72.5,
+      "opportunity": 4.0
+    },
+    {
+      "query": "carta astral gratuita",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 67.0,
+      "opportunity": 3.0
+    },
     {
       "query": "cartas astral gratis",
       "clicks": 0.0,
@@ -100,39 +228,23 @@
       "opportunity": 3.0
     },
     {
-      "query": "certificado nacimiento carta astral",
+      "query": "cartas astrales gratis",
       "clicks": 0.0,
       "impressions": 3.0,
       "ctr": 0.0,
-      "position": 7.0,
+      "position": 82.33333333333333,
       "opportunity": 3.0
-    },
-    {
-      "query": "calcula tu carta astral",
-      "clicks": 0.0,
-      "impressions": 2.0,
-      "ctr": 0.0,
-      "position": 41.5,
-      "opportunity": 2.0
-    },
-    {
-      "query": "cartas astrales gratis",
-      "clicks": 0.0,
-      "impressions": 2.0,
-      "ctr": 0.0,
-      "position": 91.0,
-      "opportunity": 2.0
-    },
-    {
-      "query": "astrología gratis",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 76.0,
-      "opportunity": 1.0
     }
   ],
   "strikingDistanceQueries": [
+    {
+      "query": "descargar carta astral gratis pdf",
+      "clicks": 0.0,
+      "impressions": 9.0,
+      "ctr": 0.0,
+      "position": 19.88888888888889,
+      "opportunity": 9.0
+    },
     {
       "query": "certificado nacimiento carta astral",
       "clicks": 0.0,

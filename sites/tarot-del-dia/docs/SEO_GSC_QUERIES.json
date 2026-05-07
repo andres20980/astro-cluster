@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-05-05T14:24:41Z",
+  "generatedAt": "2026-05-07T09:49:22Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "range": {
-    "start": "2026-04-07",
-    "end": "2026-05-02"
+    "start": "2026-04-09",
+    "end": "2026-05-04"
   },
   "queries": [
     {
       "query": "arcanos mayores",
       "clicks": 0.0,
-      "impressions": 25.0,
+      "impressions": 29.0,
       "ctr": 0.0,
-      "position": 72.0,
-      "opportunity": 25.0
+      "position": 72.27586206896552,
+      "opportunity": 29.0
     },
     {
       "query": "arcanos mayores significado",
@@ -26,10 +26,10 @@
     {
       "query": "22 arcanos mayores",
       "clicks": 0.0,
-      "impressions": 3.0,
+      "impressions": 4.0,
       "ctr": 0.0,
-      "position": 81.0,
-      "opportunity": 3.0
+      "position": 78.75,
+      "opportunity": 4.0
     },
     {
       "query": "arcano 6",
@@ -38,6 +38,14 @@
       "ctr": 0.0,
       "position": 70.33333333333333,
       "opportunity": 3.0
+    },
+    {
+      "query": "22 arcanos mayores significado",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 60.5,
+      "opportunity": 2.0
     },
     {
       "query": "arcano 17",
@@ -62,14 +70,6 @@
       "ctr": 0.0,
       "position": 79.5,
       "opportunity": 2.0
-    },
-    {
-      "query": "22 arcanos mayores significado",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 65.0,
-      "opportunity": 1.0
     },
     {
       "query": "6 arcano mayor",
@@ -212,10 +212,10 @@
     {
       "path": "/arcanos-mayores",
       "clicks": 0.0,
-      "impressions": 48.0,
+      "impressions": 59.0,
       "ctr": 0.0,
-      "position": 77.6875,
-      "opportunity": 48.0
+      "position": 77.0,
+      "opportunity": 59.0
     },
     {
       "path": "/arcanos-mayores/",
@@ -244,10 +244,18 @@
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 8.0,
+      "impressions": 10.0,
       "ctr": 0.0,
-      "position": 54.75,
-      "opportunity": 8.0
+      "position": 53.0,
+      "opportunity": 10.0
+    },
+    {
+      "path": "/arcanos-mayores/el-emperador",
+      "clicks": 0.0,
+      "impressions": 3.0,
+      "ctr": 0.0,
+      "position": 63.0,
+      "opportunity": 3.0
     },
     {
       "path": "/arcanos-mayores/la-rueda-de-la-fortuna",
@@ -294,10 +302,10 @@
     {
       "query": "arcanos mayores",
       "clicks": 0.0,
-      "impressions": 25.0,
+      "impressions": 29.0,
       "ctr": 0.0,
-      "position": 72.0,
-      "opportunity": 25.0
+      "position": 72.27586206896552,
+      "opportunity": 29.0
     },
     {
       "query": "arcanos mayores significado",
@@ -310,10 +318,10 @@
     {
       "query": "22 arcanos mayores",
       "clicks": 0.0,
-      "impressions": 3.0,
+      "impressions": 4.0,
       "ctr": 0.0,
-      "position": 81.0,
-      "opportunity": 3.0
+      "position": 78.75,
+      "opportunity": 4.0
     },
     {
       "query": "arcano 6",
@@ -324,11 +332,11 @@
       "opportunity": 3.0
     },
     {
-      "query": "arcano 17",
+      "query": "22 arcanos mayores significado",
       "clicks": 0.0,
       "impressions": 2.0,
       "ctr": 0.0,
-      "position": 72.0,
+      "position": 60.5,
       "opportunity": 2.0
     }
   ],

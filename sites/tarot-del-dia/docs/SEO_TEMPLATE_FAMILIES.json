@@ -1,44 +1,33 @@
 {
-  "generatedAt": "2026-05-05T14:24:34Z",
+  "generatedAt": "2026-05-07T09:49:13Z",
   "site": "tarot-del-dia",
   "domain": "tarot-del-dia.es",
   "families": [
     {
-      "family": "major_arcana",
-      "score": 67.0,
-      "ga4Views": 3.0,
-      "ga4LowEngagementViews": 1.0,
-      "gscImpressions": 36.0,
-      "gscOpportunity": 36.0,
-      "paths": [
-        "/arcanos-mayores/el-colgado",
-        "/arcanos-mayores/el-sol",
-        "/arcanos-mayores/el-sumo-sacerdote",
-        "/arcanos-mayores/la-emperatriz",
-        "/arcanos-mayores/la-estrella"
-      ]
-    },
-    {
       "family": "content",
-      "score": 49.0,
+      "score": 50.0,
       "ga4Views": 0.0,
       "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 49.0,
-      "gscOpportunity": 49.0,
+      "gscImpressions": 50.0,
+      "gscOpportunity": 50.0,
       "paths": [
         "/arcanos-mayores",
         "/publicidad"
       ]
     },
     {
-      "family": "home",
-      "score": 30.0,
-      "ga4Views": 10.0,
+      "family": "major_arcana",
+      "score": 36.0,
+      "ga4Views": 0.0,
       "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 10.0,
-      "gscOpportunity": 10.0,
+      "gscImpressions": 36.0,
+      "gscOpportunity": 36.0,
       "paths": [
-        "/"
+        "/arcanos-mayores/el-colgado",
+        "/arcanos-mayores/la-emperatriz",
+        "/arcanos-mayores/la-estrella",
+        "/arcanos-mayores/la-rueda-de-la-fortuna",
+        "/arcanos-mayores/los-enamorados"
       ]
     },
     {
@@ -51,21 +40,29 @@
       "paths": [
         "/arcanos-mayores/"
       ]
+    },
+    {
+      "family": "home",
+      "score": 22.0,
+      "ga4Views": 6.0,
+      "ga4LowEngagementViews": 0.0,
+      "gscImpressions": 10.0,
+      "gscOpportunity": 10.0,
+      "paths": [
+        "/"
+      ]
     }
   ],
   "topFamily": {
-    "family": "major_arcana",
-    "score": 67.0,
-    "ga4Views": 3.0,
-    "ga4LowEngagementViews": 1.0,
-    "gscImpressions": 36.0,
-    "gscOpportunity": 36.0,
+    "family": "content",
+    "score": 50.0,
+    "ga4Views": 0.0,
+    "ga4LowEngagementViews": 0.0,
+    "gscImpressions": 50.0,
+    "gscOpportunity": 50.0,
     "paths": [
-      "/arcanos-mayores/el-colgado",
-      "/arcanos-mayores/el-sol",
-      "/arcanos-mayores/el-sumo-sacerdote",
-      "/arcanos-mayores/la-emperatriz",
-      "/arcanos-mayores/la-estrella"
+      "/arcanos-mayores",
+      "/publicidad"
     ]
   }
 }

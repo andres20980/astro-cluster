@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-05-05T14:24:34Z",
+  "generatedAt": "2026-05-07T09:49:13Z",
   "site": "carta-astral",
   "domain": "carta-astral-gratis.es",
   "families": [
     {
       "family": "home",
-      "score": 78.0,
-      "ga4Views": 17.0,
+      "score": 61.0,
+      "ga4Views": 7.0,
       "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 44.0,
-      "gscOpportunity": 44.0,
+      "gscImpressions": 47.0,
+      "gscOpportunity": 47.0,
       "paths": [
         "/"
       ]
@@ -17,11 +17,11 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 78.0,
-    "ga4Views": 17.0,
+    "score": 61.0,
+    "ga4Views": 7.0,
     "ga4LowEngagementViews": 0.0,
-    "gscImpressions": 44.0,
-    "gscOpportunity": 44.0,
+    "gscImpressions": 47.0,
+    "gscOpportunity": 47.0,
     "paths": [
       "/"
     ]

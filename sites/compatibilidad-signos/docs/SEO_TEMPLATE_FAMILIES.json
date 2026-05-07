@@ -1,26 +1,26 @@
 {
-  "generatedAt": "2026-05-05T14:24:34Z",
+  "generatedAt": "2026-05-07T09:49:13Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "families": [
     {
       "family": "home",
-      "score": 380.0,
-      "ga4Views": 9.0,
-      "ga4LowEngagementViews": 9.0,
-      "gscImpressions": 138.0,
-      "gscOpportunity": 137.0,
+      "score": 422.0,
+      "ga4Views": 10.0,
+      "ga4LowEngagementViews": 10.0,
+      "gscImpressions": 153.0,
+      "gscOpportunity": 152.0,
       "paths": [
         "/"
       ]
     },
     {
       "family": "pair_pages",
-      "score": 93.0,
+      "score": 105.0,
       "ga4Views": 1.0,
       "ga4LowEngagementViews": 0.0,
-      "gscImpressions": 91.0,
-      "gscOpportunity": 91.0,
+      "gscImpressions": 103.0,
+      "gscOpportunity": 103.0,
       "paths": [
         "/acuario-acuario",
         "/acuario-geminis",
@@ -32,11 +32,11 @@
   ],
   "topFamily": {
     "family": "home",
-    "score": 380.0,
-    "ga4Views": 9.0,
-    "ga4LowEngagementViews": 9.0,
-    "gscImpressions": 138.0,
-    "gscOpportunity": 137.0,
+    "score": 422.0,
+    "ga4Views": 10.0,
+    "ga4LowEngagementViews": 10.0,
+    "gscImpressions": 153.0,
+    "gscOpportunity": 152.0,
     "paths": [
       "/"
     ]

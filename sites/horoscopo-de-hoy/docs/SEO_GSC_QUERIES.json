@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-05T14:24:41Z",
+  "generatedAt": "2026-05-07T09:49:22Z",
   "site": "horoscopo-de-hoy",
   "domain": "horoscopo-de-hoy.es",
   "range": {
-    "start": "2026-04-07",
-    "end": "2026-05-02"
+    "start": "2026-04-09",
+    "end": "2026-05-04"
   },
   "queries": [
     {
@@ -96,6 +96,14 @@
       "opportunity": 1.0
     },
     {
+      "query": "horoscopo cancer hoy gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 65.0,
+      "opportunity": 1.0
+    },
+    {
       "query": "horoscopo de cancer",
       "clicks": 0.0,
       "impressions": 1.0,
@@ -176,6 +184,14 @@
       "opportunity": 1.0
     },
     {
+      "query": "horoscopos del dia gratis",
+      "clicks": 0.0,
+      "impressions": 1.0,
+      "ctr": 0.0,
+      "position": 82.0,
+      "opportunity": 1.0
+    },
+    {
       "query": "horoscopos.es",
       "clicks": 0.0,
       "impressions": 1.0,
@@ -184,27 +200,11 @@
       "opportunity": 1.0
     },
     {
-      "query": "horóscopo hoy cáncer",
+      "query": "horóscopo cancer",
       "clicks": 0.0,
       "impressions": 1.0,
       "ctr": 0.0,
-      "position": 82.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "horóscopo: consulta las predicciones diarias sobre amor, trabajo y salud para cada signo",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 10.0,
-      "opportunity": 1.0
-    },
-    {
-      "query": "horóscopos de hoy cancer",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 95.0,
+      "position": 60.0,
       "opportunity": 1.0
     }
   ],
@@ -212,18 +212,26 @@
     {
       "path": "/",
       "clicks": 0.0,
-      "impressions": 36.0,
+      "impressions": 37.0,
       "ctr": 0.0,
-      "position": 23.805555555555557,
-      "opportunity": 36.0
+      "position": 25.37837837837838,
+      "opportunity": 37.0
     },
     {
       "path": "/cancer",
       "clicks": 0.0,
-      "impressions": 24.0,
+      "impressions": 28.0,
       "ctr": 0.0,
-      "position": 81.41666666666667,
-      "opportunity": 24.0
+      "position": 76.67857142857143,
+      "opportunity": 28.0
+    },
+    {
+      "path": "/libra",
+      "clicks": 0.0,
+      "impressions": 2.0,
+      "ctr": 0.0,
+      "position": 65.5,
+      "opportunity": 2.0
     },
     {
       "path": "/",
@@ -231,14 +239,6 @@
       "impressions": 1.0,
       "ctr": 0.0,
       "position": 5.0,
-      "opportunity": 1.0
-    },
-    {
-      "path": "/libra",
-      "clicks": 0.0,
-      "impressions": 1.0,
-      "ctr": 0.0,
-      "position": 70.0,
       "opportunity": 1.0
     },
     {

@@ -1,38 +1,27 @@
 {
-  "generatedAt": "2026-05-05T14:24:34Z",
+  "generatedAt": "2026-05-07T09:49:13Z",
   "site": "calcular-numerologia",
   "domain": "calcular-numerologia.es",
   "families": [
     {
       "family": "home",
-      "score": 236.0,
-      "ga4Views": 8.0,
-      "ga4LowEngagementViews": 8.0,
-      "gscImpressions": 21.0,
-      "gscOpportunity": 20.0,
+      "score": 210.0,
+      "ga4Views": 7.0,
+      "ga4LowEngagementViews": 7.0,
+      "gscImpressions": 22.0,
+      "gscOpportunity": 21.0,
       "paths": [
         "/"
-      ]
-    },
-    {
-      "family": "number_pages",
-      "score": 27.0,
-      "ga4Views": 1.0,
-      "ga4LowEngagementViews": 1.0,
-      "gscImpressions": 0.0,
-      "gscOpportunity": 0.0,
-      "paths": [
-        "/numero-de-vida/5"
       ]
     }
   ],
   "topFamily": {
     "family": "home",
-    "score": 236.0,
-    "ga4Views": 8.0,
-    "ga4LowEngagementViews": 8.0,
-    "gscImpressions": 21.0,
-    "gscOpportunity": 20.0,
+    "score": 210.0,
+    "ga4Views": 7.0,
+    "ga4LowEngagementViews": 7.0,
+    "gscImpressions": 22.0,
+    "gscOpportunity": 21.0,
     "paths": [
       "/"
     ]

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-05T14:24:34Z",
+  "generatedAt": "2026-05-07T09:49:13Z",
   "site": "compatibilidad-signos",
   "domain": "compatibilidad-signos.es",
   "range": {
@@ -8,17 +8,17 @@
   },
   "homepage": {
     "path": "/",
-    "views": 9.0,
-    "bounceRate": 0.75,
-    "averageSessionDuration": 4.710172
+    "views": 10.0,
+    "bounceRate": 0.5555555555555556,
+    "averageSessionDuration": 4.931197444444444
   },
   "weakHomepageEngagement": false,
   "pages": [
     {
       "path": "/",
-      "views": 9.0,
-      "bounceRate": 0.75,
-      "averageSessionDuration": 4.710172
+      "views": 10.0,
+      "bounceRate": 0.5555555555555556,
+      "averageSessionDuration": 4.931197444444444
     },
     {
       "path": "/sagitario-acuario",
