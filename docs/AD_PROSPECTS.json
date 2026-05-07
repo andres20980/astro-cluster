@@ -718,7 +718,7 @@
       "email_visible": true
     },
     "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
-    "status": "sent",
+    "status": "not_interested",
     "first_seen": "2026-04-28",
     "last_seen": "2026-04-28",
     "score": 8,
@@ -739,7 +739,10 @@
     "sent_at": "2026-05-06T09:10:19+00:00",
     "last_contacted_at": "2026-05-06T09:10:19+00:00",
     "message_id": "19dfc8d6e71935c0",
-    "thread_id": "19dfc8d6e71935c0"
+    "thread_id": "19dfc8d6e71935c0",
+    "reply_at": "2026-05-07T09:14:31+00:00",
+    "reply_snippet": "Si lo que desean es comprar libros, les pasamos en enlace En caso contrario le agraceremos no nos envíe spam www.editorialbastet.com _______________ -----Mensaje original----- De: Astro Cluster [mailto",
+    "suppressed_at": "2026-05-07T09:14:31+00:00"
   },
   {
     "email": "lacasadeeleggua@hotmail.com",
