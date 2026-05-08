@@ -2,15 +2,38 @@ name: "🔐 Tokens de verificación de GSC"
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Accion a ejecutar"
+        required: true
+        default: "list_dns_tokens"
+        type: choice
+        options:
+          - list_dns_tokens
+          - verify_url_prefix
+      domain:
+        description: "Dominio sin https:// (solo verify_url_prefix)"
+        required: false
+        default: "meditacion-chakras.es"
+      site_key:
+        description: "Clave del sitio (solo verify_url_prefix)"
+        required: false
+        default: "meditacion-chakras"
+      firebase_project:
+        description: "Proyecto Firebase (solo verify_url_prefix)"
+        required: false
+        default: "meditacion-chakras-es"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   tokens:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
+      - uses: actions/checkout@v6
+
       - name: "🔑 Intercambiar refresh token OAuth"
         id: auth
         env:
@@ -40,6 +63,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: "🔎 Listar propiedades de GSC"
+        if: ${{ inputs.action == 'list_dns_tokens' }}
         env:
           ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
           QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
@@ -51,6 +75,7 @@ jobs:
             "https://searchconsole.googleapis.com/webmasters/v3/sites" | jq
 
       - name: "🧾 Generar tokens DNS TXT"
+        if: ${{ inputs.action == 'list_dns_tokens' }}
         env:
           ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
           QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
@@ -76,3 +101,69 @@ jobs:
 
             echo "$response" | jq -c '{token: (.token // ""), error: (.error.message // ""), status: (.error.status // "")}'
           done
+
+      - name: "✅ Verificar URL prefix por HTML file"
+        if: ${{ inputs.action == 'verify_url_prefix' }}
+        env:
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          DOMAIN: ${{ inputs.domain }}
+          SITE_KEY: ${{ inputs.site_key }}
+          FIREBASE_PROJECT_ID: ${{ inputs.firebase_project }}
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SA_MEDITACION_CHAKRAS }}
+        run: |
+          set -euo pipefail
+
+          if [ "$SITE_KEY" != "meditacion-chakras" ]; then
+            echo "Por ahora solo se admite site_key=meditacion-chakras para deploy automatizado." >&2
+            exit 1
+          fi
+
+          site_url="https://${DOMAIN}/"
+
+          # 1) Pedir token de verificacion por archivo HTML
+          token_response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://www.googleapis.com/siteVerification/v1/token" \
+            -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"},\"verificationMethod\":\"FILE\"}")
+
+          verify_token=$(echo "$token_response" | jq -r '.token // empty')
+          if [ -z "$verify_token" ]; then
+            echo "$token_response" | jq .
+            echo "No se pudo obtener token FILE de Site Verification" >&2
+            exit 1
+          fi
+
+          # 2) Crear archivo exigido por Google y desplegar a Firebase Hosting
+          verify_file="sites/${SITE_KEY}/public/${verify_token}"
+          echo "$verify_token" > "$verify_file"
+
+          creds_file="$RUNNER_TEMP/firebase-${SITE_KEY}.json"
+          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$creds_file"
+          GOOGLE_APPLICATION_CREDENTIALS="$creds_file" \
+            npx firebase-tools@15.15.0 deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+          rm -f "$creds_file"
+
+          # 3) Completar verificacion del sitio con metodo FILE
+          verify_response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            "https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=FILE" \
+            -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"}}")
+
+          owner=$(echo "$verify_response" | jq -r '.owners[0] // empty')
+          if [ -z "$owner" ]; then
+            echo "$verify_response" | jq .
+            echo "Site verification no devolvio owners" >&2
+            exit 1
+          fi
+          echo "Sitio verificado para owner: $owner"
+
+          # 4) Guardar permanentemente el archivo de verificacion en el repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$verify_file"
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: agregar archivo de verificacion GSC para ${DOMAIN}"
+            git push origin HEAD
+          fi
