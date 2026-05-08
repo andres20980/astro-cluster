@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carta Astral Gratis — Calcula tu mapa natal con hora exacta</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="description" content="Genera tu carta astral gratis con la hora exacta de nacimiento. Cálculo preciso con Swiss Ephemeris: planetas, casas, ascendente y aspectos. Online sin registro.">
+  <meta name="description" content="Genera tu carta astral gratis con hora exacta. Cálculo con Swiss Ephemeris: planetas, casas, ascendente y aspectos. Online sin registro y guardable en PDF.">
   <meta name="keywords" content="carta astral, carta astral gratis, carta natal, carta natal gratis, mapa astral, mapa astral gratis, hacer carta astral, calcular carta astral, carta astral online, ascendente gratis, calcular ascendente, mi carta astral, carta astral por fecha de nacimiento, carta astral hora de nacimiento, casas astrales, carta astral gratis online, interpretar carta astral, signo ascendente calcular">
   <link rel="canonical" href="https://carta-astral-gratis.es/">
   <meta property="og:title" content="Carta Astral Gratis con hora exacta">
@@ -380,6 +380,27 @@
     .suite-card .suite-copy{display:block;font-size:.82rem;line-height:1.58;color:var(--muted)}
     .suite-card .suite-cta{display:inline-block;margin-top:.6rem;font-size:.8rem;font-weight:700;color:var(--accent)}
     .suite-note{margin-top:.9rem;font-size:.78rem;color:var(--muted)}
+    @media print{
+      body.printing-chart header,
+      body.printing-chart .ad-col,
+      body.printing-chart .ad-h,
+      body.printing-chart .steps,
+      body.printing-chart #s1,
+      body.printing-chart #s2,
+      body.printing-chart #s3,
+      body.printing-chart .cluster-suite,
+      body.printing-chart #reco-section,
+      body.printing-chart footer,
+      body.printing-chart .acts,
+      body.printing-chart .modal-ov{display:none!important}
+      body.printing-chart{background:#fff;color:#111}
+      body.printing-chart .wrap,
+      body.printing-chart main,
+      body.printing-chart .panel{display:block!important;max-width:none!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important;background:#fff!important}
+      body.printing-chart #chartRes{display:block!important}
+      body.printing-chart table{page-break-inside:auto}
+      body.printing-chart tr{page-break-inside:avoid;page-break-after:auto}
+    }
   </style>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebApplication","name":"Carta Astral Gratis","url":"https://carta-astral-gratis.es/","applicationCategory":"LifestyleApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Genera tu carta astral natal gratis con cálculo astronómico preciso. Planetas, casas, ascendente y aspectos.","inLanguage":"es"}
@@ -396,6 +417,7 @@
     {"@type":"Question","name":"¿Necesito subir mi certificado de nacimiento?","acceptedAnswer":{"@type":"Answer","text":"No. La forma recomendada es introducir manualmente fecha, hora y lugar de nacimiento. Si no recuerdas la hora exacta, puedes consultarla en tu certificado literal o en la sede electrónica del Ministerio de Justicia."}},
     {"@type":"Question","name":"¿Por qué necesito la hora exacta de nacimiento?","acceptedAnswer":{"@type":"Answer","text":"La hora determina tu ascendente, que cambia de signo cada ~2 horas. También define las 12 casas astrológicas. Sin hora exacta, solo puedes saber los planetas en signos, pero no en qué área de tu vida actúan."}},
     {"@type":"Question","name":"¿Dónde puedo ver mi hora de nacimiento?","acceptedAnswer":{"@type":"Answer","text":"En España puedes descargar tu certificado literal de nacimiento desde sede.mjusticia.gob.es con Cl@ve o certificado digital. Es gratuito. También puedes preguntar a tus padres o revisar el Libro de Familia."}},
+    {"@type":"Question","name":"¿Puedo descargar mi carta astral gratis en PDF?","acceptedAnswer":{"@type":"Answer","text":"Sí. Después de calcular la carta astral puedes usar la opción Guardar en PDF, que abre la impresión del navegador para guardar el resultado como archivo PDF."}},
     {"@type":"Question","name":"¿Qué es el ascendente?","acceptedAnswer":{"@type":"Answer","text":"El ascendente es el signo del zodíaco que estaba saliendo por el horizonte este en el momento de tu nacimiento. Representa tu imagen pública y cómo te ven los demás."}},
     {"@type":"Question","name":"¿Qué diferencia hay entre carta astral y carta natal?","acceptedAnswer":{"@type":"Answer","text":"Ninguna. Carta astral, carta natal y mapa astral son nombres distintos para lo mismo: el gráfico de las posiciones planetarias en el momento de tu nacimiento."}},
     {"@type":"Question","name":"¿Es fiable esta calculadora de carta astral?","acceptedAnswer":{"@type":"Answer","text":"Sí. Usamos la Swiss Ephemeris (la misma que usa Astro.com y los astrólogos profesionales) y el sistema de casas Placidus, el más utilizado en astrología occidental."}}
@@ -713,6 +735,10 @@
           <p style="line-height:1.7;color:var(--muted);font-size:.85rem;margin-top:.5rem">En España puedes descargar tu certificado literal de nacimiento desde <a href="https://sede.mjusticia.gob.es/es/tramites/certificado-nacimiento" target="_blank" rel="noopener" style="color:var(--accent)">sede.mjusticia.gob.es</a> con Cl@ve o certificado digital. Es gratuito. También puedes preguntar a tus padres o revisar el Libro de Familia.</p>
         </details>
         <details style="margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.8rem">
+          <summary style="cursor:pointer;font-weight:600;font-size:.9rem;color:var(--text)">¿Puedo descargar mi carta astral gratis en PDF?</summary>
+          <p style="line-height:1.7;color:var(--muted);font-size:.85rem;margin-top:.5rem">Sí. Calcula tu carta astral gratis y usa el botón <strong>Guardar en PDF</strong> del resultado. Se abrirá la impresión del navegador para guardar tu carta natal como archivo PDF.</p>
+        </details>
+        <details style="margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.8rem">
           <summary style="cursor:pointer;font-weight:600;font-size:.9rem;color:var(--text)">¿Qué es el ascendente?</summary>
           <p style="line-height:1.7;color:var(--muted);font-size:.85rem;margin-top:.5rem">El <strong>ascendente</strong> es el signo del zodíaco que estaba saliendo por el horizonte este en el momento de tu nacimiento. Representa tu imagen pública, cómo te ven los demás, y tu estilo instintivo de enfrentarte al mundo. Para calcular tu ascendente necesitas fecha, hora y lugar de nacimiento.</p>
         </details>
@@ -974,8 +1000,16 @@ function renderChart(c){
   h+='</div>';
   h+=`<div class="acts" style="margin-top:1.5rem;flex-direction:column;align-items:center;gap:1rem">
     <button class="btn btn-p" id="btnInterpret" onclick="requestInterpretation()" style="width:100%;padding:1rem;font-size:1.05rem;background:var(--gradient);border-radius:14px;box-shadow:0 6px 20px rgba(124,58,237,.35)">🔮 ¿Qué significa todo esto?</button>
+    <button class="btn btn-s" onclick="printChartPdf()" style="font-size:.85rem">Guardar en PDF</button>
     <button class="btn btn-s" onclick="step=1;updSteps();window.scrollTo({top:0,behavior:'smooth'})" style="font-size:.85rem">✨ Nueva carta</button></div>`;
   el.innerHTML=h;el.classList.remove('hidden');
+}
+
+function printChartPdf(){
+  if(window.clusterTrack)window.clusterTrack('chart_pdf_print',{tool_action:'save_pdf'});
+  document.body.classList.add('printing-chart');
+  window.print();
+  setTimeout(()=>document.body.classList.remove('printing-chart'),500);
 }
 
 function dlJSON(){
