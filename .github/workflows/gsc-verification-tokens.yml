@@ -136,7 +136,13 @@ jobs:
 
           # 2) Insertar meta tag en index.html y desplegar a Firebase Hosting
           index_file="sites/${SITE_KEY}/public/index.html"
-          verify_meta="<meta name=\"google-site-verification\" content=\"${verify_token}\" />"
+          if echo "$verify_token" | grep -q '^<meta '; then
+            # Para META, la API suele devolver el tag completo.
+            verify_meta="$verify_token"
+          else
+            # Fallback defensivo por si devolviera solo el valor del token.
+            verify_meta="<meta name=\"google-site-verification\" content=\"${verify_token}\" />"
+          fi
 
           if ! grep -Fq "$verify_meta" "$index_file"; then
             awk -v meta="$verify_meta" '
