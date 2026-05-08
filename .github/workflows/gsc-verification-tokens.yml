@@ -167,6 +167,26 @@ jobs:
               --non-interactive
           rm -f "$creds_file"
 
+          # Esperar a que el token META sea visible en el dominio final
+          token_visible="false"
+          for attempt in {1..12}; do
+            page=$(curl -sS --connect-timeout 10 --max-time 30 \
+              -H "Cache-Control: no-cache" \
+              "https://${DOMAIN}/?gsc_verify=${verify_token}&attempt=${attempt}" || true)
+            if echo "$page" | grep -Fq "$verify_token"; then
+              token_visible="true"
+              echo "Token META visible en ${DOMAIN} (intento ${attempt})."
+              break
+            fi
+            echo "Token META aun no visible en ${DOMAIN} (intento ${attempt}/12)."
+            sleep 10
+          done
+
+          if [ "$token_visible" != "true" ]; then
+            echo "El token META no es visible en https://${DOMAIN}/ tras esperar propagacion." >&2
+            exit 1
+          fi
+
           # 3) Completar verificacion del sitio con metodo META
           verify_response=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
