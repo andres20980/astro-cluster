@@ -141,7 +141,11 @@ jobs:
           creds_file="$RUNNER_TEMP/firebase-${SITE_KEY}.json"
           echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$creds_file"
           GOOGLE_APPLICATION_CREDENTIALS="$creds_file" \
-            npx firebase-tools@15.15.0 deploy --only hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+            npx firebase-tools@15.15.0 deploy \
+              --config "sites/${SITE_KEY}/firebase.json" \
+              --only hosting \
+              --project "$FIREBASE_PROJECT_ID" \
+              --non-interactive
           rm -f "$creds_file"
 
           # 3) Completar verificacion del sitio con metodo FILE
