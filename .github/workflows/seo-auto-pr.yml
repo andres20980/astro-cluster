@@ -24,7 +24,7 @@ on:
 
 concurrency:
   group: seo-auto-pr
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -55,7 +55,7 @@ jobs:
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
             site="${{ inputs.site }}"
-          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+          elif [ "${{ github.event_name }}" = "workflow_run" ] || [ "${{ github.event_name }}" = "schedule" ]; then
             site=$(python3 .github/scripts/select_seo_site.py --require-fresh-signal --min-score 0 --empty-ok)
           else
             site=$(python3 .github/scripts/select_seo_site.py)
