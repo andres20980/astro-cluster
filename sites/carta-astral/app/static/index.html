@@ -165,29 +165,20 @@
     <div class="step-indicator" id="si-3">3</div>
   </div>
 
-  <!-- STEP 1: Upload PDF -->
+  <!-- STEP 1: Manual data entry -->
   <div id="step1">
     <div class="panel">
-      <h2>① Certificado de Nacimiento</h2>
+      <h2>① Datos de Nacimiento</h2>
       <p style="color:var(--muted); margin-bottom:1rem;">
-        Sube el PDF del certificado de nacimiento del Registro Civil español.
-        Los datos se extraerán automáticamente.
+        Introduce manualmente tu fecha, hora y lugar de nacimiento. Si no recuerdas la hora exacta,
+        consulta tu certificado literal o la sede electrónica del Ministerio de Justicia y vuelve al formulario.
       </p>
-      <div class="upload-area" id="dropzone">
-        <div class="icon">📄</div>
-        <p><strong>Arrastra el PDF aquí</strong> o haz clic para seleccionar</p>
-        <p style="font-size:0.8rem; margin-top:0.5rem;">Máx. 10 MB · Solo PDF</p>
-        <input type="file" id="pdfInput" accept=".pdf" />
-      </div>
-      <div id="uploadError" class="error hidden"></div>
-      <div id="uploadSuccess" class="success-badge hidden">✓ Datos extraídos correctamente</div>
     </div>
 
-    <!-- Extracted / Manual data -->
     <div class="panel" id="dataPanel">
       <h2>② Datos de Nacimiento</h2>
       <p style="color:var(--muted); margin-bottom:1rem;">
-        Verifica los datos extraídos o introdúcelos manualmente.
+        Completa los datos manualmente para calcular tu carta astral con precisión.
       </p>
       <div class="data-grid">
         <div class="data-field full">
@@ -321,101 +312,6 @@
 
   // --- Validation on input ---
   document.addEventListener('input', validateStep);
-
-  // --- PDF Upload ---
-  const dropzone = document.getElementById('dropzone');
-  const pdfInput = document.getElementById('pdfInput');
-
-  dropzone.addEventListener('click', () => pdfInput.click());
-  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
-  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-  dropzone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropzone.classList.remove('dragover');
-    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-  });
-  pdfInput.addEventListener('change', () => { if (pdfInput.files.length) handleFile(pdfInput.files[0]); });
-
-  async function handleFile(file) {
-    const errEl = document.getElementById('uploadError');
-    const okEl = document.getElementById('uploadSuccess');
-    errEl.classList.add('hidden');
-    okEl.classList.add('hidden');
-
-    if (!file.name.toLowerCase().endsWith('.pdf')) {
-      errEl.textContent = 'Solo se aceptan archivos PDF.';
-      errEl.classList.remove('hidden');
-      return;
-    }
-
-    dropzone.innerHTML = '<div class="spinner"></div><p style="color:var(--muted);margin-top:0.5rem;">Procesando PDF…</p>';
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const res = await fetch('/api/parse-pdf', { method: 'POST', body: formData });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Error al procesar');
-      }
-      const data = await res.json();
-      const extracted = fillFormFromPdf(data);
-
-      if (extracted === 0) {
-        // No se extrajo nada útil
-        errEl.textContent = 'No se pudieron extraer datos del PDF. Puede ser un documento escaneado sin texto legible. Rellena los campos manualmente.';
-        errEl.classList.remove('hidden');
-        dropzone.innerHTML = `<div class="icon">⚠️</div><p><strong>${file.name}</strong></p><p style="font-size:0.8rem;color:var(--muted);">Sin datos extraíbles — rellena manualmente</p>`;
-      } else {
-        const ocrNote = data.ocr_used ? ' (OCR usado — revisa con atención)' : '';
-        const partialNote = extracted < 3 ? ' ⚠️ Extracción parcial — completa los campos vacíos.' : '';
-        okEl.textContent = '✓ Datos extraídos' + ocrNote + partialNote;
-        okEl.classList.remove('hidden');
-        dropzone.innerHTML = `<div class="icon">✅</div><p><strong>${file.name}</strong></p><p style="font-size:0.8rem;color:var(--muted);">Datos extraídos — verifica abajo${ocrNote}</p>`;
-      }
-    } catch (e) {
-      errEl.textContent = 'Error: ' + e.message;
-      errEl.classList.remove('hidden');
-      dropzone.innerHTML = '<div class="icon">📄</div><p><strong>Arrastra el PDF aquí</strong> o haz clic para seleccionar</p><p style="font-size:0.8rem;margin-top:0.5rem;">Máx. 10 MB · Solo PDF</p><input type="file" id="pdfInput" accept=".pdf" />';
-      document.getElementById('pdfInput').addEventListener('change', () => {
-        if (document.getElementById('pdfInput').files.length)
-          handleFile(document.getElementById('pdfInput').files[0]);
-      });
-    }
-  }
-
-  function fillFormFromPdf(data) {
-    let extracted = 0;
-    let name = '';
-    if (data.name) name = data.name;
-    if (data.first_surname) name += ' ' + data.first_surname;
-    if (data.second_surname) name += ' ' + data.second_surname;
-    if (name.trim()) {
-      document.getElementById('fname').value = name.trim();
-      extracted++;
-    }
-
-    if (data.year && data.month && data.day) {
-      const y = data.year;
-      const m = String(data.month).padStart(2, '0');
-      const d = String(data.day).padStart(2, '0');
-      document.getElementById('fdate').value = `${y}-${m}-${d}`;
-      extracted++;
-    }
-
-    if (data.hour !== null && data.minute !== null) {
-      const h = String(data.hour).padStart(2, '0');
-      const min = String(data.minute).padStart(2, '0');
-      document.getElementById('ftime').value = `${h}:${min}`;
-      extracted++;
-    }
-
-    // birthplace del PDF se ignora — se usa el mapa para geolocalizacion
-
-    validateStep();
-    return extracted;
-  }
 
   // --- Map ---
   function initMap() {

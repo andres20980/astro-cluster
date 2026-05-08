@@ -318,21 +318,8 @@ function actionStatus(label, signals, gscVerifiedSiteCount) {
 
 function main() {
   const sessions = envNum('SESSIONS');
-  const activeUsers = envOptionalNum('ACTIVE_USERS');
   const users = envNum('USERS');
-  const newUsers = envOptionalNum('NEW_USERS');
   const views = envNum('VIEWS');
-  const eventCount = envOptionalNum('EVENT_COUNT');
-  const engagedSessions = envOptionalNum('ENGAGED_SESSIONS');
-  const engagementRate = envOptionalNum('ENGAGEMENT_RATE');
-  const sessions30d = envOptionalNum('SESSIONS_30D');
-  const activeUsers30d = envOptionalNum('ACTIVE_USERS_30D');
-  const users30d = envOptionalNum('USERS_30D');
-  const newUsers30d = envOptionalNum('NEW_USERS_30D');
-  const views30d = envOptionalNum('VIEWS_30D');
-  const eventCount30d = envOptionalNum('EVENT_COUNT_30D');
-  const engagedSessions30d = envOptionalNum('ENGAGED_SESSIONS_30D');
-  const engagementRate30d = envOptionalNum('ENGAGEMENT_RATE_30D');
   const bounce = envNum('BOUNCE');
   const duration = envNum('DURATION');
   const organicSessions = envNum('ORGANIC_SESSIONS');
@@ -458,27 +445,17 @@ function main() {
     },
   ];
 
-  const stageRows = [
-    `| Etapa actual | **${current.id}: ${current.name}** |`,
-    `| Siguiente hito | **${next.id}: ${next.name}** (${next.target_weekly_sessions} sesiones/semana) |`,
-    `| Progreso | \`${progressBar(progress)}\` ${progress.toFixed(1)}% |`,
-    `| Sesiones semanales | **${sessions}** |`,
-    `| Vistas semanales | **${views}** |`,
-    activeUsers !== undefined ? `| Usuarios activos semanales | **${activeUsers}** |` : null,
-    sessions30d !== undefined ? `| Sesiones 30 dias | **${sessions30d}** |` : null,
-    activeUsers30d !== undefined ? `| Usuarios activos 30 dias | **${activeUsers30d}** |` : null,
-    views30d !== undefined ? `| Vistas / visitas de pagina 30 dias | **${views30d}** |` : null,
-    eventCount30d !== undefined ? `| Eventos 30 dias | **${eventCount30d}** |` : null,
-    `| Monetización | ${current.monetization} |`,
-    `| Ingreso mensual estimado | ~€${estRevenue} (${cpm}€ CPM) |`,
-  ].filter(Boolean);
-
   const lines = [
     '### 🚀 Progreso de hitos de crecimiento',
     '',
     '| | Estado |',
     '|---|--------|',
-    ...stageRows,
+    `| Etapa actual | **${current.id}: ${current.name}** |`,
+    `| Siguiente hito | **${next.id}: ${next.name}** (${next.target_weekly_sessions} sesiones/semana) |`,
+    `| Progreso | \`${progressBar(progress)}\` ${progress.toFixed(1)}% |`,
+    `| Sesiones semanales | **${sessions}** |`,
+    `| Monetización | ${current.monetization} |`,
+    `| Ingreso mensual estimado | ~€${estRevenue} (${cpm}€ CPM) |`,
     '',
     '#### Señales de capacidad del cluster',
     '| Señal | Estado |',
@@ -550,49 +527,24 @@ function main() {
   }
 
   const previousAuto = milestones.auto && typeof milestones.auto === 'object' ? milestones.auto : {};
-  const weeklyMetrics = {
-    sessions,
-    active_users: activeUsers,
-    users,
-    new_users: newUsers,
-    views,
-    event_count: eventCount,
-    engaged_sessions: engagedSessions,
-    engagement_rate: engagementRate !== undefined ? Number(engagementRate.toFixed(4)) : undefined,
-    organic_sessions: organicSessions,
-    organic_share: Number(organicShare.toFixed(4)),
-    bounce_rate: Number(bounce.toFixed(4)),
-    avg_duration_s: Number(duration.toFixed(1)),
-    chart_calculated: chartCalc,
-    interpretation_generated: interpGen,
-    internal_tool_click: internalToolClick,
-    advertiser_cta_click: advertiserCtaClick,
-  };
-  for (const key of Object.keys(weeklyMetrics)) {
-    if (weeklyMetrics[key] === undefined) delete weeklyMetrics[key];
-  }
-
-  const uiReconciliation30d = {
-    sessions: sessions30d,
-    active_users: activeUsers30d,
-    users: users30d,
-    new_users: newUsers30d,
-    views: views30d,
-    event_count: eventCount30d,
-    engaged_sessions: engagedSessions30d,
-    engagement_rate: engagementRate30d !== undefined ? Number(engagementRate30d.toFixed(4)) : undefined,
-  };
-  for (const key of Object.keys(uiReconciliation30d)) {
-    if (uiReconciliation30d[key] === undefined) delete uiReconciliation30d[key];
-  }
-
   milestones.auto = {
     ...previousAuto,
     last_eval: new Date().toISOString().slice(0, 10),
     current_stage_id: current.id,
     next_stage_id: next.id,
-    weekly_metrics: weeklyMetrics,
-    ga4_ui_reconciliation_30d: uiReconciliation30d,
+    weekly_metrics: {
+      sessions,
+      users,
+      views,
+      organic_sessions: organicSessions,
+      organic_share: Number(organicShare.toFixed(4)),
+      bounce_rate: Number(bounce.toFixed(4)),
+      avg_duration_s: Number(duration.toFixed(1)),
+      chart_calculated: chartCalc,
+      interpretation_generated: interpGen,
+      internal_tool_click: internalToolClick,
+      advertiser_cta_click: advertiserCtaClick,
+    },
     capability_signals: {
       ga4_unified: signals.ga4Unified,
       deploy_selective: signals.deploySelective,
