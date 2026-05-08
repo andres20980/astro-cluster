@@ -13,9 +13,7 @@ subheading_level = heading_level + "#"
 analytics_sa_status = os.environ.get("ANALYTICS_SA_STATUS", "Sin comprobar")
 
 REQUIRED_SCOPE_GROUPS = {
-    "Analytics Data": [
-        ["https://www.googleapis.com/auth/analytics.readonly"],
-    ],
+    # Analytics Data CI usa service account (no OAuth de usuario), se omite aquí
     "Search Console": [
         ["https://www.googleapis.com/auth/webmasters"],
         [

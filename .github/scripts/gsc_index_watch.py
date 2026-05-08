@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+import urllib.error
 import urllib.request
 
 
@@ -29,6 +30,10 @@ def inspect(site_url, inspect_url):
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             return json.loads(resp.read().decode())
+    except urllib.error.HTTPError as exc:
+        if exc.code == 403:
+            return {"error": f"403 Acceso denegado — dominio no verificado en Search Console (añadir en https://search.google.com/search-console/welcome)"}
+        return {"error": f"HTTP Error {exc.code}: {exc.reason}"}
     except Exception as exc:
         return {"error": str(exc)}
 
