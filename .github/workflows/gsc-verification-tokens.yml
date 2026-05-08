@@ -102,7 +102,7 @@ jobs:
             echo "$response" | jq -c '{token: (.token // ""), error: (.error.message // ""), status: (.error.status // "")}'
           done
 
-      - name: "✅ Verificar URL prefix por HTML file"
+      - name: "✅ Verificar URL prefix por meta tag"
         if: ${{ inputs.action == 'verify_url_prefix' }}
         env:
           ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
@@ -120,23 +120,42 @@ jobs:
 
           site_url="https://${DOMAIN}/"
 
-          # 1) Pedir token de verificacion por archivo HTML
+          # 1) Pedir token de verificacion por META tag
           token_response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
             "https://www.googleapis.com/siteVerification/v1/token" \
-            -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"},\"verificationMethod\":\"FILE\"}")
+            -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"},\"verificationMethod\":\"META\"}")
 
           verify_token=$(echo "$token_response" | jq -r '.token // empty')
           if [ -z "$verify_token" ]; then
             echo "$token_response" | jq .
-            echo "No se pudo obtener token FILE de Site Verification" >&2
+            echo "No se pudo obtener token META de Site Verification" >&2
             exit 1
           fi
 
-          # 2) Crear archivo exigido por Google y desplegar a Firebase Hosting
-          verify_file="sites/${SITE_KEY}/public/${verify_token}"
-          echo "$verify_token" > "$verify_file"
+          # 2) Insertar meta tag en index.html y desplegar a Firebase Hosting
+          index_file="sites/${SITE_KEY}/public/index.html"
+          verify_meta="<meta name=\"google-site-verification\" content=\"${verify_token}\" />"
+
+          if ! grep -Fq "$verify_meta" "$index_file"; then
+            awk -v meta="$verify_meta" '
+              BEGIN { inserted=0 }
+              {
+                if (!inserted && $0 ~ /<\/head>/) {
+                  print "  " meta
+                  inserted=1
+                }
+                print
+              }
+              END {
+                if (!inserted) {
+                  print meta
+                }
+              }
+            ' "$index_file" > "$index_file.tmp"
+            mv "$index_file.tmp" "$index_file"
+          fi
 
           creds_file="$RUNNER_TEMP/firebase-${SITE_KEY}.json"
           echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$creds_file"
@@ -148,11 +167,11 @@ jobs:
               --non-interactive
           rm -f "$creds_file"
 
-          # 3) Completar verificacion del sitio con metodo FILE
-          verify_response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
+          # 3) Completar verificacion del sitio con metodo META
+          verify_response=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
-            "https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=FILE" \
+            "https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=META" \
             -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"}}")
 
           owner=$(echo "$verify_response" | jq -r '.owners[0] // empty')
@@ -163,11 +182,11 @@ jobs:
           fi
           echo "Sitio verificado para owner: $owner"
 
-          # 4) Guardar permanentemente el archivo de verificacion en el repo
+          # 4) Guardar permanentemente el meta tag en el repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$verify_file"
+          git add "$index_file"
           if ! git diff --cached --quiet; then
-            git commit -m "chore: agregar archivo de verificacion GSC para ${DOMAIN}"
+            git commit -m "chore: agregar meta de verificacion GSC para ${DOMAIN}"
             git push origin HEAD
           fi
