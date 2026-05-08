@@ -56,31 +56,33 @@ jobs:
             exit 1
           fi
 
-          {
-            echo "access_token<<EOF"
-            echo "$access_token"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          echo "::add-mask::$access_token"
+          token_path="$RUNNER_TEMP/google_oauth_access_token"
+          printf '%s' "$access_token" > "$token_path"
+          chmod 600 "$token_path"
+          echo "access_token_path=$token_path" >> "$GITHUB_OUTPUT"
 
       - name: "🔎 Listar propiedades de GSC"
         if: ${{ inputs.action == 'list_dns_tokens' }}
         env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          ACCESS_TOKEN_PATH: ${{ steps.auth.outputs.access_token_path }}
           QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
+          access_token=$(cat "$ACCESS_TOKEN_PATH")
           curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 \
-            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Authorization: Bearer $access_token" \
             -H "x-goog-user-project: $QUOTA_PROJECT" \
             "https://searchconsole.googleapis.com/webmasters/v3/sites" | jq
 
       - name: "🧾 Generar tokens DNS TXT"
         if: ${{ inputs.action == 'list_dns_tokens' }}
         env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          ACCESS_TOKEN_PATH: ${{ steps.auth.outputs.access_token_path }}
           QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
         run: |
           set -euo pipefail
+          access_token=$(cat "$ACCESS_TOKEN_PATH")
 
           domains=(
             compatibilidad-signos.es
@@ -93,7 +95,7 @@ jobs:
           for domain in "${domains[@]}"; do
             echo "== $domain =="
             response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
-              -H "Authorization: Bearer $ACCESS_TOKEN" \
+              -H "Authorization: Bearer $access_token" \
               -H "x-goog-user-project: $QUOTA_PROJECT" \
               -H "Content-Type: application/json" \
               "https://www.googleapis.com/siteVerification/v1/token" \
@@ -105,13 +107,14 @@ jobs:
       - name: "✅ Verificar URL prefix por meta tag"
         if: ${{ inputs.action == 'verify_url_prefix' }}
         env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          ACCESS_TOKEN_PATH: ${{ steps.auth.outputs.access_token_path }}
           DOMAIN: ${{ inputs.domain }}
           SITE_KEY: ${{ inputs.site_key }}
           FIREBASE_PROJECT_ID: ${{ inputs.firebase_project }}
           FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SA_MEDITACION_CHAKRAS }}
         run: |
           set -euo pipefail
+          access_token=$(cat "$ACCESS_TOKEN_PATH")
 
           if [ "$SITE_KEY" != "meditacion-chakras" ]; then
             echo "Por ahora solo se admite site_key=meditacion-chakras para deploy automatizado." >&2
@@ -122,7 +125,7 @@ jobs:
 
           # 1) Pedir token de verificacion por META tag
           token_response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
-            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Authorization: Bearer $access_token" \
             -H "Content-Type: application/json" \
             "https://www.googleapis.com/siteVerification/v1/token" \
             -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"},\"verificationMethod\":\"META\"}")
@@ -139,10 +142,17 @@ jobs:
           if echo "$verify_token" | grep -q '^<meta '; then
             # Para META, la API suele devolver el tag completo.
             verify_meta="$verify_token"
+            verify_token_value=$(printf '%s' "$verify_token" | sed -n 's/.*content="\([^"]*\)".*/\1/p')
           else
             # Fallback defensivo por si devolviera solo el valor del token.
             verify_meta="<meta name=\"google-site-verification\" content=\"${verify_token}\" />"
+            verify_token_value="$verify_token"
           fi
+          if [ -z "$verify_token_value" ]; then
+            echo "No se pudo extraer el valor content del token META." >&2
+            exit 1
+          fi
+          echo "::add-mask::$verify_token_value"
 
           if ! grep -Fq "$verify_meta" "$index_file"; then
             awk -v meta="$verify_meta" '
@@ -164,22 +174,26 @@ jobs:
           fi
 
           creds_file="$RUNNER_TEMP/firebase-${SITE_KEY}.json"
-          echo "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$creds_file"
+          cleanup() {
+            rm -f "$creds_file"
+          }
+          trap cleanup EXIT
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$creds_file"
+          chmod 600 "$creds_file"
           GOOGLE_APPLICATION_CREDENTIALS="$creds_file" \
             npx firebase-tools@15.15.0 deploy \
               --config "sites/${SITE_KEY}/firebase.json" \
               --only hosting \
               --project "$FIREBASE_PROJECT_ID" \
               --non-interactive
-          rm -f "$creds_file"
 
           # Esperar a que el token META sea visible en el dominio final
           token_visible="false"
           for attempt in {1..12}; do
             page=$(curl -sS --connect-timeout 10 --max-time 30 \
               -H "Cache-Control: no-cache" \
-              "https://${DOMAIN}/?gsc_verify=${verify_token}&attempt=${attempt}" || true)
-            if echo "$page" | grep -Fq "$verify_token"; then
+              "https://${DOMAIN}/?gsc_verify_attempt=${attempt}" || true)
+            if echo "$page" | grep -Fq "$verify_token_value"; then
               token_visible="true"
               echo "Token META visible en ${DOMAIN} (intento ${attempt})."
               break
@@ -195,7 +209,7 @@ jobs:
 
           # 3) Completar verificacion del sitio con metodo META
           verify_response=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -X POST \
-            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Authorization: Bearer $access_token" \
             -H "Content-Type: application/json" \
             "https://www.googleapis.com/siteVerification/v1/webResource?verificationMethod=META" \
             -d "{\"site\":{\"type\":\"SITE\",\"identifier\":\"$site_url\"}}")
