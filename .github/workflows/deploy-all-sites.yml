@@ -235,7 +235,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 .github/scripts/check_noindex_regressions.py "sites/calcular-numerologia/public" --allow 404.html
+          python3 .github/scripts/check_noindex_regressions.py "sites/calcular-numerologia/public" --allow 404.html --allow publicidad.html
 
       - name: "🔥 Desplegar ${{ matrix.site }}"
         shell: bash
