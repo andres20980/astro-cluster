@@ -9,6 +9,12 @@ import urllib.request
 sites = json.loads(os.environ["GSC_SITES_JSON"])
 token = os.environ["OAUTH_TOKEN"]
 quota_project = os.environ.get("GOOGLE_CLOUD_QUOTA_PROJECT", "").strip()
+skip_domains_raw = os.environ.get("GSC_INDEX_SKIP_DOMAINS", "")
+skip_domains = {
+    domain.strip().lower()
+    for domain in skip_domains_raw.split(",")
+    if domain.strip()
+}
 
 
 def inspect(site_url, inspect_url):
@@ -42,7 +48,15 @@ results = []
 
 for site_key, domain, site_url in sites:
     inspected_url = f"https://{domain}/"
-    raw = inspect(site_url, inspected_url)
+    if domain.lower() in skip_domains:
+        raw = {
+            "error": (
+                "SKIPPED por configuración (dominio no verificado o en pausa). "
+                "Quita el dominio de GSC_INDEX_SKIP_DOMAINS cuando quede verificado."
+            )
+        }
+    else:
+        raw = inspect(site_url, inspected_url)
     inspection = raw.get("inspectionResult", {})
     index = inspection.get("indexStatusResult", {})
     mobile = inspection.get("mobileUsabilityResult", {})
@@ -80,9 +94,24 @@ problems = [
     item
     for item in results
     if item["error"]
-    or item["veredicto"] not in {"PASS", "NEUTRAL", "-"}
-    or item["indexacion"] not in {"INDEXING_ALLOWED", "-", "INDEXING_STATE_UNSPECIFIED"}
+    and not item["error"].startswith("SKIPPED por configuración")
 ]
+
+non_error_problems = [
+    item
+    for item in results
+    if (
+        not item["error"]
+        and (
+            item["veredicto"] not in {"PASS", "NEUTRAL", "-"}
+            or item["indexacion"] not in {"INDEXING_ALLOWED", "-", "INDEXING_STATE_UNSPECIFIED"}
+        )
+    )
+]
+
+problems.extend(non_error_problems)
+
+skipped = [item for item in results if item["error"].startswith("SKIPPED por configuración")]
 
 print("")
 if problems:
@@ -92,6 +121,12 @@ if problems:
         print(f"- `{item['domain']}`: {reason}")
 else:
     print("### ✅ Sin incidencias críticas en las home del cluster")
+
+if skipped:
+    print("")
+    print("### ⏭️ Dominios omitidos por configuración")
+    for item in skipped:
+        print(f"- `{item['domain']}`: {item['error']}")
 
 print("")
 print("```json")

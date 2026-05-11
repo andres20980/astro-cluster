@@ -4,7 +4,8 @@
 
 # — AdSense (same account for all sites)
 ADSENSE_PUB="ca-pub-9368517395014039"
-ADSENSE_AUTO_ADS_ENABLED="${ADSENSE_AUTO_ADS_ENABLED:-0}"
+ADSENSE_AUTO_ADS_ENABLED="${ADSENSE_AUTO_ADS_ENABLED:-1}"
+DIRECT_ADS_ENABLED="${DIRECT_ADS_ENABLED:-0}"
 
 # — GA4 (single cluster-wide property + cross-domain linker)
 CLUSTER_GA4_ID="G-DEWMQ73FH5"
@@ -371,6 +372,13 @@ EOF
   esac
 }
 
+direct_ads_enabled() {
+  case "${DIRECT_ADS_ENABLED:-0}" in
+    1|true|TRUE|yes|YES) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 adsense_apply_head_snippet_to_file() {
   local file="$1"
   local snippet
@@ -425,6 +433,7 @@ EOF
 }
 
 ad_block() {
+  direct_ads_enabled || return 0
   local icon="$1"
   local label="$2"
   local copy="$3"
@@ -443,6 +452,7 @@ EOF
 }
 
 footer_publicidad_line() {
+  direct_ads_enabled || return 0
   local current="$1"
   local name="${CROSSLINKS[$current]}"
   echo "<p style=\"margin-top:.6rem\"><a href=\"/publicidad\" class=\"ad-link\" data-ad-slot=\"footer_publicidad_cta\" data-link-context=\"footer_publicidad\">✦ Quiero anunciarme en ${name}: ver espacios y tarifas</a></p>"
@@ -566,6 +576,10 @@ gen_publicidad_page() {
   local hook="${SITE_COMMERCIAL_HOOK[$current]}"
   local brands="${SITE_COMMERCIAL_BRANDS[$current]}"
   local context="${SITE_COMMERCIAL_CONTEXT[$current]}"
+  local robots="noindex, follow"
+  if direct_ads_enabled; then
+    robots="index, follow"
+  fi
 
   cat > "${public_dir}/publicidad.html" <<EOF
 <!DOCTYPE html>
@@ -581,7 +595,7 @@ gen_publicidad_page() {
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://${domain}/publicidad">
   <meta property="og:locale" content="es_ES">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${robots}">
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>

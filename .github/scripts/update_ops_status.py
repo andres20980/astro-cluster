@@ -37,7 +37,7 @@ Last update: `{updated}`
 - Lighthouse is manual opt-in with `run_lighthouse=true`.
 - SEO smoke runs on weekdays and opens/updates issues instead of failing silently.
 - GSC sitemap submission is non-blocking after deploy.
-- AdSense auto ads stay disabled unless `ADSENSE_AUTO_ADS_ENABLED` is explicitly enabled.
+- AdSense auto ads are emitted by default for review/verification unless `ADSENSE_AUTO_ADS_ENABLED=0`.
 
 ## Operational Sources
 

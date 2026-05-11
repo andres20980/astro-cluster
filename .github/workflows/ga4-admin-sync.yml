@@ -87,10 +87,36 @@ jobs:
           echo "missing=false" >> "$GITHUB_OUTPUT"
           echo "token_path=$token_path" >> "$GITHUB_OUTPUT"
 
-      - name: "🏷️ Sincronizar nombres de propiedad y stream"
-        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
+      - name: "🧭 Seleccionar token GA4 Admin"
+        id: ga4_token
+        if: always()
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
+          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path }}
+          SA_TOKEN_PATH: ${{ steps.ga4_admin.outputs.token_path }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "${OAUTH_TOKEN_PATH:-}" ] && [ -f "${OAUTH_TOKEN_PATH}" ]; then
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+            echo "token_path=${OAUTH_TOKEN_PATH}" >> "$GITHUB_OUTPUT"
+            echo "source=oauth" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ -n "${SA_TOKEN_PATH:-}" ] && [ -f "${SA_TOKEN_PATH}" ]; then
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+            echo "token_path=${SA_TOKEN_PATH}" >> "$GITHUB_OUTPUT"
+            echo "source=service-account" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "missing=true" >> "$GITHUB_OUTPUT"
+          echo "source=none" >> "$GITHUB_OUTPUT"
+
+      - name: "🏷️ Sincronizar nombres de propiedad y stream"
+        if: steps.ga4_token.outputs.missing != 'true'
+        env:
+          GA4_TOKEN_PATH: ${{ steps.ga4_token.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_property_stream_names.py \
@@ -98,30 +124,30 @@ jobs:
             --property-display-name astro-cluster \
             --stream properties/531527723/dataStreams/14325968472 \
             --stream-display-name "astro-cluster web" \
-            --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --token "$(cat "$GA4_TOKEN_PATH")" \
             --apply
 
       - name: "⚙️ Sincronizar dimensiones personalizadas"
-        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
+        if: steps.ga4_token.outputs.missing != 'true'
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
+          GA4_TOKEN_PATH: ${{ steps.ga4_token.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_custom_definitions.py \
             --property properties/531527723 \
-            --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --token "$(cat "$GA4_TOKEN_PATH")" \
             --manifest shared/ga4_custom_dimensions.json \
             --apply
 
       - name: "🎯 Sincronizar eventos clave"
-        if: steps.saauth.outcome == 'success' && steps.ga4_admin.outputs.missing != 'true'
+        if: steps.ga4_token.outputs.missing != 'true'
         env:
-          OAUTH_TOKEN_PATH: ${{ steps.oauth_ga4_admin.outputs.token_path || steps.ga4_admin.outputs.token_path }}
+          GA4_TOKEN_PATH: ${{ steps.ga4_token.outputs.token_path }}
         run: |
           set -euo pipefail
           python3 .github/scripts/ga4_key_events.py \
             --property properties/531527723 \
-            --token "$(cat "$OAUTH_TOKEN_PATH")" \
+            --token "$(cat "$GA4_TOKEN_PATH")" \
             --manifest shared/ga4_key_events.json \
             --apply
 
@@ -129,13 +155,14 @@ jobs:
         if: always()
         run: |
           set -euo pipefail
-          if [ "${{ steps.saauth.outcome }}" != "success" ] || [ "${{ steps.ga4_admin.outputs.missing }}" = "true" ]; then
-            echo "No se pudo sincronizar GA4 Admin porque falta o falla FIREBASE_SERVICE_ACCOUNT." >> /tmp/ga4-admin-sync.md
+          if [ "${{ steps.ga4_token.outputs.missing }}" = "true" ]; then
+            echo "No se pudo sincronizar GA4 Admin porque no hay token usable (OAuth ni service account)." >> /tmp/ga4-admin-sync.md
           else
             echo "Sincronización GA4 Admin ejecutada." >> /tmp/ga4-admin-sync.md
+            echo "Fuente de token: ${{ steps.ga4_token.outputs.source }}" >> /tmp/ga4-admin-sync.md
             python3 .github/scripts/ga4_admin_watch.py \
               --property properties/531527723 \
-              --token "$(cat "${{ steps.ga4_admin.outputs.token_path }}")" \
+              --token "$(cat "${{ steps.ga4_token.outputs.token_path }}")" \
               --dimensions-manifest shared/ga4_custom_dimensions.json \
               --key-events-manifest shared/ga4_key_events.json >> /tmp/ga4-admin-sync.md
           fi

@@ -495,3 +495,43 @@ Timestamp: Fri May  8 13:08:16 CEST 2026
 [0;34mℹ SUMMARY[0m
 [0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
 [0;32m✅ Relogin process completed successfully[0m
+Timestamp: Mon May 11 13:07:00 CEST 2026
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ GITHUB CLI[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ Expected account: andres20980[0m
+[0;32m✅ GitHub already authenticated[0m
+[0;32m✅ ✅ Active account is correct: andres20980[0m
+[0;34mℹ [0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ GCLOUD SDK[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ Expected account: poorku@gmail.com[0m
+[0;32m✅ GCP authenticated as: poorku@gmail.com[0m
+[0;34mℹ [0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ FIREBASE CLI[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ Expected: GOOGLE_APPLICATION_CREDENTIALS or gcloud auth[0m
+[0;32m✅ gcloud auth available (fallback for Firebase)[0m
+[0;34mℹ [0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ GOOGLE APPLICATION CREDENTIALS (SERVICE ACCOUNT)[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;32m✅ Service account credentials found: /home/asanchez/.config/gcloud/service-account.json[0m
+[0;34mℹ Last updated: 3 days ago[0m
+[0;32m✅ Service account credentials are valid[0m
+[0;34mℹ [0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ VALIDATION TESTS[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;32m✅ GitHub authentication test passed[0m
+[0;32m✅ GCloud authentication test passed[0m
+[0;32m✅ Firebase authentication test passed (firebase login)[0m
+[1;33m⚠ Service account not configured, skipping test[0m
+[0;32m✅ All tests passed! 🎉[0m
+[0;34mℹ [0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;34mℹ SUMMARY[0m
+[0;34mℹ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;32m✅ Relogin process completed successfully[0m

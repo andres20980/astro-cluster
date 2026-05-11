@@ -10,6 +10,8 @@ Objetivo: captar anunciantes directos para los banners del cluster mientras AdSe
 - Cuando una conversación queda tratada (respuesta, baja o rebote), se archiva y se marca como leída automáticamente para limpiar la bandeja de entrada.
 - El cron de envío arranca en `dry-run`; para activar envío programado real hay que definir la variable de repositorio `AD_OUTREACH_SCHEDULE_SEND=1`.
 - El envío real también puede lanzarse manualmente con `workflow_dispatch` y `mode=send`.
+- El override manual de guardarraíles (`force_guardrail_override=true`) solo se permite en lanzamientos manuales y para casos de emergencia controlada.
+- Si faltan credenciales de correo y el modo es `send`, el workflow debe fallar (rojo) para evitar falsos positivos operativos.
 - Primer mes: mantener el límite en 2/día y dejar que el sistema apruebe solo candidatos con validación técnica fuerte.
 - Sin seguimientos automáticos hasta tener respuestas reales y tasa de rebote estable.
 - Guardarraíl de volumen: aunque alguien suba `AD_OUTREACH_MAX_SEND`, `AD_OUTREACH_HARD_MAX_SEND=2` mantiene el techo operativo.

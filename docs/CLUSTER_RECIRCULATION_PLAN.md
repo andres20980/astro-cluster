@@ -35,7 +35,7 @@ Objetivo: tratar `astro-cluster` como un unico producto distribuido. Cada domini
 7. Clicks desde bloques de resultado separados con `result_to_next_tool_click`.
 8. CTAs comerciales separados de recirculacion editorial.
 9. Paginas `/publicidad` vendiendo dominios individuales y paquetes de cluster.
-10. Auto Ads permanece opt-in mediante `ADSENSE_AUTO_ADS_ENABLED`.
+10. Auto Ads se emite por defecto para verificacion/revision, salvo `ADSENSE_AUTO_ADS_ENABLED=0`.
 11. SEO mantiene canonical por dominio y evita canonicals cruzados.
 12. Reporting recomendado semanal, no runtime.
 13. Checks estaticos para atributos de recirculacion y manifiestos GA4.
@@ -156,7 +156,7 @@ Objetivo: tratar `astro-cluster` como un unico producto distribuido. Cada domini
 112. Crear paquete bienestar e integracion.
 113. Separar inventario premium de AdSense.
 114. Mantener AdSense como remanente.
-115. Mantener Auto Ads opt-in.
+115. Mantener Auto Ads activo por defecto durante revision de AdSense.
 116. No activar scripts comerciales nuevos.
 117. Medir impresiones de CTAs comerciales.
 118. Medir clics de CTAs comerciales.
@@ -298,7 +298,7 @@ Objetivo: tratar `astro-cluster` como un unico producto distribuido. Cada domini
 254. No cambiar estructura de assets.
 255. No cambiar favicons.
 256. No cambiar fuentes.
-257. No cambiar monetizacion Auto Ads por defecto.
+257. Mantener monetizacion Auto Ads activa por defecto y venta directa como opt-in.
 258. No cambiar consent/opt-out.
 259. Documentar guardrails free-tier.
 260. Documentar matriz por site.

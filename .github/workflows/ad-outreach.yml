@@ -22,6 +22,14 @@ on:
         options:
           - "false"
           - "true"
+      force_guardrail_override:
+        description: "Ignorar guardarraíles operativos para este envío manual (solo emergencia)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 permissions:
   contents: write
@@ -72,6 +80,7 @@ jobs:
           AD_OUTREACH_VALIDATION_MAX_AGE_DAYS: "14"
           AD_OUTREACH_REQUIRE_SOURCE_EMAIL: "1"
           AD_OUTREACH_SEND_NEW: ${{ inputs.send_new_without_review == 'true' && '1' || '0' }}
+          AD_OUTREACH_ALLOW_GUARDRAIL_OVERRIDE: ${{ github.event_name == 'workflow_dispatch' && inputs.force_guardrail_override == 'true' && '1' || '0' }}
           AD_OUTREACH_AUTO_ARCHIVE_HANDLED: "1"
           AD_OUTREACH_AUTO_MARK_READ_HANDLED: "1"
         run: |
@@ -95,6 +104,9 @@ jobs:
               echo "Falta el secreto WORKSPACE_SERVICE_ACCOUNT_JSON. No se puede enviar ni sincronizar Gmail por API/DWD."
             } > /tmp/ad-outreach-report.md
             cat /tmp/ad-outreach-report.md
+            if [ "${AD_OUTREACH_MODE}" = "send" ]; then
+              exit 1
+            fi
             exit 0
           fi
           if [ "${AD_OUTREACH_MAIL_TRANSPORT}" = "smtp" ] && { [ -z "${GMAIL_USER:-}" ] || [ -z "${GMAIL_PASS:-}" ]; }; then
@@ -104,6 +116,9 @@ jobs:
               echo "Faltan los secretos GMAIL_USER/GMAIL_PASS. No se puede enviar ni sincronizar Gmail por SMTP/IMAP."
             } > /tmp/ad-outreach-report.md
             cat /tmp/ad-outreach-report.md
+            if [ "${AD_OUTREACH_MODE}" = "send" ]; then
+              exit 1
+            fi
             exit 0
           fi
           if [ "${AD_OUTREACH_MODE}" = "dry-run" ]; then

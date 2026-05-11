@@ -545,7 +545,7 @@ jobs:
           do
             if [ -x "$generator" ]; then
               growth_log="/tmp/$(basename "$(dirname "$(dirname "$generator")")")-growth-pages.log"
-              ADSENSE_AUTO_ADS_ENABLED="${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}" \
+              ADSENSE_AUTO_ADS_ENABLED="${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}" \
                 bash "$generator" > "$growth_log"
             fi
           done

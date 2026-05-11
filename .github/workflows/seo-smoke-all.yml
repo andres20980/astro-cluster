@@ -40,7 +40,7 @@ jobs:
       - name: "🔁 Verificar generadores deterministas"
         shell: bash
         env:
-          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}
         run: |
           set -euo pipefail
           site_dir="sites/${{ matrix.site }}"
@@ -92,7 +92,7 @@ jobs:
         id: smoke
         shell: bash
         env:
-          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}
         run: |
           set -euo pipefail
           SITE="https://${{ matrix.domain }}"
@@ -220,7 +220,7 @@ jobs:
               report+="- ❌ AdSense script missing on homepage while ADSENSE_AUTO_ADS_ENABLED is active"$'\n'
               failures=$((failures + 1))
             else
-              report+="- ⚠️ AdSense script pending until ADSENSE_AUTO_ADS_ENABLED=1"$'\n'
+              report+="- ⚠️ AdSense script intentionally disabled by ADSENSE_AUTO_ADS_ENABLED"$'\n'
             fi
 
             if echo "$html_checks" | jq -e '.homepage_not_noindex' >/dev/null; then

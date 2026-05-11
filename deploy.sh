@@ -6,6 +6,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 source "${REPO_ROOT}/shared/config.sh"
 
+DEFAULT_GOOGLE_APPLICATION_CREDENTIALS="${HOME}/.config/gcloud/service-account.json"
+if [[ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" && -f "$DEFAULT_GOOGLE_APPLICATION_CREDENTIALS" ]]; then
+  export GOOGLE_APPLICATION_CREDENTIALS="$DEFAULT_GOOGLE_APPLICATION_CREDENTIALS"
+fi
+
 declare -A PROJECTS=(
   [carta-astral]="carta-astral-f4ab9"
   [compatibilidad-signos]="compat-signos-es"

@@ -166,7 +166,7 @@ jobs:
       - name: "🏗️ Generar sitio estático si hace falta"
         shell: bash
         env:
-          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '0' }}
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}
           SITE_TZ: Europe/Madrid
           TZ: Europe/Madrid
         run: |

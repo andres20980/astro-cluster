@@ -62,5 +62,32 @@ class MessageBodyTests(unittest.TestCase):
         self.assertTrue(body.startswith("Hola,\n\nHe revisado"))
 
 
+class GuardrailOverrideTests(unittest.TestCase):
+    def test_guardrail_override_allows_send_but_keeps_reason_trace(self):
+        prospects = [
+            {"email": "a@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "b@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "c@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "d@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "e@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "f@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "g@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "h@example.com", "status": "sent", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "i@example.com", "status": "not_interested", "sent_at": "2026-05-01T00:00:00+00:00"},
+            {"email": "j@example.com", "status": "not_interested", "sent_at": "2026-05-01T00:00:00+00:00"},
+        ]
+
+        original_override = ad_outreach.ALLOW_GUARDRAIL_OVERRIDE
+        try:
+            ad_outreach.ALLOW_GUARDRAIL_OVERRIDE = True
+            decision = ad_outreach.guardrail_decision(prospects)
+        finally:
+            ad_outreach.ALLOW_GUARDRAIL_OVERRIDE = original_override
+
+        self.assertTrue(decision["can_send"])
+        self.assertTrue(decision["overridden_reasons"])
+        self.assertIn("guardarrailes operativos omitidos", " ".join(decision["warnings"]))
+
+
 if __name__ == "__main__":
     unittest.main()

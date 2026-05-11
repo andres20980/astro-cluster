@@ -15,7 +15,8 @@ Estado operativo para venta directa y AdSense. Mantener este archivo simple: sir
 
 - `ads.txt` debe contener `pub-9368517395014039`.
 - `/publicidad` debe estar indexable y enlazada.
-- Auto Ads no se despliega si `ADSENSE_AUTO_ADS_ENABLED` no esta activado.
+- Auto Ads se despliega por defecto para verificacion/revision de AdSense; se desactiva con `ADSENSE_AUTO_ADS_ENABLED=0`.
+- Los CTAs de venta directa y la indexacion de `/publicidad` se activan solo con `DIRECT_ADS_ENABLED=1`.
 - Los CTAs de venta directa se miden como `advertiser_cta_click`.
 
 ## Siguiente criterio de venta

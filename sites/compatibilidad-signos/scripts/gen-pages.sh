@@ -25,6 +25,11 @@ declare -A GLYPH=([aries]="♈" [tauro]="♉" [geminis]="♊" [cancer]="♋" [le
 declare -A ELEMENT=([aries]="Fuego" [tauro]="Tierra" [geminis]="Aire" [cancer]="Agua" [leo]="Fuego" [virgo]="Tierra" [libra]="Aire" [escorpio]="Agua" [sagitario]="Fuego" [capricornio]="Tierra" [acuario]="Aire" [piscis]="Agua")
 declare -A RULER=([aries]="Marte" [tauro]="Venus" [geminis]="Mercurio" [cancer]="Luna" [leo]="Sol" [virgo]="Mercurio" [libra]="Venus" [escorpio]="Plutón" [sagitario]="Júpiter" [capricornio]="Saturno" [acuario]="Urano" [piscis]="Neptuno")
 declare -A MODALITY=([aries]="Cardinal" [tauro]="Fijo" [geminis]="Mutable" [cancer]="Cardinal" [leo]="Fijo" [virgo]="Mutable" [libra]="Cardinal" [escorpio]="Fijo" [sagitario]="Mutable" [capricornio]="Cardinal" [acuario]="Fijo" [piscis]="Mutable")
+declare -A SIGN_ORDER=([aries]=0 [tauro]=1 [geminis]=2 [cancer]=3 [leo]=4 [virgo]=5 [libra]=6 [escorpio]=7 [sagitario]=8 [capricornio]=9 [acuario]=10 [piscis]=11)
+declare -A REL_STYLE=([aries]="iniciativa directa y deseo de moverse sin demasiada espera" [tauro]="constancia, presencia física y necesidad de confianza demostrable" [geminis]="curiosidad, conversación y cambios de estímulo frecuentes" [cancer]="cuidado emocional, memoria afectiva y búsqueda de refugio" [leo]="calidez, orgullo sano y necesidad de sentirse elegido" [virgo]="atención al detalle, actos concretos de ayuda y mejora gradual" [libra]="búsqueda de equilibrio, belleza compartida y acuerdos justos" [escorpio]="intensidad, lealtad y lectura profunda de lo no dicho" [sagitario]="apertura, humor y deseo de crecer sin sentirse encerrado" [capricornio]="compromiso sobrio, objetivos claros y paciencia para construir" [acuario]="independencia, amistad mental y respeto por lo diferente" [piscis]="empatía, imaginación y sensibilidad ante el clima emocional")
+declare -A REL_NEED=([aries]="espacio para actuar y hablar claro" [tauro]="seguridad, ritmo estable y gestos consistentes" [geminis]="variedad, escucha ágil y libertad mental" [cancer]="ternura, continuidad y señales de pertenencia" [leo]="reconocimiento, juego y generosidad afectiva" [virgo]="orden, sinceridad práctica y pequeñas pruebas de cuidado" [libra]="diálogo, reciprocidad y decisiones compartidas" [escorpio]="profundidad, honestidad radical y límites claros" [sagitario]="confianza, aventura y margen para explorar" [capricornio]="responsabilidad, proyecto y coherencia en el tiempo" [acuario]="autonomía, amistad y conversación sin posesividad" [piscis]="comprensión emocional, delicadeza y espacios de inspiración")
+declare -A REL_SHADOW=([aries]="precipitar decisiones antes de escuchar el matiz del otro" [tauro]="resistirse al cambio cuando la relación pide flexibilidad" [geminis]="quedarse en la palabra y evitar conversaciones vulnerables" [cancer]="leer distancia donde quizá solo hay cansancio o necesidad de espacio" [leo]="tomar una crítica práctica como falta de amor" [virgo]="convertir el cuidado en corrección constante" [libra]="aplazar conflictos por mantener una paz aparente" [escorpio]="probar la lealtad del otro en vez de pedir seguridad" [sagitario]="confundir libertad con falta de responsabilidad afectiva" [capricornio]="priorizar el deber hasta enfriar la expresión emocional" [acuario]="intelectualizar emociones que necesitan presencia" [piscis]="ceder demasiado y perder claridad sobre sus propios límites")
+declare -A REL_REPAIR=([aries]="bajar la velocidad y transformar la reacción en una petición concreta" [tauro]="nombrar el miedo al cambio sin convertirlo en inmovilidad" [geminis]="resumir lo entendido antes de responder o bromear" [cancer]="pedir cuidado explícito en lugar de esperar que el otro adivine" [leo]="separar orgullo de necesidad afectiva y pedir reconocimiento" [virgo]="ofrecer una mejora posible sin convertirla en lista de fallos" [libra]="elegir una postura clara aunque incomode durante unos minutos" [escorpio]="decir qué necesita para confiar sin recurrir al silencio estratégico" [sagitario]="acordar compromisos concretos que no apaguen su espontaneidad" [capricornio]="reservar tiempo emocional, no solo resolver tareas" [acuario]="volver al cuerpo y a la presencia antes de analizar la situación" [piscis]="poner límites suaves pero visibles antes de saturarse")
 
 # ── Compatibility scoring ────────────────────────────────────
 element_base() {
@@ -91,6 +96,93 @@ score_emoji() {
   fi
 }
 
+element_gift() {
+  case "$1" in
+    Fuego) echo "pasión, iniciativa y entusiasmo para abrir caminos";;
+    Tierra) echo "estabilidad, constancia y sentido práctico para sostener lo importante";;
+    Aire) echo "comunicación, ideas y perspectiva para mover la relación";;
+    Agua) echo "intuición, empatía y profundidad emocional para crear intimidad";;
+  esac
+}
+
+element_support() {
+  case "$1" in
+    Fuego) echo "motivación, coraje y vitalidad";;
+    Tierra) echo "estructura, paciencia y fiabilidad";;
+    Aire) echo "flexibilidad, sociabilidad y creatividad";;
+    Agua) echo "sensibilidad, cuidado y conexión emocional";;
+  esac
+}
+
+element_need() {
+  case "$1" in
+    Fuego) echo "acción, honestidad rápida y libertad";;
+    Tierra) echo "seguridad, previsibilidad y hechos concretos";;
+    Aire) echo "espacio mental, variedad y conversación";;
+    Agua) echo "conexión emocional profunda y cuidado";;
+  esac
+}
+
+element_priority() {
+  case "$1" in
+    Fuego) echo "la independencia y la aventura";;
+    Tierra) echo "la estabilidad y lo tangible";;
+    Aire) echo "la comunicación y lo social";;
+    Agua) echo "la intimidad y lo intuitivo";;
+  esac
+}
+
+element_challenge() {
+  local e1="$1" e2="$2"
+  if [[ "$e1" == "$e2" ]]; then
+    echo "Al compartir ${e1}, la pareja se entiende rápido, pero también puede amplificar los excesos del mismo elemento."
+  else
+    echo "La diferencia ${e1}-${e2} pide traducir necesidades: no asumir que el otro procesa deseo, seguridad o conflicto igual."
+  fi
+}
+
+modality_dynamic() {
+  local m1="$1" m2="$2"
+  if [[ "$m1" == "$m2" ]]; then
+    echo "genera un ritmo reconocible para ambos, aunque conviene vigilar la competencia por dirigir, resistir o cambiar al mismo tiempo."
+  else
+    echo "aporta ritmos distintos: uno puede iniciar, sostener o adaptar mientras el otro ofrece una respuesta complementaria."
+  fi
+}
+
+communication_text() {
+  local score="$1" r1="$2" r2="$3"
+  if (( score >= 65 )); then
+    echo "La comunicación entre ${r1} y ${r2} tiende a resolver roces con diálogo cuando ambos nombran necesidades concretas."
+  elif (( score >= 50 )); then
+    echo "La comunicación entre ${r1} y ${r2} puede alternar fluidez y malentendidos; ayuda pactar tiempos para hablar sin interrumpirse."
+  else
+    echo "La comunicación entre ${r1} y ${r2} requiere paciencia: conviene repetir lo entendido antes de responder desde la defensiva."
+  fi
+}
+
+score_guidance() {
+  local score="$1" n1="$2" n2="$3"
+  if (( score >= 80 )); then
+    echo "Con una afinidad tan alta, ${n1} y ${n2} deben evitar dormirse en la facilidad inicial: la relación gana calidad cuando convierte la química en hábitos, acuerdos y reparación después del desacuerdo."
+  elif (( score >= 65 )); then
+    echo "Esta compatibilidad alta favorece confianza y atracción, pero funciona mejor si ${n1} y ${n2} reservan espacios para negociar expectativas antes de que los pequeños roces se acumulen."
+  elif (( score >= 50 )); then
+    echo "La afinidad media indica potencial con trabajo consciente. ${n1} y ${n2} pueden complementarse si diferencian carácter, ritmo y necesidad emocional en vez de leer cada diferencia como rechazo."
+  else
+    echo "Esta combinación pide madurez, acuerdos claros y voluntad de aprendizaje. ${n1} y ${n2} no tienen por qué descartarse, pero necesitan más estructura para que la relación no dependa solo de la atracción."
+  fi
+}
+
+canonical_pair_slug() {
+  local a="$1" b="$2"
+  if (( ${SIGN_ORDER[$a]} <= ${SIGN_ORDER[$b]} )); then
+    echo "${a}-${b}"
+  else
+    echo "${b}-${a}"
+  fi
+}
+
 # ── Element pair descriptions ────────────────────────────────
 element_desc() {
   local e1="$1" e2="$2"
@@ -108,7 +200,7 @@ element_desc() {
 
 # ── Generate common <head> ───────────────────────────────────
 gen_head() {
-  local title="$1" desc="$2" canonical="$3" page_type="${4:-page}" content_group="${5:-content}" entity_slug="${6:-}"
+  local title="$1" desc="$2" canonical="$3" page_type="${4:-page}" content_group="${5:-content}" entity_slug="${6:-}" robots="${7:-index, follow}"
   cat <<ENDHEAD
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -120,7 +212,7 @@ gen_head() {
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://${DOMAIN}${canonical}">
   <meta property="og:locale" content="es_ES">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="${robots}">
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="${BRAND_FONTS}" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="${BRAND_FONTS}" rel="stylesheet"></noscript>
@@ -204,8 +296,23 @@ for s1 in "${SLUGS[@]}"; do
     elem_text=$(element_desc "$e1" "$e2")
 
     slug_page="${s1}-${s2}"
+    canonical_slug="$(canonical_pair_slug "$s1" "$s2")"
     file="$PUBLIC/${slug_page}.html"
     url_path="/${slug_page}"
+    canonical_path="/${canonical_slug}"
+    robots_meta="index, follow"
+    if [[ "$slug_page" != "$canonical_slug" ]]; then
+      robots_meta="noindex, follow"
+    fi
+
+    gift1="$(element_gift "$e1")"
+    support2="$(element_support "$e2")"
+    modality_text="$(modality_dynamic "${MODALITY[$s1]}" "${MODALITY[$s2]}")"
+    challenge_text="$(element_challenge "$e1" "$e2")"
+    need1="$(element_need "$e1")"
+    priority2="$(element_priority "$e2")"
+    comm_text="$(communication_text "$score" "$r1" "$r2")"
+    score_text="$(score_guidance "$score" "$n1" "$n2")"
 
     title="${PAIR_TITLE_TEMPLATE//\{\{name1\}\}/$n1}"
     title="${title//\{\{name2\}\}/$n2}"
@@ -221,9 +328,9 @@ for s1 in "${SLUGS[@]}"; do
 <!DOCTYPE html>
 <html lang="es">
 <head>
-$(gen_head "$title" "$desc" "$url_path" "compatibility_landing" "long_tail" "$slug_page")
+$(gen_head "$title" "$desc" "$canonical_path" "compatibility_landing" "long_tail" "$canonical_slug" "$robots_meta")
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Article","headline":"Compatibilidad ${n1} y ${n2}","description":"${desc}","author":{"@type":"Organization","name":"Compatibilidad Signos"},"publisher":{"@type":"Organization","name":"Compatibilidad Signos","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}${url_path}","inLanguage":"es"}
+  {"@context":"https://schema.org","@type":"Article","headline":"Compatibilidad ${n1} y ${n2}","description":"${desc}","author":{"@type":"Organization","name":"Compatibilidad Signos"},"publisher":{"@type":"Organization","name":"Compatibilidad Signos","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}${canonical_path}","inLanguage":"es"}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://${DOMAIN}/"},{"@type":"ListItem","position":2,"name":"${n1} y ${n2}","item":"https://${DOMAIN}${url_path}"}]}
@@ -261,19 +368,26 @@ $(ad_block "❤" "¿Tienes una aplicación de citas, consulta o regalo romántic
   <div class="panel">
     <h2>💪 Fortalezas de la pareja ${n1}–${n2}</h2>
     <ul>
-      <li>${n1} aporta la energía de ${e1}: $([ "$e1" = "Fuego" ] && echo "pasión, iniciativa y entusiasmo" || [ "$e1" = "Tierra" ] && echo "estabilidad, constancia y sentido práctico" || [ "$e1" = "Aire" ] && echo "comunicación, ideas y perspectiva" || echo "intuición, empatía y profundidad emocional")</li>
-      <li>${n2} complementa con ${e2}: $([ "$e2" = "Fuego" ] && echo "motivación, coraje y vitalidad" || [ "$e2" = "Tierra" ] && echo "estructura, paciencia y fiabilidad" || [ "$e2" = "Aire" ] && echo "flexibilidad, sociabilidad y creatividad" || echo "sensibilidad, cuidado y conexión emocional")</li>
-      <li>La combinación ${MODALITY[$s1]}–${MODALITY[$s2]} $([ "${MODALITY[$s1]}" = "${MODALITY[$s2]}" ] && echo "genera comprensión en el modo de actuar, aunque puede crear competencia" || echo "aporta equilibrio: diferentes ritmos que se complementan")</li>
+      <li>${n1} aporta la energía de ${e1}: ${gift1}.</li>
+      <li>${n2} complementa con ${e2}: ${support2}.</li>
+      <li>La combinación ${MODALITY[$s1]}–${MODALITY[$s2]} ${modality_text}</li>
     </ul>
   </div>
 
   <div class="panel">
     <h2>⚠️ Retos a trabajar</h2>
     <ul>
-      <li>$([ "$e1" = "$e2" ] && echo "Al ser ambos ${e1}, pueden potenciar los excesos del elemento y caer en dinámicas repetitivas" || echo "La diferencia ${e1}–${e2} requiere esfuerzo para entender los ritmos y necesidades del otro")</li>
-      <li>${n1} necesita $([ "$e1" = "Fuego" ] && echo "acción y libertad" || [ "$e1" = "Tierra" ] && echo "seguridad y previsibilidad" || [ "$e1" = "Aire" ] && echo "espacio mental y variedad" || echo "conexión emocional profunda"), mientras ${n2} prioriza $([ "$e2" = "Fuego" ] && echo "la independencia y la aventura" || [ "$e2" = "Tierra" ] && echo "la estabilidad y lo tangible" || [ "$e2" = "Aire" ] && echo "la comunicación y lo social" || echo "la intimidad y lo intuitivo")</li>
-      <li>La comunicación entre ${r1} y ${r2} puede generar $(( score > 60 )) && echo "roces menores que se resuelven con diálogo" || echo "malentendidos que requieren paciencia y voluntad de escucha"</li>
+      <li>${challenge_text}</li>
+      <li>${n1} suele necesitar ${need1}, mientras ${n2} prioriza ${priority2}.</li>
+      <li>${comm_text}</li>
     </ul>
+  </div>
+
+  <div class="panel">
+    <h2>Lectura práctica de ${n1} y ${n2}</h2>
+    <p>${n1} suele vincularse desde ${REL_STYLE[$s1]}; ${n2}, desde ${REL_STYLE[$s2]}. Esta mezcla se vuelve más valiosa cuando ambos distinguen atracción, convivencia y forma de reparar después de una tensión.</p>
+    <p>Para que la relación avance, ${n1} necesita ${REL_NEED[$s1]}, mientras ${n2} necesita ${REL_NEED[$s2]}. El punto débil aparece cuando ${n1} tiende a ${REL_SHADOW[$s1]} o cuando ${n2} cae en ${REL_SHADOW[$s2]}.</p>
+    <p>${score_text}</p>
   </div>
 
   <div class="panel">
@@ -318,7 +432,9 @@ $(gen_footer)
 </html>
 ENDHTML
 
-    SITEMAP_URLS+="  <url><loc>https://${DOMAIN}${url_path}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
+    if [[ "$slug_page" == "$canonical_slug" ]]; then
+      SITEMAP_URLS+="  <url><loc>https://${DOMAIN}${url_path}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
+    fi
     PAGE_COUNT=$((PAGE_COUNT + 1))
   done
 done
@@ -634,7 +750,9 @@ Sitemap: https://${DOMAIN}/sitemap.xml
 ENDROBOTS
 
 # sitemap.xml
-SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/publicidad</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+if direct_ads_enabled; then
+  SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/publicidad</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+fi
 cat > "$PUBLIC/sitemap.xml" <<ENDSITEMAP
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

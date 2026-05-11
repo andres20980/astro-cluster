@@ -22,6 +22,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: gsc-url-inspection-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   inspect:
     runs-on: ubuntu-latest
@@ -29,6 +33,7 @@ jobs:
     steps:
       - name: "🔑 Autenticación de Google"
         id: auth
+        continue-on-error: true
         uses: google-github-actions/auth@v3
         with:
           credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
@@ -43,6 +48,7 @@ jobs:
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
+          SA_AUTH_OUTCOME: ${{ steps.auth.outcome }}
         run: |
           set -euo pipefail
           case "$SITE" in
@@ -71,7 +77,10 @@ jobs:
           fi
 
           if [ -z "$access_token" ]; then
-            echo "No usable token for GSC URL inspection (OAuth and service-account fallback unavailable)" >&2
+            echo "No usable token for GSC URL inspection." >&2
+            echo "OAuth available: $( [ -n "${GOOGLE_OAUTH_CLIENT_ID:-}" ] && [ -n "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] && [ -n "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ] && echo yes || echo no )" >&2
+            echo "Service account auth outcome: ${SA_AUTH_OUTCOME:-unknown}" >&2
+            echo "Set GOOGLE_OAUTH_CLIENT_ID/SECRET/REFRESH_TOKEN or FIREBASE_SERVICE_ACCOUNT." >&2
             exit 1
           fi
 

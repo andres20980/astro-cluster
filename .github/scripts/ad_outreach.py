@@ -31,6 +31,13 @@ def env_int(name, default, minimum=None, maximum=None):
     return value
 
 
+def env_bool(name, default=False):
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
 FROM_EMAIL = os.environ.get("ASTRO_MAIL_FROM", "publicidad@carta-astral-gratis.es")
 FROM_NAME = os.environ.get("ASTRO_MAIL_FROM_NAME", "Astro Cluster")
 IMPERSONATE = os.environ.get("WORKSPACE_GMAIL_IMPERSONATE", "info@licitago.es")
@@ -55,6 +62,7 @@ MIN_NOT_INTERESTED_FOR_RATE_PAUSE = env_int("AD_OUTREACH_MIN_NOT_INTERESTED_FOR_
 MAX_BOUNCE_RATE = float(os.environ.get("AD_OUTREACH_MAX_BOUNCE_RATE", "0.05"))
 MAX_NOT_INTERESTED_RATE = float(os.environ.get("AD_OUTREACH_MAX_NOT_INTERESTED_RATE", "0.10"))
 MAIL_TRANSPORT = os.environ.get("AD_OUTREACH_MAIL_TRANSPORT", "auto").lower()
+ALLOW_GUARDRAIL_OVERRIDE = env_bool("AD_OUTREACH_ALLOW_GUARDRAIL_OVERRIDE", False)
 SMTP_HOST = os.environ.get("AD_OUTREACH_SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = env_int("AD_OUTREACH_SMTP_PORT", 465, minimum=1)
 IMAP_HOST = os.environ.get("AD_OUTREACH_IMAP_HOST", "imap.gmail.com")
@@ -782,6 +790,7 @@ def outreach_metrics(prospects):
 def guardrail_decision(prospects):
     metrics = outreach_metrics(prospects)
     reasons = []
+    overridden_reasons = []
     warnings = []
     open_replies = open_commercial_replies(prospects)
 
@@ -823,9 +832,17 @@ def guardrail_decision(prospects):
                 f"{metrics['not_interested_rate']:.1%} superior al umbral {MAX_NOT_INTERESTED_RATE:.1%}"
             )
 
+    if reasons and ALLOW_GUARDRAIL_OVERRIDE:
+        overridden_reasons = list(reasons)
+        warnings.append(
+            "guardarrailes operativos omitidos por override manual"
+        )
+        reasons = []
+
     return {
         "can_send": not reasons,
         "reasons": reasons,
+        "overridden_reasons": overridden_reasons,
         "warnings": warnings,
         "open_replies": open_replies,
         "metrics": metrics,
@@ -1084,6 +1101,7 @@ def render_report(prospects, sent, changed, validated, mailbox_report=None, guar
         f"- Tasa historica de no interes: **{negative_rate:.1f}%**",
         f"- Tasa historica de rebote: **{bounce_rate:.1f}%**",
         f"- Accion recomendada por aprendizaje: **{learning_snapshot['recommended_action']}**",
+        f"- Override manual de guardarraíles: **{'sí' if ALLOW_GUARDRAIL_OVERRIDE else 'no'}**",
         f"- Envío permitido por guardarraíles: **{'sí' if guardrail['can_send'] else 'no'}**",
         "",
         "### Estado",
@@ -1111,6 +1129,10 @@ def render_report(prospects, sent, changed, validated, mailbox_report=None, guar
     if guardrail.get("reasons"):
         lines += ["", "### Envío pausado", ""]
         for reason in guardrail["reasons"]:
+            lines.append(f"- {reason}")
+    if guardrail.get("overridden_reasons"):
+        lines += ["", "### Guardarraíles omitidos por override", ""]
+        for reason in guardrail["overridden_reasons"]:
             lines.append(f"- {reason}")
     if guardrail.get("open_replies"):
         lines += ["", "### Respuestas abiertas", ""]
