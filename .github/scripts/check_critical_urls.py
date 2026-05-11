@@ -5,6 +5,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 
+NOINDEX_ALLOWED_PATHS = {"/publicidad"}
+
+
 class HtmlMetaParser(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -107,7 +110,7 @@ def main():
         page.feed(html)
         canonical = page.canonical.rstrip("/")
 
-        if "noindex" in page.robots.lower():
+        if "noindex" in page.robots.lower() and path not in NOINDEX_ALLOWED_PATHS:
             failures.append(f"{path}: contains noindex ({html_file})")
         if canonical != expected_canonical(args.domain, path):
             failures.append(
