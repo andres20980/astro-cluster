@@ -1,6 +1,6 @@
 # SEO Rollout 21D
 
-Plan operativo para estabilizar el sistema automático SEO tras los cambios de hardening.
+Plan operativo **100% automático** para estabilizar el sistema SEO. Sin intervención manual. Solo criterios de go/no-go validados por bots.
 
 ## Objetivo
 
@@ -8,71 +8,209 @@ Plan operativo para estabilizar el sistema automático SEO tras los cambios de h
 - Reducir regresiones.
 - Aumentar precisión neta del motor antes de acelerar volumen.
 
-## Día 1 (Activación)
+## Día 1 (Activación automática)
 
-1. Ejecutar manualmente:
-   - `.github/workflows/seo-auto-pr.yml`
-   - `.github/workflows/seo-pr-gates.yml`
-   - `.github/workflows/seo-outcome-guard.yml`
-   - `.github/workflows/seo-slo-dashboard.yml`
-2. Verificar issues canónicos sin duplicados.
-3. Confirmar que `.github/config/seo-thresholds.json` pasa validación.
+**Workflow**: `seo-bootstrap-protection.yml` + `seo-weekly-ops.yml` (manual trigger)
 
-Criterio go/no-go:
-- GO si no hay fallos de sintaxis/workflow y los checks críticos pasan.
-- NO-GO si falla cualquier gate de calidad o rollback guard detecta regresión fuerte.
+Acciones automáticas:
+1. ✅ Reactivar branch protection con checks requeridos
+2. ✅ Ejecutar validación de config (seo-config-guard, seo-rules-guard)
+3. ✅ Generar baseline de precisión (`seo-engine-precision.yml`)
+4. ✅ Crear scorecard inicial (`seo-scorecard.yml`)
 
-## Semana 1 (Modo conservador)
+**Criterio go/no-go (automático):**
+```
+GO si:
+  - Cero errores de sintaxis en workflows
+  - Todos los scripts Python compilan
+  - Branch protection activo con 4 checks requeridos
+  - Primer scorecard generado sin errores
+  
+NO-GO si:
+  - Cualquier check requerido está en ERROR
+  - Hay conflictos no resueltos en config
+```
 
-Configuración recomendada:
-- holdoutRatio: 0.12 a 0.15
-- ctrDropThreshold: 0.18 a 0.22
-- oppGrowthMin: 0.85 a 0.90
+## Semana 1 (Modo conservador - automático)
 
-Objetivos:
-- Cero regresiones críticas en producción.
-- Baseline de precisión por tipo de cambio.
+**Configuración en `seo-thresholds.json`:**
+```json
+{
+  "holdoutRatio": 0.15,
+  "ctrDropThreshold": 0.20,
+  "minHoursBetweenPatches": 18,
+  "oppGrowthMin": 0.88
+}
+```
 
-Criterio go/no-go:
-- GO si semáforo cluster no está en rojo.
-- NO-GO si cluster en rojo dos runs consecutivos.
+**Workflows automáticos cada 24h:**
+- `seo-auto-pr.yml` → genera PRs automáticos
+- `seo-outcome-guard.yml` → detecta regresiones automáticamente
+- `seo-weekly-ops.yml` → genera reporte de progreso
+- `seo-engine-precision.yml` → calcula precisión neta
 
-## Semana 2 (Calibración)
+**Criterio go/no-go (automático):**
+```
+GO (continúa rollout) si:
+  - Rollbacks detectados ≤ 1 por semana
+  - Semáforo cluster NO está en rojo
+  - Auto-merge de PRs de bot ≥ 80%
+  
+NO-GO (pausa automática) si:
+  - Rollbacks > 2 en semana 1
+  - Cluster en rojo 2+ runs consecutivos
+  - Más del 20% de PRs rechazadas por gates
+  
+→ Acción auto: Crear issue "⚠️ Rollout paused: investigate"
+```
 
-Acciones:
-1. Usar `seo-rollout-governor.yml` para propuesta de tuning.
-2. Revisar PR de `seo-threshold-tuning-pr.yml` y aprobar solo si consistente.
-3. Corregir deuda detectada por:
-   - `check_snippet_quality.py`
-   - `check_internal_link_coverage.py`
-   - `check_duplicate_snippets.py`
+## Semana 2 (Calibración automática)
 
-Criterio go/no-go:
-- GO si mejora precisión global y baja ruido de alertas.
-- NO-GO si suben rollbacks o fallos en gates.
+**Workflows automáticos:**
+- `seo-threshold-tuning-pr.yml` (jueves 11:00 UTC) → abre PR de tuning automático
+- `seo-backlog-prioritizer.yml` (viernes) → prioriza por impacto
+- `seo-slo-dashboard.yml` (lunes) → valida SLOs
 
-## Semana 3 (Escalado controlado)
+**Tuning automático de thresholds:**
+El PR de tuning es auto-aprobado y auto-mergeado si:
+```
+- Mejora precisión neta (Δ > +0.5%)
+- Baja tasa de regresiones (Δ < -10%)
+- No crea anomalías nuevas (gates ≥ 85% pass rate)
+```
 
-Acciones:
-1. Si estabilidad buena, bajar holdout ligeramente (por ejemplo -0.02).
-2. Mantener PR-only para autoparches.
-3. Priorizar ejecución por impacto negocio (`seo-business-impact.yml`) + backlog (`seo-backlog-prioritizer.yml`).
+**Criterio go/no-go (automático):**
+```
+GO (acelera un poco) si:
+  - Precisión mejora semana a semana
+  - Rollbacks ≤ 1
+  - Deuda de calidad → PRs abiertos y tracked
+  
+NO-GO (mantiene conservador) si:
+  - Precisión plana o empeora
+  - Rollbacks > 1
+  - Deuda detectada pero no resuelta
+  
+→ Acción auto: `seo-weekly-ops.yml` crea issue de estado
+```
 
-Criterio go/no-go:
-- GO si precisión cluster estable en verde/amarillo y sin regresiones críticas.
-- NO-GO si reaparecen regresiones de snippets/indexabilidad.
+## Semana 3 (Escalado controlado automático)
 
-## KPIs de seguimiento
+**Cambio automático de configuración:**
+Si en semana 2 se cumple go/no-go, `seo-threshold-tuning-pr.yml` automáticamente:
+- Baja `holdoutRatio` de 0.15 → 0.12
+- Baja `minHoursBetweenPatches` de 18 → 16
+- Abre PR, se valida, auto-merge si cumple gates
 
-- % autoparches con impacto positivo neto.
-- % PRs SEO bloqueadas por gates.
-- Nº rollbacks automáticos por semana.
-- Semáforo cluster (`seo-engine-precision.yml`).
-- Ingreso proxy semanal (`seo-business-impact.yml`).
+**Workflows intensificados:**
+- `seo-auto-pr.yml` más agresivo (sin holdout si precisión > 90%)
+- `seo-interlink-recommendations.yml` (lunes) → nuevas recs de interlinking
+- `seo-business-impact.yml` (miércoles) → impacto económico
 
-## Principios de operación
+**Criterio go/no-go (automático):**
+```
+GO (cero throttle, full speed) si:
+  - Precisión verde (≥ 92%)
+  - Rollbacks cero en semana 3
+  - No hay gates bloqueados 2+ horas
+  - SLO de uptime ≥ 99%
+  
+NO-GO (vuelve a throttle) si:
+  - Precisión baja (< 88%)
+  - Rollbacks > 0 en semana 3
+  - Gates bloqueados > 4 horas
+  
+→ Acción auto: `seo-threshold-tuning-pr.yml` revierte config automáticamente
+```
 
-- No desactivar gates para “pasar rápido”.
-- No bajar holdout mientras semáforo sea rojo.
-- Hacer cambios de thresholds por PR, nunca directo en master.
-- Favorecer cambios pequeños y reversibles.
+
+
+## KPIs de seguimiento (automáticos)
+
+Generados por `seo-weekly-ops.yml` cada lunes:
+
+| KPI | Fuente | Criterio GO | Criterio NO-GO |
+|-----|--------|-------------|---|
+| % Autoparches exitosos | `seo-engine-precision.yml` | ≥ 85% | < 75% |
+| Rollbacks por semana | `seo-outcome-guard.yml` | ≤ 1 | > 2 |
+| PRs bloqueadas por gates | `seo-required-gate.yml` | ≤ 10% | > 20% |
+| Semáforo cluster | `seo-engine-precision.yml` | Verde/Amarillo | Rojo 2+x |
+| Auto-merge rate (bots) | `seo-automerge-bot-prs.yml` | ≥ 90% | < 70% |
+| SLO uptime | `seo-slo-dashboard.yml` | ≥ 99% | < 95% |
+
+**Reporte automático:**
+→ `seo-weekly-ops.yml` crea issue si hay NO-GO en cualquier métrica
+
+## Reglas automáticas (sin intervención)
+
+1. **Auto-merge habilitado**: PRs etiquetadas `seo,automated` se mergean sin revisor si pasan checks
+2. **Rollback automático**: Si `seo-outcome-guard.yml` detecta regresión (CTR drop > threshold), revierte automáticamente
+3. **Tuning automático**: PR de threshold tuning se auto-mergea si mejora precisión + baja regresiones
+4. **Throttle automático**: Si precisión baja, `seo-auto-pr.yml` baja `holdoutRatio` automáticamente
+5. **Escalado automático**: Si criterio go/no-go se cumple 2 semanas, workflow baja throttles
+
+## Dashboard de estado
+
+Accesible en GitHub Actions:
+
+```
+Semana N: [criterios automáticos]
+├── Status: GO / NO-GO / PAUSED
+├── KPIs: OK / WARN / ALERT
+├── Acciones tomadas: [lista de PRs auto-merged, rollbacks, tuning]
+└── Siguiente paso: [acción automática programada]
+```
+
+## Principios de operación (automatizados)
+
+✅ **Hacer automáticamente:**
+- Gates + rollback guard sin excepción
+- Tuning de thresholds vía PR automático
+- Escalado/throttle por métricas objetivas
+- Reportes de estado cada semana
+- Rollback automático en caso de regresión
+
+❌ **Nunca hacer manualmente:**
+- Desactivar gates "para pasar rápido"
+- Cambiar thresholds directo en master
+- Ignorar alertas de rollbacks
+- Hacer merge sin checks requeridos
+
+## Escalera de decisión (automática)
+
+```
+semana_actual <= 1:
+  holdoutRatio = 0.15, conservador
+  minHoursBetweenPatches = 18
+  criterio_go = no rollbacks + cluster_ok
+
+semana_actual == 2:
+  IF criterio_go_semana1:
+    holdoutRatio -= 0.02
+    tuning_pr = auto-open (auto-merge si OK)
+  ELSE:
+    holdoutRatio = 0.15 (pausa)
+
+semana_actual >= 3:
+  IF criterio_go_semana2 AND precision >= 90%:
+    holdoutRatio = 0.10
+    minHoursBetweenPatches = 14
+  ELSE:
+    holdoutRatio = 0.12
+```
+
+## Trigger manual (único punto de intervención)
+
+Único caso donde un humano hace algo:
+```bash
+# Solo después de semana 3 si todo está rojo
+gh workflow run seo-bootstrap-protection.yml  # Reactivar si fue desactivado por error
+```
+
+Todo lo demás es 100% bot.
+
+---
+
+**Versión automática**: v1.0 (21D operativo sin intervención)
+**Última actualización**: 2026-05-15
+**Mantenedor**: SEO automation suite
