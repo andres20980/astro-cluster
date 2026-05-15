@@ -3,7 +3,6 @@ name: "🧠 PR semanal de recomendaciones SEO"
 on:
   schedule:
     - cron: '15 8 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: write

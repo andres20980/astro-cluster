@@ -3,7 +3,6 @@ name: "🗂️ Backlog SEO priorizado"
 on:
   schedule:
     - cron: '55 9 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read

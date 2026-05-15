@@ -3,7 +3,6 @@ name: "🧭 SEO SLO dashboard"
 on:
   schedule:
     - cron: '15 10 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read

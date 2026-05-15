@@ -9,7 +9,6 @@ on:
       - ".github/config/seo-autopatch-rules.json"
       - ".github/scripts/**"
       - ".github/workflows/**"
-  workflow_dispatch:
 
 permissions:
   contents: read

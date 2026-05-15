@@ -5,7 +5,6 @@ on:
     branches: [master]
   schedule:
     - cron: "0 12 * * 1"  # Lunes 12:00 UTC
-  workflow_dispatch:
 
 permissions:
   contents: read

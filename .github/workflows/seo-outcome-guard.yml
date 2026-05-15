@@ -4,21 +4,6 @@ on:
   workflow_run:
     workflows: ["📊 Informe semanal de Google"]
     types: [completed]
-  workflow_dispatch:
-    inputs:
-      site:
-        description: "Sitio a evaluar (all = todos)"
-        required: false
-        default: all
-        type: choice
-        options:
-          - all
-          - carta-astral
-          - compatibilidad-signos
-          - tarot-del-dia
-          - calcular-numerologia
-          - horoscopo-de-hoy
-          - meditacion-chakras
 
 permissions:
   contents: write

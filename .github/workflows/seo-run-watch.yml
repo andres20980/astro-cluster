@@ -17,7 +17,6 @@ on:
       - "🧠 PR semanal de recomendaciones SEO"
       - "🗂️ PR semanal de tareas SEO"
     types: [completed]
-  workflow_dispatch:
 
 permissions:
   contents: read

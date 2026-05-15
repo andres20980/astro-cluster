@@ -9,7 +9,6 @@ on:
       - ".github/config/seo-thresholds.json"
       - ".github/workflows/**"
       - ".github/scripts/**"
-  workflow_dispatch:
 
 permissions:
   contents: read

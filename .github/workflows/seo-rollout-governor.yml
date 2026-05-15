@@ -3,7 +3,6 @@ name: "🎛️ SEO rollout governor"
 on:
   schedule:
     - cron: '40 10 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read

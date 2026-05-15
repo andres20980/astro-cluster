@@ -3,7 +3,6 @@ name: "💶 Impacto negocio SEO"
 on:
   schedule:
     - cron: '25 10 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read

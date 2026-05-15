@@ -3,7 +3,6 @@ name: "⚔️ Vigilancia de canibalización SEO"
 on:
   schedule:
     - cron: '35 8 * * 2'
-  workflow_dispatch:
 
 permissions:
   contents: read

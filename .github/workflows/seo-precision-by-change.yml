@@ -3,7 +3,6 @@ name: "🧪 Precisión SEO por tipo de cambio"
 on:
   schedule:
     - cron: '35 9 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read

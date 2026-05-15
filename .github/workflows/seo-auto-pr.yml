@@ -6,21 +6,6 @@ on:
   workflow_run:
     workflows: ["📊 Informe semanal de Google"]
     types: [completed]
-  workflow_dispatch:
-    inputs:
-      site:
-        description: 'Sitio a optimizar (auto = calendario rotatorio del cluster)'
-        required: false
-        default: auto
-        type: choice
-        options:
-          - auto
-          - carta-astral
-          - compatibilidad-signos
-          - tarot-del-dia
-          - calcular-numerologia
-          - horoscopo-de-hoy
-          - meditacion-chakras
 
 concurrency:
   group: seo-auto-pr
@@ -54,9 +39,7 @@ jobs:
             exit 0
           fi
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
-            site="${{ inputs.site }}"
-          elif [ "${{ github.event_name }}" = "workflow_run" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+          if [ "${{ github.event_name }}" = "workflow_run" ] || [ "${{ github.event_name }}" = "schedule" ]; then
             site=$(python3 .github/scripts/select_seo_site.py --require-fresh-signal --require-complete-signals --min-score 0 --empty-ok)
           else
             site=$(python3 .github/scripts/select_seo_site.py)

@@ -3,7 +3,6 @@ name: "🔗 Recomendaciones de interlink SEO"
 on:
   schedule:
     - cron: '5 9 * * 3'
-  workflow_dispatch:
 
 permissions:
   contents: read

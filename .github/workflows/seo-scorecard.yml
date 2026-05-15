@@ -3,7 +3,6 @@ name: "📈 Scorecard SEO cluster"
 on:
   schedule:
     - cron: '50 8 * * 3'
-  workflow_dispatch:
 
 permissions:
   contents: write

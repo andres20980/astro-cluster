@@ -3,7 +3,6 @@ name: "🕵️ Inteligencia competitiva"
 on:
   schedule:
     - cron: '30 8 * * 2'
-  workflow_dispatch:
     inputs:
       site:
         description: 'Sitio a analizar (auto = calendario rotatorio del cluster)'
@@ -50,12 +49,8 @@ jobs:
           set -euo pipefail
           sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
-            site="${{ inputs.site }}"
-          else
-            idx=$(( (10#$(date -u +%j) - 1) % ${#sites[@]} ))
-            site="${sites[$idx]}"
-          fi
+          idx=$(( (10#$(date -u +%j) - 1) % ${#sites[@]} ))
+          site="${sites[$idx]}"
 
           echo "site=$site" >> "$GITHUB_OUTPUT"
           echo "Selected site: $site"
@@ -63,7 +58,6 @@ jobs:
       - name: "🕵️ Analizar competidores"
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}
-          FORCE: ${{ inputs.force }}
         run: |
           set -euo pipefail
           node .github/scripts/seo-competitor-intel.js

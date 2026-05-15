@@ -3,7 +3,6 @@ name: "🎯 Precisión del motor SEO"
 on:
   schedule:
     - cron: '20 9 * * 4'
-  workflow_dispatch:
 
 permissions:
   contents: read
