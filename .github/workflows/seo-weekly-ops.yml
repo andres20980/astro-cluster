@@ -2,7 +2,7 @@ name: "📊 Operaciones SEO semanales (auto-validación)"
 
 on:
   schedule:
-    - cron: "0 12 * * 1"  # Lunes 12:00 UTC
+    - cron: "0 12 * * 1"
 
 permissions:
   contents: read
@@ -17,26 +17,6 @@ jobs:
         with:
           fetch-depth: 100
 
-      - name: "🔍 Detectar PRs automáticos de la semana"
-        id: auto_prs
-        shell: bash
-        run: |
-          set -euo pipefail
-          since=$(date -u -d '7 days ago' '+%Y-%m-%dT%H:%M:%SZ')
-          merged_count=$(git log --grep="feat(seo): auto-optim" --grep="chore(seo):" --since="$since" --oneline | wc -l)
-          echo "merged_count=$merged_count" >> "$GITHUB_OUTPUT"
-          echo "Merged SEO PRs in last 7 days: $merged_count"
-
-      - name: "🚨 Detectar rollbacks de la semana"
-        id: rollbacks
-        shell: bash
-        run: |
-          set -euo pipefail
-          since=$(date -u -d '7 days ago' '+%Y-%m-%dT%H:%M:%SZ')
-          rollback_count=$(git log --grep="revert(seo):" --since="$since" --oneline | wc -l)
-          echo "rollback_count=$rollback_count" >> "$GITHUB_OUTPUT"
-          echo "Rollbacks in last 7 days: $rollback_count"
-
       - name: "📈 Validar consistencia de configuración"
         shell: bash
         run: |
@@ -44,60 +24,56 @@ jobs:
           python3 .github/scripts/check_seo_thresholds_consistency.py .github/config/seo-thresholds.json
           python3 .github/scripts/validate_seo_rules_coverage.py .github/config/seo-autopatch-rules.json
 
-      - name: "✅ Crear reporte de progreso"
-        id: report
+      - name: "🧮 Calcular indicadores semanales"
+        id: metrics
         shell: bash
-        env:
-          MERGED: ${{ steps.auto_prs.outputs.merged_count }}
-          ROLLBACKS: ${{ steps.rollbacks.outputs.rollback_count }}
         run: |
           set -euo pipefail
-          report_date=$(date -u '+%Y-%m-%d %H:%M UTC')
-          status="✅ GREEN"
-          
-          if [ "$ROLLBACKS" -gt 2 ]; then
-            status="🔴 RED - Rollbacks elevados"
-          elif [ "$ROLLBACKS" -gt 0 ]; then
-            status="⚠️ YELLOW - Rollbacks detectados"
+          since=$(date -u -d '7 days ago' '+%Y-%m-%dT%H:%M:%SZ')
+          merged_count=$(git log --grep="feat(seo): auto-optim" --grep="chore(seo):" --since="$since" --oneline | wc -l)
+          rollback_count=$(git log --grep="revert(seo):" --since="$since" --oneline | wc -l)
+
+          status="GREEN"
+          if [ "$rollback_count" -gt 2 ]; then
+            status="RED"
+          elif [ "$rollback_count" -gt 0 ]; then
+            status="YELLOW"
           fi
 
-          report="## Reporte operativo SEO - $report_date
-
-**Estado general**: $status
-
-- PRs automáticos mezclados (7 días): $MERGED
-- Rollbacks detectados (7 días): $ROLLBACKS
-- Validación de config: ✅ OK
-
-### Criterio de continuidad
-- ✅ Si ROLLBACKS < 3: seguir adelante con confianza
-- ⚠️ Si ROLLBACKS = 2-3: revisar anomalías en signals/umbrales
-- 🔴 Si ROLLBACKS > 3: pausar automación, calibrar manualmente
-
-**Timestamp**: $report_date
-"
-
-          echo "$report" > /tmp/weekly_report.md
-          cat /tmp/weekly_report.md
-
           {
-            echo "report<<EOF"
-            cat /tmp/weekly_report.md
-            echo "EOF"
+            echo "merged=$merged_count"
+            echo "rollbacks=$rollback_count"
+            echo "status=$status"
           } >> "$GITHUB_OUTPUT"
 
-      - name: "📝 Crear issue de reporte si hay anomalías"
-        if: steps.rollbacks.outputs.rollback_count > 0 || steps.auto_prs.outputs.merged_count == 0
+      - name: "📝 Publicar issue de reporte"
         uses: actions/github-script@v8
         env:
-          REPORT: ${{ steps.report.outputs.report }}
+          MERGED: ${{ steps.metrics.outputs.merged }}
+          ROLLBACKS: ${{ steps.metrics.outputs.rollbacks }}
+          STATUS: ${{ steps.metrics.outputs.status }}
         with:
           script: |
-            const report = process.env.REPORT || "Sin datos";
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: "📊 Reporte semanal SEO: revisión operativa recomendada",
-              body: report,
-              labels: ["seo", "automated", "ops-review"]
-            });
+            const merged = Number(process.env.MERGED || '0');
+            const rollbacks = Number(process.env.ROLLBACKS || '0');
+            const status = process.env.STATUS || 'GREEN';
+            const now = new Date().toISOString();
+
+            const body = [
+              `## Reporte operativo SEO - ${now}`,
+              '',
+              `**Estado general**: ${status}`,
+              `- PRs automáticos mezclados (7 días): ${merged}`,
+              `- Rollbacks detectados (7 días): ${rollbacks}`,
+              '- Validación de config: OK',
+            ].join('\n');
+
+            if (rollbacks > 0 || merged === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '📊 Reporte semanal SEO: revisión operativa recomendada',
+                body,
+                labels: ['seo', 'automated', 'ops-review']
+              });
+            }

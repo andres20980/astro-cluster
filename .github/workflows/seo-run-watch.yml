@@ -59,12 +59,18 @@ jobs:
             const staleRuns = [];
 
             for (const workflow of criticalWorkflows) {
-              const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: workflow,
-                per_page: 20,
-              });
+              let runs = [];
+              try {
+                runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: workflow,
+                  per_page: 20,
+                });
+              } catch (err) {
+                failures.push({ workflow, reason: 'workflow_not_found_or_unreadable' });
+                continue;
+              }
 
               const latest = runs[0];
               if (!latest) {
