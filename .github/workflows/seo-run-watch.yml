@@ -1,0 +1,130 @@
+name: "👁️ SEO run watcher"
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  workflow_run:
+    workflows:
+      - "🔒 Bootstrap: Reactivate branch protection"
+      - "📊 Operaciones SEO semanales (auto-validación)"
+      - "🔒 SEO Required Gate"
+      - "🧱 SEO config guard"
+      - "📐 SEO rules guard"
+      - "🐍 SEO Python sanity"
+      - "🚀 Despliegue SEO automático"
+      - "🧯 Guardián de resultado SEO"
+      - "🛠️ PR de tuning de umbrales SEO"
+      - "🧠 PR semanal de recomendaciones SEO"
+      - "🗂️ PR semanal de tareas SEO"
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+concurrency:
+  group: seo-run-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🔎 Evaluar runs recientes"
+        id: watch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const criticalWorkflows = [
+              '🔒 Bootstrap: Reactivate branch protection',
+              '📊 Operaciones SEO semanales (auto-validación)',
+              '🔒 SEO Required Gate',
+              '🧱 SEO config guard',
+              '📐 SEO rules guard',
+              '🐍 SEO Python sanity',
+              '🚀 Despliegue SEO automático',
+              '🧯 Guardián de resultado SEO',
+              '🛠️ PR de tuning de umbrales SEO',
+              '🧠 PR semanal de recomendaciones SEO',
+              '🗂️ PR semanal de tareas SEO',
+            ];
+
+            const now = Date.now();
+            const staleThresholdMs = 2 * 60 * 60 * 1000;
+            const failures = [];
+            const staleRuns = [];
+
+            for (const workflow of criticalWorkflows) {
+              const runs = await github.paginate(github.rest.actions.listWorkflowRuns, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflow,
+                per_page: 20,
+              });
+
+              const latest = runs[0];
+              if (!latest) {
+                failures.push({ workflow, reason: 'no_runs_found' });
+                continue;
+              }
+
+              if (latest.status !== 'completed') {
+                const createdAt = new Date(latest.created_at).getTime();
+                if (now - createdAt > staleThresholdMs) {
+                  staleRuns.push({ workflow, runNumber: latest.run_number, status: latest.status, conclusion: latest.conclusion });
+                }
+                continue;
+              }
+
+              if (latest.conclusion !== 'success') {
+                failures.push({ workflow, reason: latest.conclusion || 'unknown', runNumber: latest.run_number, url: latest.html_url });
+              }
+            }
+
+            core.setOutput('failureCount', String(failures.length));
+            core.setOutput('staleCount', String(staleRuns.length));
+            core.setOutput('shouldIssue', String(failures.length > 0 || staleRuns.length > 0));
+            core.setOutput('failuresJson', JSON.stringify(failures));
+            core.setOutput('staleJson', JSON.stringify(staleRuns));
+
+      - name: "📝 Abrir issue si hay anomalías"
+        if: steps.watch.outputs.shouldIssue == 'true'
+        uses: actions/github-script@v8
+        env:
+          FAILURES: ${{ steps.watch.outputs.failuresJson }}
+          STALE: ${{ steps.watch.outputs.staleJson }}
+          FAILURE_COUNT: ${{ steps.watch.outputs.failureCount }}
+          STALE_COUNT: ${{ steps.watch.outputs.staleCount }}
+        with:
+          script: |
+            const failures = JSON.parse(process.env.FAILURES || '[]');
+            const stale = JSON.parse(process.env.STALE || '[]');
+            const body = [
+              '## SEO Run Watcher',
+              '',
+              `- Failures: ${process.env.FAILURE_COUNT || '0'}`,
+              `- Stale runs: ${process.env.STALE_COUNT || '0'}`,
+              '',
+              '### Failures',
+              failures.length ? failures.map(f => `- ${f.workflow}: ${f.reason}${f.runNumber ? ` (run #${f.runNumber})` : ''}${f.url ? ` ${f.url}` : ''}`).join('\n') : '- None',
+              '',
+              '### Stale runs',
+              stale.length ? stale.map(s => `- ${s.workflow}: ${s.status}/${s.conclusion} (run #${s.runNumber})`).join('\n') : '- None',
+              '',
+              'Acción automática: seguimiento sin intervención; revisar KPIs en el próximo ciclo semanal.',
+            ].join('\n');
+
+            const title = `👁️ SEO watcher alert: ${process.env.FAILURE_COUNT || '0'} failures / ${process.env.STALE_COUNT || '0'} stale`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['seo', 'automated', 'ops-review']
+            });
