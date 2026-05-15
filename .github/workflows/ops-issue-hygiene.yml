@@ -1,0 +1,68 @@
+name: "🧹 Ops issue hygiene"
+
+on:
+  schedule:
+    - cron: '20 6 * * *'
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: ops-issue-hygiene
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "🧹 Cerrar issues de reporte obsoletos"
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const DAY_MS = 24 * 60 * 60 * 1000;
+            const STALE_DAYS = 3;
+            const now = Date.now();
+            const protectedPrefixes = [
+              '🔐 OAuth degradado',
+              '🔎 Vigilancia de indexación de GSC',
+              '🧠 SEO automejora semanal (canónico)'
+            ];
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100,
+            });
+
+            let closed = 0;
+            for (const issue of issues) {
+              if (issue.pull_request) continue;
+              if (protectedPrefixes.some(prefix => issue.title.startsWith(prefix))) continue;
+
+              const labels = (issue.labels || []).map(l => typeof l === 'string' ? l : l.name);
+              const isReportLike = labels.includes('report') || labels.includes('ops-actions-usage');
+              if (!isReportLike) continue;
+
+              const ageDays = (now - Date.parse(issue.created_at)) / DAY_MS;
+              if (ageDays < STALE_DAYS) continue;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: 'Cierre automático de higiene operativa: reporte obsoleto y sustituido por ejecuciones más recientes.'
+              });
+
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                state: 'closed'
+              });
+              closed += 1;
+            }
+
+            core.info(`Issues cerrados automáticamente: ${closed}`);

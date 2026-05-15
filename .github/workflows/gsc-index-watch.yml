@@ -131,6 +131,25 @@ jobs:
               .filter(issue => legacyTitlePrefixes.some(prefix => issue.title.startsWith(prefix)))
               .sort((a, b) => a.number - b.number);
             const title = `${titlePrefix} — ${today}`;
+            const hasIncidents = /403 Acceso denegado|SKIPPED por configuración|No se pudo ejecutar la vigilancia/i.test(body);
+
+            if (!hasIncidents) {
+              for (const issue of matching) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: 'Sin incidencias de indexación en la última ejecución. Cerrando issue automáticamente.'
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              }
+              return;
+            }
 
             if (matching.length > 0) {
               const primary = matching[0];
