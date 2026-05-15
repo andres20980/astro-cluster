@@ -1,0 +1,125 @@
+name: "⚔️ Vigilancia de canibalización SEO"
+
+on:
+  schedule:
+    - cron: '35 8 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: seo-cannibalization-watch
+  cancel-in-progress: true
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🎛️ Cargar umbrales SEO"
+        id: thresholds
+        shell: bash
+        run: |
+          set -euo pipefail
+          cfg=".github/config/seo-thresholds.json"
+          min_impr=$(jq -r '.cannibalization.minImpressions // 40' "$cfg")
+          max_pos=$(jq -r '.cannibalization.maxPosition // 30' "$cfg")
+          alert_threshold=$(jq -r '.cannibalization.alertThreshold // 20' "$cfg")
+
+          echo "minImpressions=$min_impr" >> "$GITHUB_OUTPUT"
+          echo "maxPosition=$max_pos" >> "$GITHUB_OUTPUT"
+          echo "alertThreshold=$alert_threshold" >> "$GITHUB_OUTPUT"
+
+      - name: "🔎 Detectar canibalización"
+        id: scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          status=0
+          python3 .github/scripts/check_query_cannibalization.py \
+            --min-impressions "${{ steps.thresholds.outputs.minImpressions }}" \
+            --max-position "${{ steps.thresholds.outputs.maxPosition }}" \
+            --report /tmp/seo-cannibalization.md \
+            --json /tmp/seo-cannibalization.json \
+            --fail-threshold "${{ steps.thresholds.outputs.alertThreshold }}" || status=$?
+
+          cat /tmp/seo-cannibalization.md
+
+          count=$(jq -r '.collisionCount // 0' /tmp/seo-cannibalization.json)
+          echo "collisionCount=$count" >> "$GITHUB_OUTPUT"
+
+      - name: "📝 Sincronizar issue canónico"
+        uses: actions/github-script@v8
+        env:
+          REPORT_PATH: /tmp/seo-cannibalization.md
+          JSON_PATH: /tmp/seo-cannibalization.json
+          COLLISION_COUNT: ${{ steps.scan.outputs.collisionCount }}
+        with:
+          script: |
+            const fs = require('fs');
+            const titlePrefix = '⚔️ Vigilancia de canibalización SEO';
+            const today = new Date().toISOString().slice(0, 10);
+            const report = fs.readFileSync(process.env.REPORT_PATH, 'utf8');
+            const data = JSON.parse(fs.readFileSync(process.env.JSON_PATH, 'utf8'));
+            const body = [
+              `Fecha: ${today}`,
+              '',
+              `Colisiones detectadas: ${process.env.COLLISION_COUNT || '0'}`,
+              '',
+              report,
+              '',
+              '```json',
+              JSON.stringify(data, null, 2),
+              '```',
+            ].join('\n');
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'seo,automated',
+              per_page: 100,
+            });
+
+            const matching = issues
+              .filter((issue) => issue.title.startsWith(titlePrefix))
+              .sort((a, b) => a.number - b.number);
+            const title = `${titlePrefix} — ${today}`;
+
+            if (matching.length > 0) {
+              const primary = matching[0];
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: primary.number,
+                title,
+                body,
+              });
+
+              for (const duplicate of matching.slice(1)) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  body: `Sustituido por #${primary.number}. Mantenemos un único issue canónico.`
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  state: 'closed',
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['seo', 'automated'],
+              });
+            }

@@ -1,0 +1,62 @@
+name: "🤖 Auto-merge PRs SEO de bot"
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: seo-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: >-
+      contains(github.event.pull_request.labels.*.name, 'seo') &&
+      contains(github.event.pull_request.labels.*.name, 'automated')
+    steps:
+      - name: "🔎 Validar elegibilidad"
+        id: eligibility
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const author = (pr.user?.login || '').toLowerCase();
+            const branch = pr.head?.ref || '';
+            const isBotAuthor = author.endsWith('[bot]') || author === 'github-actions';
+            const trustedPrefix = branch.startsWith('seo/');
+
+            core.info(`Author=${author} Branch=${branch}`);
+            if (!isBotAuthor || !trustedPrefix) {
+              core.setOutput('ok', 'false');
+              core.setOutput('reason', 'PR no elegible para auto-merge (autor/rama).');
+              return;
+            }
+
+            if (pr.draft) {
+              core.setOutput('ok', 'false');
+              core.setOutput('reason', 'PR en draft, no se habilita auto-merge.');
+              return;
+            }
+
+            core.setOutput('ok', 'true');
+            core.setOutput('reason', 'Elegible para auto-merge cuando checks pasen.');
+
+      - name: "✅ Habilitar auto-merge"
+        if: steps.eligibility.outputs.ok == 'true'
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
+
+      - name: "ℹ️ Estado"
+        if: always()
+        run: |
+          set -euo pipefail
+          echo "Eligibility: ${{ steps.eligibility.outputs.ok }}"
+          echo "Reason: ${{ steps.eligibility.outputs.reason }}"

@@ -1,0 +1,133 @@
+name: "✅ SEO PR Gates"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "sites/**"
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+      - "shared/**"
+
+permissions:
+  contents: read
+
+jobs:
+  detect-sites:
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.detect.outputs.sites }}
+      hasSites: ${{ steps.detect.outputs.hasSites }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🧱 Validar configuración SEO"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/check_seo_thresholds_consistency.py .github/config/seo-thresholds.json
+        with:
+          fetch-depth: 0
+
+      - name: "🔎 Detectar sitios afectados"
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          all_sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
+          impacted=()
+
+          for site in "${all_sites[@]}"; do
+            if echo "$changed" | grep -q "^sites/${site}/"; then
+              impacted+=("$site")
+            fi
+          done
+
+          if echo "$changed" | grep -qE '^\.github/scripts/|^shared/'; then
+            impacted=("${all_sites[@]}")
+          fi
+
+          if [ ${#impacted[@]} -eq 0 ]; then
+            echo "hasSites=false" >> "$GITHUB_OUTPUT"
+            echo 'sites=[]' >> "$GITHUB_OUTPUT"
+          else
+            echo "hasSites=true" >> "$GITHUB_OUTPUT"
+            echo "sites=$(printf '%s\n' "${impacted[@]}" | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+          fi
+
+  gates:
+    needs: detect-sites
+    if: needs.detect-sites.outputs.hasSites == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        site: ${{ fromJson(needs.detect-sites.outputs.sites) }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🎛️ Cargar umbrales SEO"
+        id: thresholds
+        shell: bash
+        run: |
+          set -euo pipefail
+          cfg=".github/config/seo-thresholds.json"
+          title_min=$(jq -r '.snippet.titleMin // 35' "$cfg")
+          title_max=$(jq -r '.snippet.titleMax // 70' "$cfg")
+          desc_min=$(jq -r '.snippet.descriptionMin // 70' "$cfg")
+          desc_max=$(jq -r '.snippet.descriptionMax // 165' "$cfg")
+          stuffing_threshold=$(jq -r '.snippet.stuffingThreshold // 4' "$cfg")
+          min_links=$(jq -r '.internalLinks.minPerPage // 2' "$cfg")
+
+          echo "titleMin=$title_min" >> "$GITHUB_OUTPUT"
+          echo "titleMax=$title_max" >> "$GITHUB_OUTPUT"
+          echo "descriptionMin=$desc_min" >> "$GITHUB_OUTPUT"
+          echo "descriptionMax=$desc_max" >> "$GITHUB_OUTPUT"
+          echo "stuffingThreshold=$stuffing_threshold" >> "$GITHUB_OUTPUT"
+          echo "minInternalLinks=$min_links" >> "$GITHUB_OUTPUT"
+
+      - name: "🏗️ Generar páginas"
+        shell: bash
+        env:
+          ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}
+        run: |
+          set -euo pipefail
+          site_dir="sites/${{ matrix.site }}"
+          for script_path in "$site_dir/scripts/gen-pages.sh" "$site_dir/scripts/gen-sign-pages.sh"; do
+            if [ -f "$script_path" ]; then
+              bash "$script_path"
+            fi
+          done
+
+      - name: "🧪 Validar checks SEO"
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_dir="sites/${{ matrix.site }}"
+          case "${{ matrix.site }}" in
+            carta-astral) domain="carta-astral-gratis.es" ;;
+            compatibilidad-signos) domain="compatibilidad-signos.es" ;;
+            tarot-del-dia) domain="tarot-del-dia.es" ;;
+            calcular-numerologia) domain="calcular-numerologia.es" ;;
+            horoscopo-de-hoy) domain="horoscopo-de-hoy.es" ;;
+            meditacion-chakras) domain="meditacion-chakras.es" ;;
+            *) echo "Unknown site" >&2; exit 1 ;;
+          esac
+
+          python3 .github/scripts/check_internal_urls.py "$site_dir/public" "$domain"
+          python3 .github/scripts/check_sitemap_indexability.py "$site_dir/public" "$domain"
+          python3 .github/scripts/check_sitemap_freshness.py "$site_dir/public/sitemap.xml"
+          python3 .github/scripts/check_sitemap_sample_html.py "$site_dir/public" "$domain" --sample-size 12
+          python3 .github/scripts/check_duplicate_snippets.py "$site_dir/public"
+          python3 .github/scripts/check_snippet_quality.py "$site_dir/public" \
+            --title-min "${{ steps.thresholds.outputs.titleMin }}" \
+            --title-max "${{ steps.thresholds.outputs.titleMax }}" \
+            --description-min "${{ steps.thresholds.outputs.descriptionMin }}" \
+            --description-max "${{ steps.thresholds.outputs.descriptionMax }}" \
+            --stuffing-threshold "${{ steps.thresholds.outputs.stuffingThreshold }}"
+          python3 .github/scripts/check_internal_link_coverage.py "$site_dir/public" \
+            --min-internal-links "${{ steps.thresholds.outputs.minInternalLinks }}" \
+            --skip 404.html
+          python3 .github/scripts/check_critical_urls.py "$site_dir" "$domain"

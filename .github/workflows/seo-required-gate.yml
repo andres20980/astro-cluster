@@ -1,0 +1,105 @@
+name: "🔒 SEO Required Gate"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - "sites/**"
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+      - "shared/**"
+      - ".github/config/**"
+
+permissions:
+  contents: read
+
+jobs:
+  required-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: "🧱 Validar configuración SEO"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/check_seo_thresholds_consistency.py .github/config/seo-thresholds.json
+          python3 .github/scripts/validate_seo_rules_coverage.py .github/config/seo-autopatch-rules.json
+          node --check .github/scripts/seo-auto-pr.js
+
+      - name: "🔎 Detectar sitios afectados"
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          all_sites=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
+          impacted=()
+
+          for site in "${all_sites[@]}"; do
+            if echo "$changed" | grep -q "^sites/${site}/"; then
+              impacted+=("$site")
+            fi
+          done
+
+          if echo "$changed" | grep -qE '^\.github/scripts/|^\.github/workflows/|^shared/|^\.github/config/'; then
+            impacted=("${all_sites[@]}")
+          fi
+
+          if [ ${#impacted[@]} -eq 0 ]; then
+            echo "No impacted sites for SEO checks."
+            exit 0
+          fi
+
+          printf '%s\n' "${impacted[@]}" > /tmp/seo-impacted-sites.txt
+          cat /tmp/seo-impacted-sites.txt
+
+      - name: "🧪 Ejecutar checks SEO requeridos"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cfg=".github/config/seo-thresholds.json"
+          title_min=$(jq -r '.snippet.titleMin // 35' "$cfg")
+          title_max=$(jq -r '.snippet.titleMax // 70' "$cfg")
+          desc_min=$(jq -r '.snippet.descriptionMin // 70' "$cfg")
+          desc_max=$(jq -r '.snippet.descriptionMax // 165' "$cfg")
+          stuffing_threshold=$(jq -r '.snippet.stuffingThreshold // 4' "$cfg")
+          min_links=$(jq -r '.internalLinks.minPerPage // 2' "$cfg")
+
+          while IFS= read -r site; do
+            site_dir="sites/${site}"
+            case "$site" in
+              carta-astral) domain="carta-astral-gratis.es" ;;
+              compatibilidad-signos) domain="compatibilidad-signos.es" ;;
+              tarot-del-dia) domain="tarot-del-dia.es" ;;
+              calcular-numerologia) domain="calcular-numerologia.es" ;;
+              horoscopo-de-hoy) domain="horoscopo-de-hoy.es" ;;
+              meditacion-chakras) domain="meditacion-chakras.es" ;;
+              *) echo "Unknown site: $site" >&2; exit 1 ;;
+            esac
+
+            for script_path in "$site_dir/scripts/gen-pages.sh" "$site_dir/scripts/gen-sign-pages.sh"; do
+              if [ -f "$script_path" ]; then
+                bash "$script_path"
+              fi
+            done
+
+            python3 .github/scripts/check_internal_urls.py "$site_dir/public" "$domain"
+            python3 .github/scripts/check_sitemap_indexability.py "$site_dir/public" "$domain"
+            python3 .github/scripts/check_sitemap_freshness.py "$site_dir/public/sitemap.xml"
+            python3 .github/scripts/check_sitemap_sample_html.py "$site_dir/public" "$domain" --sample-size 12
+            python3 .github/scripts/check_duplicate_snippets.py "$site_dir/public"
+            python3 .github/scripts/check_snippet_quality.py "$site_dir/public" \
+              --title-min "$title_min" \
+              --title-max "$title_max" \
+              --description-min "$desc_min" \
+              --description-max "$desc_max" \
+              --stuffing-threshold "$stuffing_threshold"
+            python3 .github/scripts/check_internal_link_coverage.py "$site_dir/public" \
+              --min-internal-links "$min_links" \
+              --skip 404.html
+            python3 .github/scripts/check_critical_urls.py "$site_dir" "$domain"
+          done </tmp/seo-impacted-sites.txt

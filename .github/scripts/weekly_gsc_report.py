@@ -87,6 +87,7 @@ def build_page_rows(rows, domain):
         position = float(row.get("position", 0) or 0)
         ctr = (clicks / impressions) if impressions else 0.0
         opportunity = impressions * (1 - ctr)
+        ctr_gap = max(0.0, 0.03 - ctr)
         results.append(
             {
                 "path": path,
@@ -94,6 +95,7 @@ def build_page_rows(rows, domain):
                 "impressions": impressions,
                 "ctr": ctr,
                 "position": position,
+                "ctrGap": ctr_gap,
                 "opportunity": opportunity,
             }
         )
@@ -174,6 +176,7 @@ for site_key, domain, site_url in sites:
             "queries": query_rows,
             "pages": page_rows,
             "topOpportunities": query_rows[:REPORT_ROW_LIMIT],
+            "topPageOpportunities": page_rows[:REPORT_ROW_LIMIT],
             "strikingDistanceQueries": build_striking_distance_rows(query_rows)[:REPORT_ROW_LIMIT],
             "strikingDistancePages": build_striking_distance_rows(page_rows)[:REPORT_ROW_LIMIT],
         }

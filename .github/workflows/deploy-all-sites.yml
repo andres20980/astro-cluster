@@ -204,6 +204,26 @@ jobs:
               ;;
           esac
 
+      - name: "🎛️ Cargar umbrales SEO"
+        id: thresholds
+        shell: bash
+        run: |
+          set -euo pipefail
+          cfg=".github/config/seo-thresholds.json"
+          title_min=$(jq -r '.snippet.titleMin // 35' "$cfg")
+          title_max=$(jq -r '.snippet.titleMax // 70' "$cfg")
+          desc_min=$(jq -r '.snippet.descriptionMin // 70' "$cfg")
+          desc_max=$(jq -r '.snippet.descriptionMax // 165' "$cfg")
+          stuffing_threshold=$(jq -r '.snippet.stuffingThreshold // 4' "$cfg")
+          min_links=$(jq -r '.internalLinks.minPerPage // 2' "$cfg")
+
+          echo "titleMin=$title_min" >> "$GITHUB_OUTPUT"
+          echo "titleMax=$title_max" >> "$GITHUB_OUTPUT"
+          echo "descriptionMin=$desc_min" >> "$GITHUB_OUTPUT"
+          echo "descriptionMax=$desc_max" >> "$GITHUB_OUTPUT"
+          echo "stuffingThreshold=$stuffing_threshold" >> "$GITHUB_OUTPUT"
+          echo "minInternalLinks=$min_links" >> "$GITHUB_OUTPUT"
+
       - name: "🧱 Comprobar URLs internas generadas"
         shell: bash
         env:
@@ -221,6 +241,22 @@ jobs:
           set -euo pipefail
           python3 .github/scripts/check_sitemap_indexability.py "sites/${{ matrix.site }}/public" "$DOMAIN"
           python3 .github/scripts/check_sitemap_freshness.py "sites/${{ matrix.site }}/public/sitemap.xml"
+          python3 .github/scripts/check_sitemap_sample_html.py "sites/${{ matrix.site }}/public" "$DOMAIN" --sample-size 12
+
+      - name: "🧬 Comprobar snippets duplicados"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/check_duplicate_snippets.py "sites/${{ matrix.site }}/public"
+          python3 .github/scripts/check_snippet_quality.py "sites/${{ matrix.site }}/public" \
+            --title-min "${{ steps.thresholds.outputs.titleMin }}" \
+            --title-max "${{ steps.thresholds.outputs.titleMax }}" \
+            --description-min "${{ steps.thresholds.outputs.descriptionMin }}" \
+            --description-max "${{ steps.thresholds.outputs.descriptionMax }}" \
+            --stuffing-threshold "${{ steps.thresholds.outputs.stuffingThreshold }}"
+          python3 .github/scripts/check_internal_link_coverage.py "sites/${{ matrix.site }}/public" \
+            --min-internal-links "${{ steps.thresholds.outputs.minInternalLinks }}" \
+            --skip 404.html
 
       - name: "🧪 Comprobar URLs críticas"
         shell: bash

@@ -1,0 +1,103 @@
+name: "🎛️ SEO rollout governor"
+
+on:
+  schedule:
+    - cron: '40 10 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: seo-rollout-governor
+  cancel-in-progress: true
+
+jobs:
+  governor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🧮 Generar señales de control"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_cluster_scorecard.py --json /tmp/seo-scorecard.json --report /tmp/seo-scorecard.md
+          python3 .github/scripts/check_query_cannibalization.py --json /tmp/seo-cannibalization.json --report /tmp/seo-cannibalization.md --fail-threshold 999
+          python3 .github/scripts/seo_engine_precision.py --json /tmp/seo-engine-precision.json --report /tmp/seo-engine-precision.md
+          python3 .github/scripts/seo_slo_dashboard.py \
+            --precision /tmp/seo-engine-precision.json \
+            --scorecard /tmp/seo-scorecard.json \
+            --cannibal /tmp/seo-cannibalization.json \
+            --json /tmp/seo-slo.json \
+            --report /tmp/seo-slo.md
+
+      - name: "🎛️ Recomendar ajuste de umbrales"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_threshold_recommender.py \
+            --config .github/config/seo-thresholds.json \
+            --precision /tmp/seo-engine-precision.json \
+            --slo /tmp/seo-slo.json \
+            --json /tmp/seo-threshold-recommendation.json \
+            --report /tmp/seo-threshold-recommendation.md
+          cat /tmp/seo-threshold-recommendation.md
+
+      - name: "📝 Sincronizar issue canónico"
+        uses: actions/github-script@v8
+        env:
+          REPORT_PATH: /tmp/seo-threshold-recommendation.md
+          JSON_PATH: /tmp/seo-threshold-recommendation.json
+        with:
+          script: |
+            const fs = require('fs');
+            const titlePrefix = '🎛️ SEO rollout governor';
+            const today = new Date().toISOString().slice(0, 10);
+            const body = [
+              fs.readFileSync(process.env.REPORT_PATH, 'utf8'),
+              '',
+              '```json',
+              fs.readFileSync(process.env.JSON_PATH, 'utf8'),
+              '```',
+            ].join('\n');
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'report',
+              per_page: 100,
+            });
+
+            const matching = issues
+              .filter((issue) => issue.title.startsWith(titlePrefix))
+              .sort((a, b) => a.number - b.number);
+            const title = `${titlePrefix} — ${today}`;
+
+            if (matching.length > 0) {
+              const primary = matching[0];
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: primary.number,
+                title,
+                body,
+              });
+              for (const duplicate of matching.slice(1)) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  state: 'closed',
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['report'],
+              });
+            }

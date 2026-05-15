@@ -1,0 +1,21 @@
+{
+  "holdoutRatio": 0.12,
+  "minHoursBetweenPatches": 18,
+  "ctrDropThreshold": 0.20,
+  "oppGrowthMin": 0.85,
+  "snippet": {
+    "titleMin": 35,
+    "titleMax": 70,
+    "descriptionMin": 70,
+    "descriptionMax": 165,
+    "stuffingThreshold": 4
+  },
+  "internalLinks": {
+    "minPerPage": 2
+  },
+  "cannibalization": {
+    "minImpressions": 40,
+    "maxPosition": 30,
+    "alertThreshold": 20
+  }
+}

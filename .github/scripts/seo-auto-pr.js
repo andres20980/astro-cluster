@@ -15,6 +15,12 @@ const RULES_PATH = path.join(REPO_ROOT, '.github', 'config', 'seo-autopatch-rule
 const STATE_PATH = path.join(SITE_ROOT, 'docs', 'SEO_AGENT_STATE.json');
 const MAX_CHANGES = Number(process.env.SEO_AUTO_PR_MAX_CHANGES || 1);
 const MAX_SIGNAL_AGE_DAYS = Number(process.env.SEO_SIGNAL_MAX_AGE_DAYS || 21);
+const MIN_HOURS_BETWEEN_PATCHES = Number(process.env.SEO_MIN_HOURS_BETWEEN_PATCHES || 18);
+const MIN_TITLE_LENGTH = Number(process.env.SEO_MIN_TITLE_LENGTH || 35);
+const MAX_TITLE_LENGTH = Number(process.env.SEO_MAX_TITLE_LENGTH || 70);
+const MIN_DESCRIPTION_LENGTH = Number(process.env.SEO_MIN_DESCRIPTION_LENGTH || 70);
+const MAX_DESCRIPTION_LENGTH = Number(process.env.SEO_MAX_DESCRIPTION_LENGTH || 165);
+const HOLDOUT_RATIO = Math.max(0, Math.min(1, Number(process.env.SEO_HOLDOUT_RATIO || 0)));
 
 function readJson(fp, fallback) {
   try {
@@ -115,6 +121,78 @@ function normalizeText(value) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function recentlyPatched(lastRunIso) {
+  if (!lastRunIso) return false;
+  const ts = new Date(lastRunIso).getTime();
+  if (!Number.isFinite(ts)) return false;
+  const ageHours = (Date.now() - ts) / (1000 * 60 * 60);
+  return ageHours < MIN_HOURS_BETWEEN_PATCHES;
+}
+
+function deterministicBucket(seed) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash % 1000) / 1000;
+}
+
+function shouldHoldout() {
+  if (HOLDOUT_RATIO <= 0) return false;
+  const now = new Date();
+  const weekKey = `${now.getUTCFullYear()}-W${Math.ceil((now.getUTCDate()) / 7)}`;
+  const bucket = deterministicBucket(`${SITE_KEY}-${weekKey}`);
+  return bucket < HOLDOUT_RATIO;
+}
+
+function isLengthSafe(value, min, max) {
+  const len = String(value || '').trim().length;
+  return len >= min && len <= max;
+}
+
+function hasKeywordStuffing(value) {
+  const tokens = tokenize(value);
+  if (tokens.length === 0) return false;
+  const counts = new Map();
+  for (const token of tokens) {
+    counts.set(token, (counts.get(token) || 0) + 1);
+  }
+  return [...counts.values()].some((count) => count >= 4);
+}
+
+function isSafeRule(rule) {
+  const titleOk = isLengthSafe(rule.title, MIN_TITLE_LENGTH, MAX_TITLE_LENGTH);
+  const descriptionOk = isLengthSafe(rule.description, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH);
+  const stuffingRisk = hasKeywordStuffing(rule.title) || hasKeywordStuffing(rule.description);
+  return titleOk && descriptionOk && !stuffingRisk;
+}
+
+function classifyPathForSite(siteKey, rawPath) {
+  const p = String(rawPath || '/').split('?', 1)[0] || '/';
+  if (p === '/') return 'home';
+  if (siteKey === 'carta-astral') {
+    if (p.startsWith('/signos/') && p !== '/signos/') return 'sign_profiles';
+    if (p.startsWith('/signos/')) return 'sign_hub';
+  }
+  if (siteKey === 'compatibilidad-signos') return 'pair_pages';
+  if (siteKey === 'tarot-del-dia') {
+    if (p.startsWith('/arcanos-mayores/') && p !== '/arcanos-mayores/') return 'major_arcana';
+    if (p.startsWith('/arcanos-mayores/')) return 'major_arcana_hub';
+    if (p.startsWith('/arcanos-menores/')) return 'minor_arcana';
+  }
+  if (siteKey === 'calcular-numerologia') {
+    if (p.startsWith('/numero-de-vida/') && p !== '/numero-de-vida/') return 'number_pages';
+    if (p.startsWith('/numero-de-vida/')) return 'number_hub';
+  }
+  if (siteKey === 'horoscopo-de-hoy') return 'sign_pages';
+  if (siteKey === 'meditacion-chakras') {
+    if (p.startsWith('/chakras/') && p !== '/chakras/') return 'chakra_steps';
+    return 'home';
+  }
+  return 'content';
 }
 
 function tokenize(value) {
@@ -237,6 +315,28 @@ function scoreKeywordByTemplateFamily(keyword, templateSignals) {
   return { score: base - boost, matchedSignals };
 }
 
+function scoreKeywordByPageOpportunities(keyword, gscSignals) {
+  const base = (keyword.priority || 99) * 100;
+  const pages = (gscSignals && Array.isArray(gscSignals.topPageOpportunities)) ? gscSignals.topPageOpportunities : [];
+  if (!keyword.templateFamily || pages.length === 0) {
+    return { score: base, matchedSignals: [], matchedPages: [] };
+  }
+
+  const matchingPages = pages.filter((row) => classifyPathForSite(SITE_KEY, row.path) === keyword.templateFamily);
+  if (matchingPages.length === 0) {
+    return { score: base, matchedSignals: [], matchedPages: [] };
+  }
+
+  const aggregate = matchingPages.reduce((sum, row) => sum + Number(row.opportunity || 0), 0);
+  const ctrGap = matchingPages.reduce((sum, row) => sum + Number(row.ctrGap || 0), 0);
+  const boost = Math.min(80, (aggregate / 10) + (ctrGap * 300));
+  return {
+    score: base - boost,
+    matchedSignals: [`page_opportunity_${keyword.templateFamily}`],
+    matchedPages: matchingPages.slice(0, 3).map((row) => row.path),
+  };
+}
+
 function updateSitemapLastmod(siteConfig, dateStr) {
   if (!siteConfig.sitemapFile || !siteConfig.homeUrl) return false;
   const sitemapPath = path.join(SITE_ROOT, siteConfig.sitemapFile);
@@ -293,17 +393,21 @@ function pickRecommendations(siteConfig, state, payload, competitorIntel, gscSig
       const competitorScore = scoreKeywordByCompetitorIntel(keyword, competitorIntel);
       const gscScore = scoreKeywordByGsc(keyword, gscSignals);
       const familyScore = scoreKeywordByTemplateFamily(keyword, templateSignals);
-      const combinedScore = Math.min(competitorScore.score, gscScore.score, familyScore.score);
+      const pageScore = scoreKeywordByPageOpportunities(keyword, gscSignals);
+      const combinedScore = Math.min(competitorScore.score, gscScore.score, familyScore.score, pageScore.score);
       return {
         ...keyword,
         competitorScore: competitorScore.score,
         gscScore: gscScore.score,
         familyScore: familyScore.score,
+        pageScore: pageScore.score,
         combinedScore,
+        matchedPages: pageScore.matchedPages || [],
         matchedSignals: [
           ...(competitorScore.matchedSignals || []),
           ...(gscScore.matchedSignals || []),
           ...(familyScore.matchedSignals || []),
+          ...(pageScore.matchedSignals || []),
         ],
       };
     })
@@ -320,6 +424,7 @@ function pickRecommendations(siteConfig, state, payload, competitorIntel, gscSig
   return rotated.slice(0, MAX_CHANGES).map((keyword) => ({
     query: keyword.query,
     matchedSignals: keyword.matchedSignals || [],
+    matchedPages: keyword.matchedPages || [],
   }));
 }
 
@@ -351,6 +456,29 @@ function main() {
   const templateSignals = isFreshSignal(templateSignalsRaw) ? templateSignalsRaw : null;
   const recs = pickRecommendations(siteConfig, state, payload, competitorIntel, gscSignals, templateSignals);
 
+  if (recentlyPatched(state.lastRun)) {
+    console.log(JSON.stringify({
+      site: SITE_KEY,
+      changedCount: 0,
+      totalChecked: 0,
+      skipped: 'recent_patch_cooldown',
+      runAt: new Date().toISOString(),
+    }));
+    return;
+  }
+
+  if (shouldHoldout()) {
+    console.log(JSON.stringify({
+      site: SITE_KEY,
+      changedCount: 0,
+      totalChecked: 0,
+      skipped: 'holdout_experiment',
+      holdoutRatio: HOLDOUT_RATIO,
+      runAt: new Date().toISOString(),
+    }));
+    return;
+  }
+
   const runAt = new Date().toISOString();
   const results = [];
   let applied = 0;
@@ -361,13 +489,29 @@ function main() {
     const key = String(rec.query || '').trim().toLowerCase();
     const rule = rules[key];
     if (!rule) continue;
+    if (!isSafeRule(rule)) {
+      results.push({
+        query: key,
+        matchedSignals: rec.matchedSignals || [],
+        matchedPages: rec.matchedPages || [],
+        file: rule.file,
+        changed: false,
+        reason: 'rule_quality_guard',
+      });
+      continue;
+    }
 
     const targets = [rule, ...(Array.isArray(rule.extraTargets) ? rule.extraTargets : [])];
     const ruleResults = targets.map((target) => optimizeFile(siteConfig, target));
     const changed = ruleResults.some((result) => result.changed);
 
     for (const res of ruleResults) {
-      results.push({ query: key, matchedSignals: rec.matchedSignals || [], ...res });
+      results.push({
+        query: key,
+        matchedSignals: rec.matchedSignals || [],
+        matchedPages: rec.matchedPages || [],
+        ...res,
+      });
     }
 
     if (changed) {
@@ -394,6 +538,16 @@ function main() {
       competitorIntel: Boolean(competitorIntelRaw && !competitorIntel),
       gscSignals: Boolean(gscSignalsRaw && !gscSignals),
       templateSignals: Boolean(templateSignalsRaw && !templateSignals),
+    },
+    qualityGuards: {
+      minTitleLength: MIN_TITLE_LENGTH,
+      maxTitleLength: MAX_TITLE_LENGTH,
+      minDescriptionLength: MIN_DESCRIPTION_LENGTH,
+      maxDescriptionLength: MAX_DESCRIPTION_LENGTH,
+      minHoursBetweenPatches: MIN_HOURS_BETWEEN_PATCHES,
+    },
+    holdout: {
+      ratio: HOLDOUT_RATIO,
     },
     runAt,
   }));

@@ -28,6 +28,7 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   auto-seo:
@@ -56,7 +57,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.site }}" != "auto" ] && [ -n "${{ inputs.site }}" ]; then
             site="${{ inputs.site }}"
           elif [ "${{ github.event_name }}" = "workflow_run" ] || [ "${{ github.event_name }}" = "schedule" ]; then
-            site=$(python3 .github/scripts/select_seo_site.py --require-fresh-signal --min-score 0 --empty-ok)
+            site=$(python3 .github/scripts/select_seo_site.py --require-fresh-signal --require-complete-signals --min-score 0 --empty-ok)
           else
             site=$(python3 .github/scripts/select_seo_site.py)
           fi
@@ -68,6 +69,31 @@ jobs:
             echo "No fresh weekly GA4/GSC signal qualifies for an automatic SEO patch."
           fi
 
+      - name: "🎛️ Cargar umbrales SEO"
+        if: steps.select.outputs.site != ''
+        id: thresholds
+        shell: bash
+        run: |
+          set -euo pipefail
+          cfg=".github/config/seo-thresholds.json"
+          holdout=$(jq -r '.holdoutRatio // 0.12' "$cfg")
+          cooldown=$(jq -r '.minHoursBetweenPatches // 18' "$cfg")
+          title_min=$(jq -r '.snippet.titleMin // 35' "$cfg")
+          title_max=$(jq -r '.snippet.titleMax // 70' "$cfg")
+          desc_min=$(jq -r '.snippet.descriptionMin // 70' "$cfg")
+          desc_max=$(jq -r '.snippet.descriptionMax // 165' "$cfg")
+          stuff_threshold=$(jq -r '.snippet.stuffingThreshold // 4' "$cfg")
+          min_links=$(jq -r '.internalLinks.minPerPage // 2' "$cfg")
+
+          echo "holdout=$holdout" >> "$GITHUB_OUTPUT"
+          echo "cooldown=$cooldown" >> "$GITHUB_OUTPUT"
+          echo "titleMin=$title_min" >> "$GITHUB_OUTPUT"
+          echo "titleMax=$title_max" >> "$GITHUB_OUTPUT"
+          echo "descriptionMin=$desc_min" >> "$GITHUB_OUTPUT"
+          echo "descriptionMax=$desc_max" >> "$GITHUB_OUTPUT"
+          echo "stuffingThreshold=$stuff_threshold" >> "$GITHUB_OUTPUT"
+          echo "minInternalLinks=$min_links" >> "$GITHUB_OUTPUT"
+
       - name: "🧠 Aplicar optimizaciones SEO"
         if: steps.select.outputs.site != ''
         id: autopatch
@@ -75,11 +101,19 @@ jobs:
         env:
           SITE_KEY: ${{ steps.select.outputs.site }}
           SEO_AUTO_PR_MAX_CHANGES: '1'
+          SEO_MIN_HOURS_BETWEEN_PATCHES: ${{ steps.thresholds.outputs.cooldown }}
+          SEO_HOLDOUT_RATIO: ${{ vars.SEO_HOLDOUT_RATIO || steps.thresholds.outputs.holdout }}
+          SEO_MIN_TITLE_LENGTH: ${{ steps.thresholds.outputs.titleMin }}
+          SEO_MAX_TITLE_LENGTH: ${{ steps.thresholds.outputs.titleMax }}
+          SEO_MIN_DESCRIPTION_LENGTH: ${{ steps.thresholds.outputs.descriptionMin }}
+          SEO_MAX_DESCRIPTION_LENGTH: ${{ steps.thresholds.outputs.descriptionMax }}
           ADSENSE_AUTO_ADS_ENABLED: ${{ vars.ADSENSE_AUTO_ADS_ENABLED || '1' }}
         run: |
           set -euo pipefail
           pushd "sites/${SITE_KEY}" >/dev/null
           mkdir -p docs
+          cp docs/SEO_GSC_QUERIES.json docs/SEO_GSC_QUERIES.pre_patch.json 2>/dev/null || true
+          cp docs/SEO_GA4_PAGES.json docs/SEO_GA4_PAGES.pre_patch.json 2>/dev/null || true
           node ../../.github/scripts/seo-auto-pr.js > /tmp/seo-result.json
           changed=$(jq -r '.changedCount' /tmp/seo-result.json)
 
@@ -93,21 +127,40 @@ jobs:
           domain="${DOMAINS[$SITE_KEY]}"
           python3 .github/scripts/check_internal_urls.py "sites/${SITE_KEY}/public" "$domain"
           python3 .github/scripts/check_sitemap_indexability.py "sites/${SITE_KEY}/public" "$domain"
+          python3 .github/scripts/check_sitemap_sample_html.py "sites/${SITE_KEY}/public" "$domain" --sample-size 12
+          python3 .github/scripts/check_duplicate_snippets.py "sites/${SITE_KEY}/public"
+          python3 .github/scripts/check_snippet_quality.py "sites/${SITE_KEY}/public" \
+            --title-min "${{ steps.thresholds.outputs.titleMin }}" \
+            --title-max "${{ steps.thresholds.outputs.titleMax }}" \
+            --description-min "${{ steps.thresholds.outputs.descriptionMin }}" \
+            --description-max "${{ steps.thresholds.outputs.descriptionMax }}" \
+            --stuffing-threshold "${{ steps.thresholds.outputs.stuffingThreshold }}"
+          python3 .github/scripts/check_internal_link_coverage.py "sites/${SITE_KEY}/public" \
+            --min-internal-links "${{ steps.thresholds.outputs.minInternalLinks }}" \
+            --skip 404.html
           SEO_SMOKE_DOMAIN="$domain" python3 .github/scripts/seo_smoke_html_checks.py "sites/${SITE_KEY}/public/index.html" \
             | jq -e '.title_present and .meta_description_present and .canonical_ok and .structured_data_present and .homepage_not_noindex and .h1_present and (.internal_copy_leaked | not)'
 
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
           cat /tmp/seo-result.json
 
-      - name: "📤 Subir cambios a master"
+      - name: "🧾 Crear Pull Request automático"
         if: steps.select.outputs.site != '' && steps.autopatch.outputs.changed != '0'
-        shell: bash
-        env:
-          SITE_KEY: ${{ steps.select.outputs.site }}
-        run: |
-          set -euo pipefail
-          git config user.name "SEO Bot"
-          git config user.email "seo-bot@carta-astral-gratis.es"
-          git add "sites/${SITE_KEY}/"
-          git commit -m "feat(seo): auto-optimización ${SITE_KEY} $(date +%Y-%m-%d)"
-          git push origin master
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "feat(seo): auto-optimización ${{ steps.select.outputs.site }} ${{ github.run_id }}"
+          title: "feat(seo): auto-optimización ${{ steps.select.outputs.site }}"
+          body: |
+            Auto-optimización SEO generada por workflow.
+
+            - Site: `${{ steps.select.outputs.site }}`
+            - Run ID: `${{ github.run_id }}`
+            - Trigger: `${{ github.event_name }}`
+            - Fuente de señales: GSC + GA4 + familias de plantilla frescas
+
+            Este PR reemplaza push directo a `master` y requiere revisión/gates de CI.
+          branch: "seo/auto-${{ steps.select.outputs.site }}-${{ github.run_id }}"
+          base: master
+          delete-branch: true
+          labels: seo,automated,automerge

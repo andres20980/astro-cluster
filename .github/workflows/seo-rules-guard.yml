@@ -1,0 +1,31 @@
+name: "📐 SEO rules guard"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - ".github/config/seo-autopatch-rules.json"
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-rules:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "📐 Validar cobertura de reglas SEO"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/validate_seo_rules_coverage.py .github/config/seo-autopatch-rules.json
+
+      - name: "🧪 Validar sintaxis de scripts core"
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/validate_seo_rules_coverage.py
+          node --check .github/scripts/seo-auto-pr.js

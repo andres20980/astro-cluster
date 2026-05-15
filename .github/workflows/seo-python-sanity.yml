@@ -1,0 +1,55 @@
+name: "🐍 SEO Python sanity"
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - ".github/scripts/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  py-sanity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🐍 Compilar scripts SEO"
+        shell: bash
+        run: |
+          set -euo pipefail
+          scripts=(
+            .github/scripts/check_critical_urls.py
+            .github/scripts/check_duplicate_snippets.py
+            .github/scripts/check_internal_link_coverage.py
+            .github/scripts/check_query_cannibalization.py
+            .github/scripts/check_seo_thresholds_consistency.py
+            .github/scripts/check_sitemap_freshness.py
+            .github/scripts/check_sitemap_indexability.py
+            .github/scripts/check_sitemap_sample_html.py
+            .github/scripts/check_snippet_quality.py
+            .github/scripts/seo_backlog_prioritizer.py
+            .github/scripts/seo_business_impact.py
+            .github/scripts/seo_cluster_scorecard.py
+            .github/scripts/seo_engine_precision.py
+            .github/scripts/seo_interlink_recommendations.py
+            .github/scripts/seo_outcome_guard.py
+            .github/scripts/seo_precision_by_change_type.py
+            .github/scripts/seo_recommendation_seed.py
+            .github/scripts/seo_slo_dashboard.py
+            .github/scripts/seo_threshold_recommender.py
+            .github/scripts/validate_seo_rules_coverage.py
+            .github/scripts/apply_seo_threshold_recommendation.py
+            .github/scripts/build_seo_action_tasks.py
+          )
+
+          python3 -m py_compile "${scripts[@]}"
+
+      - name: "🧪 Validar JS core"
+        run: |
+          set -euo pipefail
+          node --check .github/scripts/seo-auto-pr.js

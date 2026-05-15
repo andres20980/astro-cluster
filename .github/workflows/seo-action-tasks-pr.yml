@@ -1,0 +1,58 @@
+name: "🗂️ PR semanal de tareas SEO"
+
+on:
+  schedule:
+    - cron: '50 10 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: seo-action-tasks-pr
+  cancel-in-progress: true
+
+jobs:
+  tasks-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🧮 Generar reportes base"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_cluster_scorecard.py --json /tmp/seo-scorecard.json --report /tmp/seo-scorecard.md
+          python3 .github/scripts/check_query_cannibalization.py --json /tmp/seo-cannibalization.json --report /tmp/seo-cannibalization.md --fail-threshold 999
+          python3 .github/scripts/seo_engine_precision.py --json /tmp/seo-engine-precision.json --report /tmp/seo-engine-precision.md
+          python3 .github/scripts/seo_interlink_recommendations.py --json /tmp/seo-interlink.json --report /tmp/seo-interlink.md
+          python3 .github/scripts/seo_backlog_prioritizer.py --json /tmp/seo-backlog.json --report /tmp/seo-backlog.md
+
+      - name: "🗂️ Construir tareas accionables"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/build_seo_action_tasks.py \
+            --backlog /tmp/seo-backlog.json \
+            --cannibal /tmp/seo-cannibalization.json \
+            --interlink /tmp/seo-interlink.json \
+            --output docs/SEO_ACTION_TASKS.md
+
+      - name: "🧾 Abrir PR de tareas"
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: seo/action-tasks-${{ github.run_id }}
+          base: master
+          delete-branch: true
+          title: "chore(seo): tareas accionables semanales"
+          commit-message: "chore(seo): tareas accionables semanales"
+          labels: seo,automated,automerge
+          body: |
+            PR automático con tareas SEO accionables derivadas de:
+            - backlog priorizado
+            - canibalización
+            - recomendaciones de interlinking
+
+            Archivo actualizado:
+            - `docs/SEO_ACTION_TASKS.md`

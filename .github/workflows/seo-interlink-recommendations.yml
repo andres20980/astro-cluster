@@ -1,0 +1,90 @@
+name: "🔗 Recomendaciones de interlink SEO"
+
+on:
+  schedule:
+    - cron: '5 9 * * 3'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: seo-interlink-recommendations
+  cancel-in-progress: true
+
+jobs:
+  recommend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🧮 Preparar scorecard base"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_cluster_scorecard.py --json /tmp/seo-scorecard.json --report /tmp/seo-scorecard.md
+
+      - name: "🔗 Generar recomendaciones"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_interlink_recommendations.py --json /tmp/seo-interlink.json --report /tmp/seo-interlink.md
+          cat /tmp/seo-interlink.md
+
+      - name: "📝 Sincronizar issue canónico"
+        uses: actions/github-script@v8
+        env:
+          REPORT_PATH: /tmp/seo-interlink.md
+          JSON_PATH: /tmp/seo-interlink.json
+        with:
+          script: |
+            const fs = require('fs');
+            const titlePrefix = '🔗 Recomendaciones de interlink SEO';
+            const today = new Date().toISOString().slice(0, 10);
+            const body = [
+              fs.readFileSync(process.env.REPORT_PATH, 'utf8'),
+              '',
+              '```json',
+              fs.readFileSync(process.env.JSON_PATH, 'utf8'),
+              '```',
+            ].join('\n');
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'seo,automated',
+              per_page: 100,
+            });
+
+            const matching = issues
+              .filter((issue) => issue.title.startsWith(titlePrefix))
+              .sort((a, b) => a.number - b.number);
+            const title = `${titlePrefix} — ${today}`;
+
+            if (matching.length > 0) {
+              const primary = matching[0];
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: primary.number,
+                title,
+                body,
+              });
+              for (const duplicate of matching.slice(1)) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: duplicate.number,
+                  state: 'closed',
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['seo', 'automated'],
+              });
+            }

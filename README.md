@@ -110,13 +110,41 @@ astro-cluster/
 ## Automatización
 
 - `deploy-all-sites.yml`: despliega solo los sitios afectados por cambios reales en `sites/*` o `shared/`, y tras cada deploy envía el sitemap a GSC con la API oficial.
-- `seo-smoke-all.yml`: comprueba `robots.txt`, `sitemap.xml`, `ads.txt`, páginas legales, `/publicidad`, canonical, meta description, `H1`, structured data, `noindex`, script AdSense y accesibilidad de `www`.
+- `seo-smoke-all.yml`: comprueba `robots.txt`, `sitemap.xml`, `ads.txt`, páginas legales, `/publicidad`, canonical, meta description, `H1`, structured data, `noindex`, script AdSense y accesibilidad de `www`, incluyendo muestra de URLs del sitemap y detección de snippets duplicados.
 - `daily-horoscope.yml`: regenera y publica `horoscopo-de-hoy`.
-- `seo-auto-pr.yml`: aplica mejoras SEO automáticas sobre un site del cluster por ejecución y prioriza intents validados por competitor intel y señales GSC (CTR bajo con impresiones relevantes).
+- `seo-auto-pr.yml`: aplica mejoras SEO automáticas sobre un site del cluster por ejecución y prioriza intents validados por competitor intel y señales GSC (CTR bajo con impresiones relevantes), abriendo PR automático en lugar de push directo a `master`.
 - El auto-SEO ignora señales de GSC/competencia envejecidas para no optimizar con datos stale.
 - La selección automática del site a optimizar usa GSC + GA4 cuando hay señal fresca; si no, vuelve al fallback rotatorio.
 - En los sites generados, el auto-SEO actualiza tanto la home como las plantillas de sus familias long-tail para propagar mejoras a muchas URLs con un único cambio barato.
 - El weekly report genera señales por familia de plantillas para que el auto-SEO priorice también dónde tocar dentro de cada site.
+- `seo-pr-gates.yml`: ejecuta gates de calidad SEO en pull requests (indexabilidad, sitemap sample, snippets duplicados y URLs críticas) antes de merge.
+- `seo-outcome-guard.yml`: vigila regresiones post-cambio con base en señales GSC y puede abrir rollback automático vía PR.
+- `seo-cannibalization-watch.yml`: detecta canibalización inter-sitio por query usando señales GSC y mantiene un issue canónico de colisiones.
+- `seo-scorecard.yml`: genera un scorecard semanal de prioridad SEO por site para orientar backlog y capacidad de autoparches.
+- `seo-interlink-recommendations.yml`: genera propuestas automáticas de interlinking intra-site y cross-site basadas en intención y oportunidades detectadas.
+- `seo-engine-precision.yml`: calcula la precisión semanal del motor SEO (semaforo por site y cluster) para medir acierto de autoparches.
+- `seo-precision-by-change.yml`: mide precisión por tipo de cambio SEO (snippet HTML vs plantilla de generador) para optimizar estrategias de autopatch.
+- `seo-backlog-prioritizer.yml`: unifica scorecard, canibalización, precisión e interlinking en un backlog SEO priorizado automático.
+- `seo-slo-dashboard.yml`: consolida scorecard, canibalización y precisión en un dashboard SLO semanal del sistema SEO automático.
+- `seo-rollout-governor.yml`: recomienda ajustes de umbrales operativos (holdout/guard) según semáforo de precisión y estado SLO.
+- `seo-business-impact.yml`: estima impacto de negocio SEO (proxy de clicks/pageviews/ingreso) para priorización económica semanal.
+- `seo-threshold-tuning-pr.yml`: abre PR automático con propuesta de tuning de umbrales en `.github/config/seo-thresholds.json`.
+- `seo-action-tasks-pr.yml`: abre PR semanal con tareas SEO accionables consolidadas en `docs/SEO_ACTION_TASKS.md`.
+- `seo-recommendations-pr.yml`: abre PR semanal con seeds de `SEO_AGENT_RECOMMENDATIONS.json` por sitio a partir de reglas + señales GSC.
+- `seo-config-guard.yml`: valida coherencia de `.github/config/seo-thresholds.json` y scripts dependientes en PR.
+- `seo-rules-guard.yml`: valida cobertura/coherencia de `.github/config/seo-autopatch-rules.json` para evitar drift entre keywords y reglas.
+- `seo-python-sanity.yml`: compila scripts SEO y valida sintaxis JS core en PR para prevenir roturas silenciosas.
+- `seo-automerge-bot-prs.yml`: habilita auto-merge (squash) para PRs SEO automáticos de bot cuando pasan checks requeridos.
+
+Checks adicionales incorporados en smoke/deploy/PR gates:
+- `check_snippet_quality.py`: valida presupuestos de snippets (longitud y riesgo de stuffing).
+- `check_internal_link_coverage.py`: exige cobertura mínima de enlaces internos por página muestreada.
+
+Configuración centralizada:
+- `.github/config/seo-thresholds.json`: fuente única de umbrales para holdout, guard de regresión, calidad de snippets, enlaces internos y canibalización.
+
+Plan operativo:
+- `docs/SEO_ROLLOUT_21D.md`: checklist de activación, calibración y escalado controlado en 21 días.
 - `seo-competitor-intel.yml`: captura señales de competidores de forma rotatoria para un site del cluster por ejecución, con guardia de recencia para evitar gasto innecesario en GitHub Actions.
 - `weekly-google-report.yml`: genera informe con GA4, GSC y AdSense, con bloque agregado del cluster y detalle por dominio.
 - `ga4-admin-sync.yml`: sincroniza mensualmente o bajo demanda las custom dimensions y key events de GA4 contra los manifiestos del repo.

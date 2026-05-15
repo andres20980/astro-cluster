@@ -1,0 +1,154 @@
+name: "🧯 Guardián de resultado SEO"
+
+on:
+  workflow_run:
+    workflows: ["📊 Informe semanal de Google"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      site:
+        description: "Sitio a evaluar (all = todos)"
+        required: false
+        default: all
+        type: choice
+        options:
+          - all
+          - carta-astral
+          - compatibilidad-signos
+          - tarot-del-dia
+          - calcular-numerologia
+          - horoscopo-de-hoy
+          - meditacion-chakras
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: seo-outcome-guard
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 100
+
+      - name: "🚦 Saltar si weekly report falló"
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success'
+        run: |
+          set -euo pipefail
+          echo "Weekly report not successful, skipping outcome guard."
+          exit 0
+
+      - name: "🔎 Evaluar regresiones"
+        id: outcome
+        env:
+          INPUT_SITE: ${{ inputs.site }}
+        run: |
+          set -euo pipefail
+          cfg=".github/config/seo-thresholds.json"
+          ctr_drop=$(jq -r '.ctrDropThreshold // 0.20' "$cfg")
+          opp_min=$(jq -r '.oppGrowthMin // 0.85' "$cfg")
+          site="${INPUT_SITE:-all}"
+          python3 .github/scripts/seo_outcome_guard.py \
+            --site "$site" \
+            --ctr-drop-threshold "$ctr_drop" \
+            --opp-growth-min "$opp_min" > /tmp/seo-outcome.json
+          cat /tmp/seo-outcome.json
+
+          should=$(jq -r '.shouldRollback' /tmp/seo-outcome.json)
+          first_site=$(jq -r '.regressions[0].site // empty' /tmp/seo-outcome.json)
+          first_reason=$(jq -r '.regressions[0].reasons[0] // empty' /tmp/seo-outcome.json)
+
+          echo "shouldRollback=$should" >> "$GITHUB_OUTPUT"
+          echo "site=$first_site" >> "$GITHUB_OUTPUT"
+          {
+            echo "reason<<EOF"
+            echo "$first_reason"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: "↩️ Revertir último autoparche"
+        if: steps.outcome.outputs.shouldRollback == 'true' && steps.outcome.outputs.site != ''
+        id: revert
+        env:
+          SITE_KEY: ${{ steps.outcome.outputs.site }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          sha=$(git log --grep="feat(seo): auto-optimización ${SITE_KEY}" --format="%H" -n 1 || true)
+          if [ -z "$sha" ]; then
+            sha=$(git log --grep="feat(seo): auto-optim" --format="%H" -n 1 || true)
+          fi
+
+          if [ -z "$sha" ]; then
+            echo "No matching SEO auto-optimization commit found." >&2
+            echo "reverted=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if git revert --no-edit "$sha"; then
+            echo "reverted=true" >> "$GITHUB_OUTPUT"
+            echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          else
+            git revert --abort || true
+            echo "reverted=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: "🧾 Crear PR de rollback"
+        if: steps.revert.outputs.reverted == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "seo/rollback-${{ steps.outcome.outputs.site }}-${{ github.run_id }}"
+          base: master
+          title: "revert(seo): rollback automático ${{ steps.outcome.outputs.site }}"
+          commit-message: "revert(seo): rollback automático ${{ steps.outcome.outputs.site }}"
+          delete-branch: true
+          labels: seo,automated,rollback,automerge
+          body: |
+            Rollback automático disparado por guardián de resultado SEO.
+
+            - Site: `${{ steps.outcome.outputs.site }}`
+            - Reason: `${{ steps.outcome.outputs.reason }}`
+            - Reverted commit: `${{ steps.revert.outputs.sha }}`
+
+            Validar datos semanales y ajustar reglas de autopatch antes de reintentar.
+
+      - name: "📝 Registrar incidencia de regresión"
+        if: steps.outcome.outputs.shouldRollback == 'true'
+        uses: actions/github-script@v8
+        env:
+          SITE_KEY: ${{ steps.outcome.outputs.site }}
+          REASON: ${{ steps.outcome.outputs.reason }}
+          REPORT_PATH: /tmp/seo-outcome.json
+        with:
+          script: |
+            const fs = require('fs');
+            const site = process.env.SITE_KEY || 'desconocido';
+            const reason = process.env.REASON || 'Sin detalle';
+            const body = [
+              `Regresión detectada por guardián SEO para ${site}.`,
+              '',
+              `Motivo principal: ${reason}`,
+              '',
+              'Resumen técnico:',
+              '```json',
+              fs.readFileSync(process.env.REPORT_PATH, 'utf8'),
+              '```'
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Regresión SEO detectada: ${site}`,
+              body,
+              labels: ['seo', 'automated']
+            });

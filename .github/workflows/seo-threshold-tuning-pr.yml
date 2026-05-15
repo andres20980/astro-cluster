@@ -1,0 +1,86 @@
+name: "🛠️ PR de tuning de umbrales SEO"
+
+on:
+  schedule:
+    - cron: '5 11 * * 4'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: seo-threshold-tuning-pr
+  cancel-in-progress: true
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "🧮 Generar señales para recomendación"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_cluster_scorecard.py --json /tmp/seo-scorecard.json --report /tmp/seo-scorecard.md
+          python3 .github/scripts/check_query_cannibalization.py --json /tmp/seo-cannibalization.json --report /tmp/seo-cannibalization.md --fail-threshold 999
+          python3 .github/scripts/seo_engine_precision.py --json /tmp/seo-engine-precision.json --report /tmp/seo-engine-precision.md
+          python3 .github/scripts/seo_slo_dashboard.py \
+            --precision /tmp/seo-engine-precision.json \
+            --scorecard /tmp/seo-scorecard.json \
+            --cannibal /tmp/seo-cannibalization.json \
+            --json /tmp/seo-slo.json \
+            --report /tmp/seo-slo.md
+
+      - name: "🎛️ Calcular y aplicar recomendación"
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_threshold_recommender.py \
+            --config .github/config/seo-thresholds.json \
+            --precision /tmp/seo-engine-precision.json \
+            --slo /tmp/seo-slo.json \
+            --json /tmp/seo-threshold-recommendation.json \
+            --report /tmp/seo-threshold-recommendation.md
+
+          python3 .github/scripts/apply_seo_threshold_recommendation.py \
+            --config .github/config/seo-thresholds.json \
+            --recommendation /tmp/seo-threshold-recommendation.json
+
+      - name: "🧪 Validar config"
+        run: |
+          set -euo pipefail
+          jq . .github/config/seo-thresholds.json >/dev/null
+
+      - name: "📎 Preparar resumen de recomendación"
+        id: summary
+        if: always()
+        run: |
+          set -euo pipefail
+          json=$(cat /tmp/seo-threshold-recommendation.json | jq -c .)
+          {
+            echo "recommendation_json<<EOF"
+            echo "$json"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: "🧾 Crear PR de tuning"
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: seo/tuning-thresholds-${{ github.run_id }}
+          base: master
+          delete-branch: true
+          title: "chore(seo): tuning automático de umbrales"
+          commit-message: "chore(seo): tuning automático de umbrales"
+          labels: seo,automated,automerge
+          body: |
+            Propuesta automática de tuning de umbrales SEO basada en señales semanales.
+
+            Archivos:
+            - `.github/config/seo-thresholds.json`
+
+            Resumen recomendación:
+            ```json
+            ${{ steps.summary.outputs.recommendation_json }}
+            ```
