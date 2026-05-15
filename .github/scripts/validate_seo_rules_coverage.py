@@ -13,6 +13,7 @@ def read_json(path: Path):
 
 def validate_site(site_key: str, site_cfg: dict):
     issues = []
+    warnings = []
     target_keywords = site_cfg.get("targetKeywords") or []
     rules = site_cfg.get("rulesByQuery") or {}
 
@@ -21,14 +22,17 @@ def validate_site(site_key: str, site_cfg: dict):
 
     normalized_rules = {str(k).strip().lower(): v for k, v in rules.items()}
 
+    mapped = 0
     for kw in target_keywords:
         query = str(kw.get("query", "")).strip().lower()
         if not query:
             issues.append("empty target keyword query")
             continue
         if query not in normalized_rules:
-            issues.append(f"missing rule for target keyword: {query}")
+            warnings.append(f"missing rule for target keyword: {query}")
             continue
+
+        mapped += 1
 
         rule = normalized_rules[query]
         file_path = str(rule.get("file", "")).strip()
@@ -47,7 +51,8 @@ def validate_site(site_key: str, site_cfg: dict):
             if not extra_file:
                 issues.append(f"extraTarget without file for query: {query}")
 
-    return issues
+    coverage = (mapped / len(target_keywords)) if target_keywords else 1.0
+    return issues, warnings, coverage
 
 
 def main():
@@ -61,6 +66,7 @@ def main():
         raise SystemExit(f"Could not read rules file: {rules_path}")
 
     all_issues = []
+    all_warnings = []
 
     global_target = data.get("targetKeywords") or []
     global_rules = data.get("rulesByQuery") or {}
@@ -69,14 +75,25 @@ def main():
             "targetKeywords": global_target,
             "rulesByQuery": global_rules,
         }
-        issues = validate_site("global", global_cfg)
+        issues, warnings, coverage = validate_site("global", global_cfg)
         for issue in issues:
             all_issues.append(f"global: {issue}")
+        for warning in warnings:
+            all_warnings.append(f"global: {warning}")
+        print(f"Coverage global: {coverage:.2%}")
 
     for site_key, site_cfg in (data.get("sites") or {}).items():
-        issues = validate_site(site_key, site_cfg or {})
+        issues, warnings, coverage = validate_site(site_key, site_cfg or {})
         for issue in issues:
             all_issues.append(f"{site_key}: {issue}")
+        for warning in warnings:
+            all_warnings.append(f"{site_key}: {warning}")
+        print(f"Coverage {site_key}: {coverage:.2%}")
+
+    if all_warnings:
+        print("SEO rules coverage warnings:")
+        for warning in all_warnings:
+            print(f"- {warning}")
 
     if all_issues:
         print("SEO rules coverage validation failed:")

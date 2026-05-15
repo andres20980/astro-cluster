@@ -3,25 +3,6 @@ name: "🕵️ Inteligencia competitiva"
 on:
   schedule:
     - cron: '30 8 * * 2'
-    inputs:
-      site:
-        description: 'Sitio a analizar (auto = calendario rotatorio del cluster)'
-        required: false
-        default: auto
-        type: choice
-        options:
-          - auto
-          - carta-astral
-          - compatibilidad-signos
-          - tarot-del-dia
-          - calcular-numerologia
-          - horoscopo-de-hoy
-          - meditacion-chakras
-      force:
-        description: 'Forzar ejecución aunque la inteligencia competitiva sea reciente'
-        required: false
-        default: false
-        type: boolean
 
 concurrency:
   group: seo-competitor-intel
