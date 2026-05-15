@@ -9,6 +9,7 @@ on:
       - ".github/workflows/**"
       - "shared/**"
       - ".github/config/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
