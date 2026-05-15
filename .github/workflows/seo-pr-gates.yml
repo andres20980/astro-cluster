@@ -20,14 +20,14 @@ jobs:
       hasSites: ${{ steps.detect.outputs.hasSites }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: "🧱 Validar configuración SEO"
         shell: bash
         run: |
           set -euo pipefail
           python3 .github/scripts/check_seo_thresholds_consistency.py .github/config/seo-thresholds.json
-        with:
-          fetch-depth: 0
 
       - name: "🔎 Detectar sitios afectados"
         id: detect
