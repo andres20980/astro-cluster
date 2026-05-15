@@ -1,6 +1,8 @@
 name: "📐 SEO rules guard"
 
 on:
+  push:
+    branches: [master]
   pull_request:
     branches: [master]
     paths:

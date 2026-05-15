@@ -1,6 +1,8 @@
 name: "🔒 Bootstrap: Reactivate branch protection"
 
 on:
+  push:
+    branches: [master]
   schedule:
     - cron: "0 0 * * *"  # Daily at 00:00 UTC (fallback if manual trigger fails)
   workflow_dispatch:
