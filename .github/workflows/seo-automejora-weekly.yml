@@ -1,0 +1,96 @@
+name: "🧠 SEO automejora semanal"
+
+on:
+  schedule:
+    - cron: '30 12 * * 1'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: seo-automejora-weekly
+  cancel-in-progress: true
+
+jobs:
+  automejora:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: "📊 Generar señales base"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_engine_precision.py --json /tmp/seo-engine-precision.json --report /tmp/seo-engine-precision.md
+          python3 .github/scripts/seo_cluster_scorecard.py --json /tmp/seo-scorecard.json --report /tmp/seo-scorecard.md
+          python3 .github/scripts/check_query_cannibalization.py --json /tmp/seo-cannibalization.json --report /tmp/seo-cannibalization.md --fail-threshold 999
+
+      - name: "🎛️ Recomendar tuning"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_slo_dashboard.py \
+            --precision /tmp/seo-engine-precision.json \
+            --scorecard /tmp/seo-scorecard.json \
+            --cannibal /tmp/seo-cannibalization.json \
+            --json /tmp/seo-slo-dashboard.json \
+            --report /tmp/seo-slo-dashboard.md
+
+          python3 .github/scripts/seo_threshold_recommender.py \
+            --config .github/config/seo-thresholds.json \
+            --precision /tmp/seo-engine-precision.json \
+            --slo /tmp/seo-slo-dashboard.json \
+            --json /tmp/seo-threshold-recommendation.json \
+            --report /tmp/seo-threshold-recommendation.md
+
+      - name: "🧠 Construir análisis de automejora"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/seo_weekly_automejora.py \
+            --precision /tmp/seo-engine-precision.json \
+            --slo /tmp/seo-slo-dashboard.json \
+            --threshold-rec /tmp/seo-threshold-recommendation.json \
+            --cannibal /tmp/seo-cannibalization.json \
+            --scorecard /tmp/seo-scorecard.json \
+            --json /tmp/seo-automejora.json \
+            --report /tmp/seo-automejora.md
+
+      - name: "📝 Upsert issue canónico de automejora"
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('fs');
+            const title = '🧠 SEO automejora semanal (canónico)';
+            const body = fs.readFileSync('/tmp/seo-automejora.md', 'utf8');
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'seo,automated',
+              per_page: 100,
+            });
+
+            const canonical = issues.find(i => i.title === title);
+
+            if (canonical) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: canonical.number,
+                body,
+              });
+              core.info(`Updated canonical issue #${canonical.number}`);
+            } else {
+              const created = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['seo', 'automated', 'ops-review'],
+              });
+              core.info(`Created canonical issue #${created.data.number}`);
+            }

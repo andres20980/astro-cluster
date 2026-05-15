@@ -136,6 +136,7 @@ astro-cluster/
 - `seo-python-sanity.yml`: compila scripts SEO y valida sintaxis JS core en PR para prevenir roturas silenciosas.
 - `seo-automerge-bot-prs.yml`: habilita auto-merge (squash) para PRs SEO automáticos de bot cuando pasan checks requeridos.
 - `seo-run-watch.yml`: vigila workflows críticos, detecta fallos/colas atascadas y abre issue operativo automáticamente.
+- `seo-automejora-weekly.yml`: genera análisis semanal de automejora y crea/actualiza un issue canónico con plan accionable.
 
 Checks adicionales incorporados en smoke/deploy/PR gates:
 - `check_snippet_quality.py`: valida presupuestos de snippets (longitud y riesgo de stuffing).
