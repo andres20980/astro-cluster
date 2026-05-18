@@ -275,6 +275,27 @@ jobs:
           fi
           echo "::add-mask::$verify_token_value"
 
+          site_dir="sites/${SITE_KEY}"
+          generated=0
+          for script_path in "$site_dir/scripts/gen-pages.sh" "$site_dir/scripts/gen-sign-pages.sh"; do
+            if [ -f "$script_path" ]; then
+              echo "Generating $SITE_KEY with $script_path"
+              bash "$script_path"
+              generated=1
+            fi
+          done
+          if [ "$generated" -eq 0 ]; then
+            echo "No generator script for $SITE_KEY"
+          fi
+
+          source shared/config.sh
+          adsense_apply_head_snippet_to_file "$index_file"
+
+          if [ ! -f "$index_file" ]; then
+            echo "Expected $index_file to exist before verification deploy" >&2
+            exit 1
+          fi
+
           if ! grep -Fq "$verify_meta" "$index_file"; then
             awk -v meta="$verify_meta" '
               BEGIN { inserted=0 }
@@ -343,11 +364,4 @@ jobs:
           fi
           echo "Sitio verificado para owner: $owner"
 
-          # 4) Guardar permanentemente el meta tag en el repo
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$index_file"
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: agregar meta de verificacion GSC para ${DOMAIN}"
-            git push origin HEAD
-          fi
+          echo "Verificacion completada. El token META se ha desplegado, pero no se guarda en Git."
