@@ -269,7 +269,7 @@ gen_footer() {
   cat <<ENDFOOTER
 <footer>
   <p>© $(date +%Y) Compatibilidad Signos — Herramienta gratuita de astrología</p>
-  <p><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
+  <p><a href="/metodologia">Metodología</a> · <a href="/sobre-nosotros">Sobre nosotros</a> · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
   $(footer_publicidad_line "$SITE_KEY")
   ${CROSSLINKS_HTML}
 </footer>
@@ -547,6 +547,8 @@ ${COMMON_CSS}
     <a href="/tabla-compatibilidad-geminis">Tabla de compatibilidad de Géminis</a>
     <a href="/tabla-compatibilidad-aries">Tabla de compatibilidad de Aries</a>
     <a href="#tabla-completa">Tabla zodiacal completa</a>
+    <a href="/metodologia">Cómo calculamos la afinidad</a>
+    <a href="/sobre-nosotros">Criterio editorial</a>
   </nav>
 
 $(ad_block "❤" "Publicidad destacada en un nicho de amor y afinidad" "La ubicación más visible para captar usuarios antes de que profundicen en la tabla completa." "Informarme →")
@@ -745,6 +747,118 @@ ENDSIGN
 done
 echo "  ✓ ${SIGN_TABLE_COUNT} sign table pages generated"
 
+echo "Generating editorial trust pages..."
+cat > "$PUBLIC/metodologia.html" <<ENDMETHOD
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "Metodología de Compatibilidad de Signos — Cómo Calculamos la Afinidad" "Explicación clara del método de compatibilidad zodiacal: elementos, modalidades, regentes, distancia entre signos y límites de la lectura." "/metodologia" "methodology_page" "trust" "metodologia")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Metodología de Compatibilidad de Signos","author":{"@type":"Organization","name":"Compatibilidad Signos"},"publisher":{"@type":"Organization","name":"Compatibilidad Signos","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}/metodologia","inLanguage":"es"}
+  </script>
+  <style>
+${COMMON_CSS}
+    .method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+    .method-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .method-card h2{font-size:1rem;color:var(--accent);margin-bottom:.4rem}
+    .method-card p,.method-card li{color:var(--muted);font-size:.9rem;line-height:1.7}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Compatibilidad Signos</a> › Metodología</nav>
+  <h1>Metodología de <span>compatibilidad</span></h1>
+  <p class="intro">El porcentaje de afinidad resume varios factores astrológicos básicos. Sirve como orientación inicial, no como diagnóstico definitivo de una relación.</p>
+
+  <div class="method-grid">
+    <section class="method-card">
+      <h2>Elementos</h2>
+      <p>Fuego, Tierra, Aire y Agua marcan el tono de la relación: impulso, estabilidad, comunicación o sensibilidad. Los elementos afines suman fluidez; los elementos tensos exigen acuerdos más conscientes.</p>
+    </section>
+    <section class="method-card">
+      <h2>Modalidades</h2>
+      <p>Cardinal, Fijo y Mutable describen el modo de actuar. Dos signos cardinales pueden iniciar mucho y chocar por liderazgo; dos fijos dan constancia, pero también pueden resistirse al cambio.</p>
+    </section>
+    <section class="method-card">
+      <h2>Planetas regentes</h2>
+      <p>Los regentes añaden matiz: Venus busca armonía, Marte acción, Mercurio diálogo, la Luna cuidado, Saturno compromiso y Urano independencia. La afinidad sube cuando esos estilos colaboran.</p>
+    </section>
+  </div>
+
+$(ad_block "❤" "Espacio contextual de metodología" "Usuarios que comparan signos y profundizan en criterios de afinidad." "Ver espacios →")
+
+  <section class="panel">
+    <h2>Cómo se interpreta el porcentaje</h2>
+    <p>Las combinaciones altas suelen tener lenguaje emocional o ritmo compatible, pero no garantizan una relación fácil. Las combinaciones medias pueden funcionar muy bien si hay comunicación y objetivos compartidos. Las combinaciones con más reto no son una condena: indican dónde conviene pactar expectativas desde el principio.</p>
+    <p>Por eso cada página incluye fortalezas, retos, dinámica diaria y consejos prácticos. El número ayuda a comparar, pero el valor real está en entender qué necesita cada signo para sentirse seguro, escuchado y respetado.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Límites de la herramienta</h2>
+    <p>Esta calculadora usa el signo solar porque es el dato que la mayoría de usuarios conoce. Una lectura completa debería considerar Luna, Venus, Marte, ascendente, casas y aspectos entre cartas natales. Para ampliar el análisis puedes calcular tu <a href="https://carta-astral-gratis.es/">carta astral gratis</a>.</p>
+    <p>La astrología se presenta como herramienta cultural y de autoconocimiento. No sustituye terapia, asesoramiento legal, médico ni decisiones personales basadas en hechos.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Recomendación de uso</h2>
+    <p>Lee primero la combinación concreta, después revisa la tabla del signo y finalmente cruza el resultado con situaciones reales: cómo habláis de límites, cómo reparáis una discusión, cómo gestionáis el tiempo y cómo decidís planes.</p>
+  </section>
+
+$(cluster_recirculation_block "$SITE_KEY")
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDMETHOD
+
+cat > "$PUBLIC/sobre-nosotros.html" <<ENDABOUT
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "Sobre Compatibilidad Signos — Criterio Editorial y Contacto" "Quién mantiene Compatibilidad Signos, cómo se genera el contenido y qué límites tiene la calculadora zodiacal gratuita." "/sobre-nosotros" "about_page" "trust" "sobre-nosotros")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"AboutPage","name":"Sobre Compatibilidad Signos","url":"https://${DOMAIN}/sobre-nosotros","isPartOf":{"@type":"WebSite","name":"Compatibilidad Signos","url":"https://${DOMAIN}/"},"inLanguage":"es"}
+  </script>
+  <style>
+${COMMON_CSS}
+    .trust-list li{color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:.4rem}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Compatibilidad Signos</a> › Sobre nosotros</nav>
+  <h1>Sobre <span>Compatibilidad Signos</span></h1>
+  <section class="panel">
+    <h2>Qué hacemos</h2>
+    <p>Compatibilidad Signos ofrece una tabla gratuita de afinidad zodiacal con 144 combinaciones canónicas. Cada lectura explica porcentaje, elementos, regentes, fortalezas, retos y recomendaciones prácticas para relaciones.</p>
+    <p>La web forma parte de una red de herramientas en español sobre astrología, tarot, numerología y bienestar. El objetivo es que cada página resuelva una búsqueda concreta sin exigir registro ni pago.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Criterio editorial</h2>
+    <ul class="trust-list">
+      <li>Las puntuaciones siguen una regla estable basada en elementos, modalidades, regentes y distancia zodiacal.</li>
+      <li>Las páginas explican límites: el signo solar no sustituye una carta natal completa ni la experiencia real de la relación.</li>
+      <li>Revisamos el sitio cuando detectamos contenido insuficiente, errores de indexación o señales de baja calidad.</li>
+      <li>La publicidad directa se separa del contenido editorial y se revisa antes de publicarse.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Contacto</h2>
+    <p>Para correcciones, sugerencias o publicidad contextual puedes escribir a <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
+  </section>
+
+$(cluster_recirculation_block "$SITE_KEY")
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDABOUT
+
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/metodologia</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/sobre-nosotros</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+
 write_firebase_json() {
   {
     cat <<'ENDJSON'
@@ -830,6 +944,8 @@ ENDROBOTS
 if direct_ads_enabled; then
   SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/publicidad</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
 fi
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/privacy</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/terms</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
 cat > "$PUBLIC/sitemap.xml" <<ENDSITEMAP
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -864,4 +980,5 @@ END404
 
 echo "  ✓ ads.txt, robots.txt, sitemap.xml, 404.html"
 bash "$REPO_ROOT/scripts/generate-legal-pages.sh" "$SITE_KEY"
-echo "Done! ${PAGE_COUNT} pages + index + static files in $PUBLIC"
+HTML_COUNT=$(find "$PUBLIC" -type f -name '*.html' | wc -l | tr -d ' ')
+echo "Done! ${HTML_COUNT} HTML pages + static files in $PUBLIC"

@@ -74,7 +74,7 @@ gen_footer() {
   cat <<ENDFOOTER
 <footer>
   <p>© $(date +%Y) Tarot del Día — Herramienta gratuita de tarot</p>
-  <p><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
+  <p><a href="/guia-tarot">Guía de lectura</a> · <a href="/sobre-nosotros">Sobre nosotros</a> · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
   $(footer_publicidad_line "$SITE_KEY")
   ${CROSSLINKS_HTML}
 </footer>
@@ -309,6 +309,181 @@ ENDMAJOR
 
 SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/arcanos-mayores</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
 echo "  ✓ arcanos-mayores/index.html"
+
+# ── Minor Arcana pages ───────────────────────────────────────
+declare -a SUIT_SLUGS SUIT_NAMES SUIT_ELEMENTS SUIT_AREAS SUIT_SYMBOLS SUIT_THEMES SUIT_SHADOWS SUIT_ACTIONS
+SUIT_SLUGS=(bastos copas espadas oros)
+SUIT_NAMES=("Bastos" "Copas" "Espadas" "Oros")
+SUIT_ELEMENTS=("Fuego" "Agua" "Aire" "Tierra")
+SUIT_AREAS=("deseo, iniciativa y energia vital" "emociones, vinculos y sensibilidad" "mente, comunicacion y decisiones" "cuerpo, recursos y resultados concretos")
+SUIT_SYMBOLS=("🔥" "💧" "⚔️" "🪙")
+SUIT_THEMES=("movimiento, valor, creatividad y accion visible" "afecto, intuicion, memoria emocional y reciprocidad" "claridad mental, conflicto, palabra y verdad" "trabajo, dinero, salud, paciencia y estabilidad")
+SUIT_SHADOWS=("impulsividad, prisa o desgaste por actuar sin pausa" "dependencia emocional, idealizacion o exceso de nostalgia" "rumiacion, dureza verbal o necesidad de tener razon" "apego a la seguridad, lentitud o miedo a perder recursos")
+SUIT_ACTIONS=("elige una accion pequena y hazla antes de buscar mas senales" "nombra lo que sientes sin convertirlo en exigencia" "escribe la decision con pros, limites y una pregunta honesta" "baja la lectura a tiempo, dinero, energia y compromiso real")
+
+declare -a RANK_SLUGS RANK_NAMES RANK_ARCS RANK_LIGHTS RANK_SHADOWS RANK_QUESTIONS
+RANK_SLUGS=(as dos tres cuatro cinco seis siete ocho nueve diez sota caballo reina rey)
+RANK_NAMES=("As" "Dos" "Tres" "Cuatro" "Cinco" "Seis" "Siete" "Ocho" "Nueve" "Diez" "Sota" "Caballo" "Reina" "Rey")
+RANK_ARCS=("inicio disponible" "decision o equilibrio" "crecimiento compartido" "estructura y pausa" "tension que pide ajuste" "intercambio y reparacion" "eleccion entre opciones" "avance rapido" "madurez interior" "culminacion del ciclo" "aprendizaje y mensaje" "movimiento y busqueda" "dominio receptivo" "dominio activo")
+RANK_LIGHTS=("abre una puerta nueva y pide atencion al primer impulso" "ayuda a comparar sin paralizarte" "muestra apoyo, colaboracion y senales externas" "ordena la energia para conservar lo importante" "senala una friccion util si se mira de frente" "recupera confianza mediante un gesto concreto" "obliga a priorizar y descartar fantasia" "acelera procesos que ya estaban preparados" "confirma autonomia, criterio y paciencia" "cierra una etapa para mostrar el resultado acumulado" "trae curiosidad, noticia o practica inicial" "empuja a explorar con deseo de experiencia" "cuida, integra y sostiene el aprendizaje" "decide, protege y dirige la energia del palo")
+RANK_SHADOWS=("quedarse solo en la promesa sin iniciar nada" "sostener dos caminos para evitar elegir" "depender demasiado de aprobacion externa" "confundir descanso con cierre emocional" "convertir una dificultad en identidad" "dar o recibir sin equilibrio" "dispersarse entre posibilidades poco reales" "ir tan deprisa que no escuchas el contexto" "aislarse por orgullo o autosuficiencia" "cargar con mas de lo necesario" "actuar desde ingenuidad o reaccion" "confundir intensidad con direccion" "proteger tanto que no dejas fluir" "controlar por miedo a perder autoridad")
+RANK_QUESTIONS=("Que oportunidad esta naciendo aqui" "Que necesito elegir con mas honestidad" "Con quien conviene compartir o contrastar esto" "Que debo estabilizar antes de avanzar" "Que conflicto muestra una necesidad ignorada" "Que gesto repara o equilibra la situacion" "Que opcion tiene hechos y cual solo deseo" "Que debe moverse ahora y que puede esperar" "Que aprendizaje ya puedo sostener sin ayuda" "Que ciclo pide cierre o descanso" "Que mensaje pequeno no debo ignorar" "Hacia donde se mueve mi energia realmente" "Que debo cuidar sin absorberlo todo" "Que decision madura me toca asumir")
+
+echo "Generating 56 minor arcana pages..."
+MINOR_GRID=""
+MINOR_COUNT=0
+for s in "${!SUIT_SLUGS[@]}"; do
+  suit_slug="${SUIT_SLUGS[$s]}"
+  suit_name="${SUIT_NAMES[$s]}"
+  suit_element="${SUIT_ELEMENTS[$s]}"
+  suit_area="${SUIT_AREAS[$s]}"
+  suit_symbol="${SUIT_SYMBOLS[$s]}"
+  suit_theme="${SUIT_THEMES[$s]}"
+  suit_shadow="${SUIT_SHADOWS[$s]}"
+  suit_action="${SUIT_ACTIONS[$s]}"
+  suit_links=""
+
+  for r in "${!RANK_SLUGS[@]}"; do
+    rank_slug="${RANK_SLUGS[$r]}"
+    rank_name="${RANK_NAMES[$r]}"
+    rank_arc="${RANK_ARCS[$r]}"
+    rank_light="${RANK_LIGHTS[$r]}"
+    rank_shadow="${RANK_SHADOWS[$r]}"
+    rank_question="${RANK_QUESTIONS[$r]}"
+    slug="${rank_slug}-de-${suit_slug}"
+    name="${rank_name} de ${suit_name}"
+    path="/arcanos-menores/${slug}"
+    title="${name} — Significado en el Tarot | Tarot del Día"
+    desc="Significado de ${name}: interpretacion al derecho e invertida, consejo practico, amor, trabajo y pregunta de diario para tu tirada."
+    suit_links+="<a class=\"tarot-card\" href=\"${path}\"><span class=\"tnum\">${suit_symbol}</span><span class=\"tname\">${name}</span><span class=\"tkeys\">${rank_arc} · ${suit_name}</span></a>"
+
+    cat > "$PUBLIC/arcanos-menores/${slug}.html" <<ENDMINOR
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "$title" "$desc" "$path" "minor_arcana_profile" "evergreen" "$slug")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"${name} — Significado en el Tarot","description":"${desc}","author":{"@type":"Organization","name":"Tarot del Día"},"publisher":{"@type":"Organization","name":"Tarot del Día","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}${path}","inLanguage":"es"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://${DOMAIN}/"},{"@type":"ListItem","position":2,"name":"Arcanos Menores","item":"https://${DOMAIN}/arcanos-menores"},{"@type":"ListItem","position":3,"name":"${name}","item":"https://${DOMAIN}${path}"}]}
+  </script>
+  <style>
+${COMMON_CSS}
+    .minor-hero{text-align:center;padding:1.6rem 0 1rem}
+    .minor-hero .symbol{font-size:3rem;margin-bottom:.5rem}
+    .meaning-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+    .meaning-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .meaning-card h2{font-size:1rem;color:var(--accent);margin-bottom:.4rem}
+    .meaning-card p,.meaning-card li{color:var(--muted);font-size:.9rem;line-height:1.7}
+    .next-links{display:flex;flex-wrap:wrap;gap:.55rem;justify-content:center;margin-top:1rem}
+    .next-links a{display:inline-block;padding:.5rem .75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--accent);text-decoration:none;font-size:.82rem;font-weight:700}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Tarot del Día</a> › <a href="/arcanos-menores">Arcanos Menores</a> › ${name}</nav>
+  <header class="minor-hero">
+    <div class="symbol">${suit_symbol}</div>
+    <h1><span>${name}</span></h1>
+    <p style="color:var(--muted);font-size:.9rem">${suit_name} · elemento ${suit_element} · ${rank_arc}</p>
+  </header>
+
+  <section class="panel">
+    <h2>Significado general</h2>
+    <p>${name} combina el ${rank_arc} con el palo de ${suit_name}, asociado a ${suit_area}. En una tirada diaria, esta carta no se lee como sentencia: muestra una energia concreta que puedes observar en decisiones, vinculos, conversaciones o recursos durante las proximas horas.</p>
+    <p>Su tema principal es ${suit_theme}. La lectura gana precision cuando preguntas donde aparece esta energia hoy y que accion pequena puedes tomar para responder con mas claridad.</p>
+  </section>
+
+  <div class="meaning-grid">
+    <section class="meaning-card">
+      <h2>Al derecho</h2>
+      <p>${rank_light}. En el palo de ${suit_name}, esta energia se expresa a traves de ${suit_area}. Es una invitacion a actuar con presencia y comprobar los hechos antes de cerrar una conclusion.</p>
+    </section>
+    <section class="meaning-card">
+      <h2>Invertida</h2>
+      <p>${rank_shadow}. Tambien puede reflejar ${suit_shadow}. No indica fracaso: pide revisar si la energia esta bloqueada, exagerada o dirigida hacia un lugar que no responde a tu pregunta real.</p>
+    </section>
+  </div>
+
+$(ad_block "🃏" "Espacio junto a Arcanos Menores" "Contexto evergreen para usuarios que estudian significados concretos del tarot." "Ver espacios →")
+
+  <section class="panel">
+    <h2>${name} en amor y vinculos</h2>
+    <p>En preguntas afectivas, ${name} habla de como se mueve ${suit_area} dentro del vinculo. Si sale al derecho, observa que gesto confirma disponibilidad. Si aparece invertida, pregunta que expectativa o patron esta pesando mas que la realidad visible.</p>
+  </section>
+
+  <section class="panel">
+    <h2>${name} en trabajo y decisiones</h2>
+    <p>En trabajo, proyectos o dinero, esta carta pide traducir la intuicion a una accion verificable: ${suit_action}. Si la pregunta implica otras personas, separa hechos, interpretaciones y acuerdos pendientes antes de decidir.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Pregunta para tu diario</h2>
+    <p><strong>${rank_question}?</strong></p>
+    <p>Anota la pregunta, la orientacion de la carta y una accion concreta para hoy. Revisa al final del dia que ocurrio realmente; ese contraste mejora tus lecturas futuras mas que repetir la tirada.</p>
+  </section>
+
+  <div class="next-links">
+    <a href="/arcanos-menores">Todos los Arcanos Menores</a>
+    <a href="/arcanos-mayores">Arcanos Mayores</a>
+    <a href="/">Tirada gratis</a>
+  </div>
+
+$(cluster_recirculation_block "$SITE_KEY")
+
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDMINOR
+
+    SITEMAP_URLS+="  <url><loc>https://${DOMAIN}${path}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n"
+    MINOR_COUNT=$((MINOR_COUNT + 1))
+  done
+
+  MINOR_GRID+="<section class=\"panel\"><h2>${suit_symbol} ${suit_name}</h2><p>El palo de ${suit_name} trabaja ${suit_area}. Su sombra habitual es ${suit_shadow}.</p><div class=\"tarot-grid\">${suit_links}</div></section>"
+done
+
+cat > "$PUBLIC/arcanos-menores/index.html" <<ENDMINORHUB
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "Los 56 Arcanos Menores del Tarot — Significados por Palo" "Guia completa de los 56 Arcanos Menores del tarot: Bastos, Copas, Espadas y Oros con interpretacion al derecho, invertida y consejo practico." "/arcanos-menores" "content_hub" "hub" "arcanos-menores")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"CollectionPage","name":"Los 56 Arcanos Menores del Tarot","description":"Guia de significados de Bastos, Copas, Espadas y Oros.","url":"https://${DOMAIN}/arcanos-menores","inLanguage":"es"}
+  </script>
+  <style>
+${COMMON_CSS}
+    .intro{text-align:center;color:var(--muted);font-size:.92rem;line-height:1.6;max-width:680px;margin:0 auto 1.5rem}
+    .tarot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin:1rem 0}
+    .tarot-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;text-decoration:none;color:var(--text);box-shadow:var(--shadow)}
+    .tarot-card:hover{transform:translateY(-2px)}
+    .tarot-card .tnum{font-size:1.3rem;display:block}
+    .tarot-card .tname{font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem;display:block;margin:.35rem 0;color:var(--accent)}
+    .tarot-card .tkeys{font-size:.72rem;color:var(--muted);line-height:1.4;display:block}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Tarot del Día</a> › Arcanos Menores</nav>
+  <h1>Los 56 <span>Arcanos Menores</span></h1>
+  <p class="intro">Los Arcanos Menores aterrizan la lectura en escenas concretas: deseo, vinculos, conversaciones, recursos, trabajo y acciones del dia. Usa este indice para encontrar cada carta por palo y numero.</p>
+  <section class="panel">
+    <h2>Cómo leer los Arcanos Menores</h2>
+    <p>Los palos muestran el area de experiencia y los numeros describen el momento del proceso. Un As inicia, un Cinco tensiona, un Diez culmina; las figuras muestran formas de aprender, moverse, cuidar o dirigir esa energia.</p>
+    <p>En una tirada diaria, los Arcanos Menores suelen responder mejor a preguntas practicas: que conversacion preparar, que recurso revisar, donde poner energia o que limite cuidar. Por eso cada ficha incluye una pregunta de diario y una accion concreta.</p>
+  </section>
+  ${MINOR_GRID}
+$(cluster_recirculation_block "$SITE_KEY")
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDMINORHUB
+
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/arcanos-menores</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
+echo "  ✓ ${MINOR_COUNT} minor arcana pages and hub"
 
 # ── Intent landing pages ─────────────────────────────────────
 gen_intent_page() {
@@ -578,6 +753,7 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
   <div class="panel" style="text-align:center">
     <h2>Explora los Arcanos</h2>
     <p><a href="/arcanos-mayores" style="color:var(--accent);font-weight:600;text-decoration:none">Ver los 22 Arcanos Mayores →</a></p>
+    <p style="margin-top:.45rem"><a href="/arcanos-menores" style="color:var(--accent);font-weight:600;text-decoration:none">Ver los 56 Arcanos Menores →</a></p>
   </div>
 
   <section class="panel">
@@ -586,6 +762,7 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
       <a href="/tarot-amor"><strong>Tarot del amor</strong><span>Preguntas para relaciones, rupturas y vínculos nuevos.</span></a>
       <a href="/tarot-trabajo"><strong>Tarot del trabajo</strong><span>Guía para entrevistas, proyectos y cambios profesionales.</span></a>
       <a href="/tarot-si-o-no"><strong>Tarot sí o no</strong><span>Cómo formular preguntas cerradas sin perder matiz.</span></a>
+      <a href="/guia-tarot"><strong>Guía de lectura</strong><span>Método responsable para formular preguntas e interpretar resultados.</span></a>
     </div>
   </section>
 
@@ -812,6 +989,122 @@ $(gen_footer)
 </html>
 ENDINDEX
 
+echo "Generating editorial trust pages..."
+cat > "$PUBLIC/guia-tarot.html" <<ENDGUIDE
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "Guía de Tarot — Cómo Hacer Lecturas Responsables" "Método práctico para formular preguntas de tarot, interpretar cartas al derecho e invertidas y convertir una tirada en decisiones observables." "/guia-tarot" "editorial_guide" "trust" "guia-tarot")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Guía de Tarot — Cómo Hacer Lecturas Responsables","author":{"@type":"Organization","name":"Tarot del Día"},"publisher":{"@type":"Organization","name":"Tarot del Día","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}/guia-tarot","inLanguage":"es"}
+  </script>
+  <style>
+${COMMON_CSS}
+    .guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+    .guide-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .guide-card h2{font-size:1rem;color:var(--accent);margin-bottom:.4rem}
+    .guide-card p,.guide-card li{color:var(--muted);font-size:.9rem;line-height:1.7}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Tarot del Día</a> › Guía de lectura</nav>
+  <h1>Guía de <span>tarot responsable</span></h1>
+  <p class="intro">Una tirada útil no consiste en buscar una predicción cerrada, sino en ordenar una pregunta, detectar patrones y decidir el siguiente paso con más calma.</p>
+
+  <div class="guide-grid">
+    <section class="guide-card">
+      <h2>Formula mejor la pregunta</h2>
+      <p>Evita preguntas que intentan controlar a otra persona. Cambia “qué hará” por “qué necesito comprender”, “qué límite cuidar” o “qué acción está en mi mano esta semana”.</p>
+    </section>
+    <section class="guide-card">
+      <h2>Lee posición y contexto</h2>
+      <p>Una misma carta no significa lo mismo en pasado, presente, futuro, bloqueo o consejo. Primero interpreta la posición, después la carta y al final la historia completa.</p>
+    </section>
+    <section class="guide-card">
+      <h2>Usa cartas invertidas sin miedo</h2>
+      <p>Una carta invertida suele señalar energía bloqueada, exagerada o interiorizada. No la leas como castigo: úsala para revisar dónde falta claridad o movimiento.</p>
+    </section>
+  </div>
+
+$(ad_block "🔮" "Patrocinio en guía de lectura" "Audiencia interesada en aprender tarot con intención y lectura responsable." "Ver espacios →")
+
+  <section class="panel">
+    <h2>Método de 5 pasos</h2>
+    <ol>
+      <li>Escribe una pregunta concreta y con marco temporal.</li>
+      <li>Elige una tirada sencilla: una carta, tres cartas o situación-obstáculo-consejo.</li>
+      <li>Anota orientación, primera impresión y palabras clave.</li>
+      <li>Contrasta la carta con hechos observables, no solo con deseo o miedo.</li>
+      <li>Cierra con una acción pequeña: hablar, esperar, revisar datos, descansar o poner un límite.</li>
+    </ol>
+  </section>
+
+  <section class="panel">
+    <h2>Cuándo no conviene tirar cartas</h2>
+    <p>No uses el tarot para sustituir ayuda médica, legal, psicológica o financiera. Tampoco conviene repetir la misma pregunta varias veces en momentos de ansiedad; en ese caso es más útil pausar, escribir lo que temes y volver con una pregunta distinta.</p>
+    <p>La lectura responsable separa símbolo y realidad: una carta puede iluminar un patrón, pero las decisiones importantes necesitan datos, conversación y responsabilidad personal.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Continúa estudiando</h2>
+    <p><a href="/arcanos-mayores">Arcanos Mayores</a> · <a href="/arcanos-menores">Arcanos Menores</a> · <a href="/tarot-amor">Tarot del amor</a> · <a href="/tarot-trabajo">Tarot del trabajo</a></p>
+  </section>
+
+$(cluster_recirculation_block "$SITE_KEY")
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDGUIDE
+
+cat > "$PUBLIC/sobre-nosotros.html" <<ENDABOUT
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "Sobre Tarot del Día — Criterio Editorial y Contacto" "Quién mantiene Tarot del Día, cómo se revisa el contenido y qué límites aplica esta herramienta gratuita de lectura de tarot." "/sobre-nosotros" "about_page" "trust" "sobre-nosotros")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"AboutPage","name":"Sobre Tarot del Día","url":"https://${DOMAIN}/sobre-nosotros","isPartOf":{"@type":"WebSite","name":"Tarot del Día","url":"https://${DOMAIN}/"},"inLanguage":"es"}
+  </script>
+  <style>
+${COMMON_CSS}
+    .trust-list li{color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:.4rem}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Tarot del Día</a> › Sobre nosotros</nav>
+  <h1>Sobre <span>Tarot del Día</span></h1>
+  <section class="panel">
+    <h2>Qué hacemos</h2>
+    <p>Tarot del Día es una herramienta gratuita para hacer tiradas sencillas y consultar significados de cartas. El contenido está pensado para autoconocimiento, escritura personal y reflexión diaria, no para reemplazar asesoramiento profesional.</p>
+    <p>La web forma parte de una red de herramientas en español sobre astrología, tarot, numerología y bienestar. Priorizamos páginas claras, navegación estable, contenido evergreen y enlaces internos que ayuden a profundizar sin forzar registros ni pagos.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Criterio editorial</h2>
+    <ul class="trust-list">
+      <li>Las fichas explican significado general, lectura al derecho, lectura invertida y aplicación práctica.</li>
+      <li>Las guías evitan promesas absolutas y recomiendan convertir cada lectura en una acción verificable.</li>
+      <li>Actualizamos páginas cuando detectamos errores, contenido insuficiente o cambios técnicos que afecten a la experiencia.</li>
+      <li>La publicidad directa se revisa para que no se confunda con interpretación editorial.</li>
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>Contacto</h2>
+    <p>Para correcciones, propuestas editoriales o publicidad contextual puedes escribir a <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
+  </section>
+
+$(cluster_recirculation_block "$SITE_KEY")
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDABOUT
+
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/guia-tarot</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/sobre-nosotros</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
 SITEMAP_URLS="  <url><loc>https://${DOMAIN}/</loc><lastmod>${TODAY}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>\n${SITEMAP_URLS}"
 
 # ══════════════════════════════════════════════════════════════
@@ -829,6 +1122,8 @@ ENDROBOTS
 if direct_ads_enabled; then
   SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/publicidad</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
 fi
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/privacy</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/terms</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
 
 cat > "$PUBLIC/sitemap.xml" <<ENDSITEMAP
 <?xml version="1.0" encoding="UTF-8"?>
@@ -861,4 +1156,5 @@ END404
 
 echo "  ✓ Static files"
 bash "$REPO_ROOT/scripts/generate-legal-pages.sh" "$SITE_KEY"
-echo "Done! $((PAGE_COUNT + 1)) pages + index in $PUBLIC"
+HTML_COUNT=$(find "$PUBLIC" -type f -name '*.html' | wc -l | tr -d ' ')
+echo "Done! ${HTML_COUNT} HTML pages in $PUBLIC"
