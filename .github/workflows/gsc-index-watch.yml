@@ -172,6 +172,13 @@ jobs:
               .sort((a, b) => a.number - b.number);
             const title = `${titlePrefix} — ${today}`;
             const hasIncidents = /403 Acceso denegado|SKIPPED por configuración|No se pudo ejecutar la vigilancia/i.test(body);
+            const duplicateBody = (primary) => [
+              `Sustituido por #${primary.number}.`,
+              '',
+              'Mantenemos un único issue canónico de vigilancia de indexación para evitar reportes obsoletos.',
+              '',
+              `Estado vigente: #${primary.number}`
+            ].join('\n');
 
             if (!hasIncidents) {
               if (matching.length > 0) {
@@ -196,6 +203,7 @@ jobs:
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     issue_number: duplicate.number,
+                    body: duplicateBody(primary),
                     state: 'closed'
                   });
                 }
@@ -225,6 +233,7 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: duplicate.number,
+                  body: duplicateBody(primary),
                   state: 'closed'
                 });
               }
