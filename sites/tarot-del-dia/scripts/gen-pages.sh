@@ -97,7 +97,7 @@ MAJOR_DESC=("El Loco representa el espíritu libre que da el salto al vacío con
 SITEMAP_URLS=""
 PAGE_COUNT=0
 MAJOR_TITLE_TEMPLATE="{{name}} ({{num}}) — Significado en el Tarot | Tarot del Día"
-MAJOR_DESC_TEMPLATE="Significado de {{name}} (Arcano Mayor {{num}}) en el tarot. Al derecho: {{upright}}. Invertida: {{reversed}}. Descubre su mensaje para hoy."
+MAJOR_DESC_TEMPLATE="Significado de {{name}} (Arcano Mayor {{num}}): interpretación al derecho e invertida, amor, trabajo y consejo práctico para tu tirada diaria."
 
 # ── Generate Major Arcana pages ──────────────────────────────
 echo "Generating 22 major arcana pages..."
@@ -310,6 +310,127 @@ ENDMAJOR
 SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/arcanos-mayores</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
 echo "  ✓ arcanos-mayores/index.html"
 
+# ── Intent landing pages ─────────────────────────────────────
+gen_intent_page() {
+  local slug="$1" title="$2" desc="$3" h1="$4" intro="$5" focus="$6" spread="$7" reading="$8" caution="$9" faq_question="${10}" faq_answer="${11}"
+  local path="/${slug}"
+
+  cat > "$PUBLIC/${slug}.html" <<ENDINTENT
+<!DOCTYPE html>
+<html lang="es">
+<head>
+$(gen_head "$title" "$desc" "$path" "intent_landing" "evergreen" "$slug")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"${h1}","description":"${desc}","author":{"@type":"Organization","name":"Tarot del Día"},"publisher":{"@type":"Organization","name":"Tarot del Día","url":"https://${DOMAIN}/"},"mainEntityOfPage":"https://${DOMAIN}${path}","inLanguage":"es"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"${faq_question}","acceptedAnswer":{"@type":"Answer","text":"${faq_answer}"}},{"@type":"Question","name":"¿Puedo repetir la tirada varias veces?","acceptedAnswer":{"@type":"Answer","text":"Conviene hacer una sola tirada por pregunta. Si necesitas más claridad, cambia el enfoque hacia una acción concreta o una conversación pendiente."}}]}
+  </script>
+  <style>
+${COMMON_CSS}
+    .intent-hero{text-align:center;padding:1.5rem 0 1rem}
+    .intent-hero p{max-width:680px;margin:.75rem auto 0;color:var(--muted);line-height:1.7;font-size:.94rem}
+    .intent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1.4rem 0}
+    .intent-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .intent-card h2{font-size:1rem;margin-bottom:.45rem;color:var(--accent)}
+    .intent-card p,.intent-card li{color:var(--muted);font-size:.9rem;line-height:1.7}
+    .intent-card ul{padding-left:1.15rem}
+    .intent-links{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.9rem}
+    .intent-links a{display:inline-block;padding:.5rem .7rem;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--accent);text-decoration:none;font-size:.82rem;font-weight:700}
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb"><a href="/">Tarot del Día</a> › ${h1}</nav>
+  <header class="intent-hero">
+    <div style="font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600">Guía de tirada</div>
+    <h1><span>${h1}</span></h1>
+    <p>${intro}</p>
+  </header>
+
+  <div class="intent-grid">
+    <section class="intent-card">
+      <h2>Antes de preguntar</h2>
+      <p>${focus}</p>
+    </section>
+    <section class="intent-card">
+      <h2>Tirada recomendada</h2>
+      <p>${spread}</p>
+    </section>
+    <section class="intent-card">
+      <h2>Cómo interpretar la respuesta</h2>
+      <p>${reading}</p>
+    </section>
+  </div>
+
+$(ad_block "🔮" "Espacio contextual en guías de tarot" "Usuarios con intención concreta antes de hacer una tirada diaria." "Ver espacios →")
+
+  <section class="panel">
+    <h2>Lectura responsable</h2>
+    <p>${caution}</p>
+    <p>El tarot funciona mejor como herramienta de reflexión: ayuda a nombrar patrones, preparar decisiones y detectar qué parte de una situación pide más atención. No sustituye asesoramiento profesional, legal, médico o financiero.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Continúa tu lectura</h2>
+    <p>Después de leer esta guía, puedes hacer la tirada interactiva del día o revisar el significado de cada carta para interpretar mejor el mensaje.</p>
+    <div class="intent-links">
+      <a href="/">Hacer tirada de 3 cartas</a>
+      <a href="/arcanos-mayores">Ver Arcanos Mayores</a>
+      <a href="https://carta-astral-gratis.es/">Calcular carta astral</a>
+    </div>
+  </section>
+
+$(cluster_recirculation_block "$SITE_KEY")
+
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDINTENT
+
+  SITEMAP_URLS+="  <url><loc>https://${DOMAIN}${path}</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>\n"
+  PAGE_COUNT=$((PAGE_COUNT + 1))
+}
+
+echo "Generating intent landing pages..."
+gen_intent_page "tarot-amor" \
+  "Tarot del Amor Gratis — Tirada y Consejos para Relaciones" \
+  "Guía de tarot del amor gratis: cómo preguntar por una relación, qué cartas observar y cómo interpretar una tirada afectiva sin caer en dependencia." \
+  "Tarot del Amor" \
+  "El tarot del amor sirve para ordenar emociones, revisar expectativas y entender qué dinámica está activa en una relación, una ruptura o una atracción nueva." \
+  "Formula una pregunta que dependa de tu claridad, no del control sobre otra persona. Mejor que preguntar si alguien volverá, pregunta qué necesitas comprender, qué límite cuidar o qué conversación preparar." \
+  "Usa tres cartas: situación emocional, necesidad real y siguiente paso. Si sale una carta invertida, léela como una energía bloqueada o una señal de que conviene ir más despacio." \
+  "Las cartas de Copas suelen hablar de vínculo y sensibilidad; Bastos, de deseo e impulso; Espadas, de conversación y conflicto mental; Oros, de estabilidad y hechos concretos. En Arcanos Mayores, presta atención a Enamorados, Emperatriz, Diablo, Templanza y Torre." \
+  "En temas afectivos evita usar el tarot para vigilar, insistir o justificar una relación que te daña. Si la tirada marca tensión, conviértela en una acción observable: pedir claridad, bajar expectativas o proteger tu descanso." \
+  "¿Qué carta del tarot habla más de amor?" \
+  "Los Enamorados es la carta más directa para decisiones afectivas, pero la Emperatriz, el Sol, la Templanza y el Dos de Copas también pueden señalar apertura, cuidado y reciprocidad."
+
+gen_intent_page "tarot-trabajo" \
+  "Tarot del Trabajo Gratis — Tirada para Decisiones Laborales" \
+  "Guía de tarot del trabajo gratis: preguntas útiles para empleo, proyectos, entrevistas y cambios profesionales con una lectura práctica de 3 cartas." \
+  "Tarot del Trabajo" \
+  "El tarot aplicado al trabajo ayuda a mirar decisiones profesionales con más distancia: entrevistas, cambios de puesto, proyectos, conflictos de equipo o dudas sobre continuidad." \
+  "Haz preguntas que terminen en una acción: qué debo preparar para esta entrevista, qué riesgo no estoy viendo, qué recurso profesional puedo usar mejor o qué conversación conviene tener." \
+  "Prueba una tirada de tres cartas: contexto actual, obstáculo principal y movimiento recomendable. Si la tercera carta es de Espadas, prioriza comunicación; si es de Oros, baja la decisión a números, tiempos y condiciones." \
+  "El Mago favorece iniciativa y habilidades; la Justicia pide contratos claros; el Carro marca avance con disciplina; el Ermitaño sugiere análisis; la Rueda habla de cambio de ciclo. Ninguna carta reemplaza revisar datos, plazos y compromisos reales." \
+  "No uses una tirada para delegar decisiones importantes. Cruza el mensaje con información verificable: salario, condiciones, carga de trabajo, salud, responsabilidades y alternativas disponibles." \
+  "¿Sirve el tarot para decidir si cambiar de trabajo?" \
+  "Puede servir como herramienta de reflexión, siempre que la lectura se combine con datos concretos: condiciones, estabilidad, objetivos, salud y oportunidades reales."
+
+gen_intent_page "tarot-si-o-no" \
+  "Tarot Sí o No Gratis — Cómo Interpretar una Respuesta Clara" \
+  "Aprende a hacer una tirada de tarot sí o no: cómo formular la pregunta, cuándo evitarla y cómo leer cartas afirmativas, negativas o condicionales." \
+  "Tarot Sí o No" \
+  "El tarot sí o no es útil para preguntas simples, pero gana valor cuando la respuesta incluye una condición: qué favorece el sí, qué activa el no y qué puedes hacer ahora." \
+  "Evita preguntas ambiguas o cargadas de ansiedad. Una buena pregunta tiene una acción y un marco temporal: ¿me conviene enviar este mensaje esta semana?, ¿es buen momento para aceptar esta propuesta?" \
+  "Para una respuesta rápida, saca una carta: al derecho indica energía favorable y al revés pide cautela. Para más matiz, usa tres cartas: sí, no y condición. La carta de condición es la más importante." \
+  "Sol, Mundo, Estrella, Carro y As de Bastos suelen inclinar hacia un sí. Torre, Diablo, Cinco de Espadas o Luna pueden pedir pausa, revisión o un no temporal. Cartas como Templanza o Colgado responden: todavía no, ajusta el enfoque." \
+  "Si repites la misma pregunta hasta conseguir la respuesta que quieres, la tirada pierde utilidad. Anota la primera respuesta y tradúcela a una decisión pequeña, concreta y reversible." \
+  "¿El tarot sí o no siempre responde de forma cerrada?" \
+  "No siempre. Muchas cartas responden con condiciones: sí si actúas con claridad, no si mantienes el mismo patrón, o espera hasta tener más información."
+echo "  ✓ intent landing pages generated"
+
 # ══════════════════════════════════════════════════════════════
 # INDEX — Interactive 3-card spread
 # ══════════════════════════════════════════════════════════════
@@ -397,6 +518,10 @@ ${COMMON_CSS}
     .result-deeper h3{font-family:'Playfair Display',serif;font-size:1.02rem;margin-bottom:.35rem}
     .result-deeper p{color:var(--muted);font-size:.88rem;line-height:1.6;margin-bottom:.75rem}
     .result-deeper a{display:inline-block;padding:.58rem 1rem;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:.84rem;font-weight:700}
+    .intent-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin:1.2rem 0}
+    .intent-nav a{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem;box-shadow:var(--shadow)}
+    .intent-nav strong{display:block;color:var(--accent);font-size:.9rem;margin-bottom:.25rem}
+    .intent-nav span{display:block;color:var(--muted);font-size:.78rem;line-height:1.45}
     .seo-text{margin:2rem 0}
     .seo-text h2{font-size:1.1rem;margin:1.2rem 0 .5rem}
     .seo-text p{line-height:1.7;color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
@@ -454,6 +579,15 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
     <h2>Explora los Arcanos</h2>
     <p><a href="/arcanos-mayores" style="color:var(--accent);font-weight:600;text-decoration:none">Ver los 22 Arcanos Mayores →</a></p>
   </div>
+
+  <section class="panel">
+    <h2>Lecturas de tarot por intención</h2>
+    <div class="intent-nav">
+      <a href="/tarot-amor"><strong>Tarot del amor</strong><span>Preguntas para relaciones, rupturas y vínculos nuevos.</span></a>
+      <a href="/tarot-trabajo"><strong>Tarot del trabajo</strong><span>Guía para entrevistas, proyectos y cambios profesionales.</span></a>
+      <a href="/tarot-si-o-no"><strong>Tarot sí o no</strong><span>Cómo formular preguntas cerradas sin perder matiz.</span></a>
+    </div>
+  </section>
 
   <div class="seo-text panel">
     <h2>¿Qué es el Tarot del Día?</h2>
@@ -709,6 +843,7 @@ cat > "$PUBLIC/404.html" <<END404
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página no encontrada — Tarot del Día</title>
+  <meta name="description" content="Página no encontrada en Tarot del Día. Vuelve al inicio para hacer una tirada gratis o consultar los Arcanos Mayores.">
   <meta name="robots" content="noindex">
 $(canonical_host_redirect_script "$DOMAIN")
   <style>${COMMON_CSS}</style>

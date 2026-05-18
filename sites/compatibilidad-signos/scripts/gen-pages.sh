@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Generate 144 compatibility pages + index + sitemap for compatibilidad-signos.es
+# Generate canonical compatibility pages + redirects + index + sitemap for compatibilidad-signos.es
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SITE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -183,6 +183,10 @@ canonical_pair_slug() {
   fi
 }
 
+pair_path() {
+  canonical_pair_slug "$1" "$2"
+}
+
 # ── Element pair descriptions ────────────────────────────────
 element_desc() {
   local e1="$1" e2="$2"
@@ -275,11 +279,12 @@ ENDFOOTER
 # ══════════════════════════════════════════════════════════════
 # GENERATE PAIR PAGES
 # ══════════════════════════════════════════════════════════════
-echo "Generating 144 compatibility pages..."
+echo "Generating canonical compatibility pages..."
 mkdir -p "$PUBLIC"
 
 SITEMAP_URLS=""
 PAGE_COUNT=0
+REDIRECT_COUNT=0
 PAIR_TITLE_TEMPLATE="Compatibilidad {{name1}} y {{name2}} {{glyphs}} — {{score}}% {{label}}"
 PAIR_DESC_TEMPLATE="¿Son compatibles {{name1}} y {{name2}}? Descubre su afinidad amorosa ({{score}}%), fortalezas, retos y cómo se complementan según sus elementos y planetas regentes."
 
@@ -302,7 +307,9 @@ for s1 in "${SLUGS[@]}"; do
     canonical_path="/${canonical_slug}"
     robots_meta="index, follow"
     if [[ "$slug_page" != "$canonical_slug" ]]; then
-      robots_meta="noindex, follow"
+      rm -f "$file"
+      REDIRECT_COUNT=$((REDIRECT_COUNT + 1))
+      continue
     fi
 
     gift1="$(element_gift "$e1")"
@@ -421,7 +428,7 @@ $(ad_block "✦" "Patrocina una de las combinaciones más buscadas" "Ideal para 
 
   <div class="panel">
     <h2>Otras compatibilidades de ${n1}</h2>
-    <p style="display:flex;flex-wrap:wrap;gap:.4rem">$(for s in "${SLUGS[@]}"; do [[ "$s" == "$s2" ]] && continue; printf '<a href="/%s-%s" style="padding:.25rem .6rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--accent);font-size:.8rem">%s %s</a>' "$s1" "$s" "${GLYPH[$s]}" "${NAME[$s]}"; done)</p>
+    <p style="display:flex;flex-wrap:wrap;gap:.4rem">$(for s in "${SLUGS[@]}"; do [[ "$s" == "$s2" ]] && continue; printf '<a href="/%s" style="padding:.25rem .6rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--accent);font-size:.8rem">%s %s</a>' "$(pair_path "$s1" "$s")" "${GLYPH[$s]}" "${NAME[$s]}"; done)</p>
   </div>
 
 $(cluster_recirculation_block "$SITE_KEY")
@@ -439,6 +446,7 @@ ENDHTML
   done
 done
 echo "  ✓ ${PAGE_COUNT} pair pages generated"
+echo "  ✓ ${REDIRECT_COUNT} reverse pair redirects prepared"
 
 # ══════════════════════════════════════════════════════════════
 # INDEX PAGE
@@ -460,7 +468,7 @@ for s1 in "${SLUGS[@]}"; do
     elif (( sc >= 55 )); then cls="mid"
     else cls="low"
     fi
-    GRID_ROWS+="<td class=\"cell ${cls}\"><a href=\"/${s1}-${s2}\">${sc}%</a></td>"
+    GRID_ROWS+="<td class=\"cell ${cls}\"><a href=\"/$(pair_path "$s1" "$s2")\">${sc}%</a></td>"
   done
   GRID_ROWS+="</tr>"
 done
@@ -470,8 +478,8 @@ ARIES_LINKS=""
 for s in "${SLUGS[@]}"; do
   geminis_score=$(calc_score "geminis" "$s")
   aries_score=$(calc_score "aries" "$s")
-  GEMINIS_LINKS+="<a href=\"/geminis-${s}\">Géminis con ${NAME[$s]} <strong>${geminis_score}%</strong></a>"
-  ARIES_LINKS+="<a href=\"/aries-${s}\">Aries con ${NAME[$s]} <strong>${aries_score}%</strong></a>"
+  GEMINIS_LINKS+="<a href=\"/$(pair_path "geminis" "$s")\">Géminis con ${NAME[$s]} <strong>${geminis_score}%</strong></a>"
+  ARIES_LINKS+="<a href=\"/$(pair_path "aries" "$s")\">Aries con ${NAME[$s]} <strong>${aries_score}%</strong></a>"
 done
 
 cat > "$PUBLIC/index.html" <<ENDINDEX
@@ -598,10 +606,14 @@ $(cluster_recirculation_block "$SITE_KEY")
 $(gen_footer)
 </div>
 <script>
+const SIGN_ORDER={aries:0,tauro:1,geminis:2,cancer:3,leo:4,virgo:5,libra:6,escorpio:7,sagitario:8,capricornio:9,acuario:10,piscis:11};
+function canonicalPairPath(a,b){
+  return SIGN_ORDER[a] <= SIGN_ORDER[b] ? '/' + a + '-' + b : '/' + b + '-' + a;
+}
 function openCompatibilityFromHome(){
   const s1=document.getElementById('s1').value;
   const s2=document.getElementById('s2').value;
-  const target='/' + s1 + '-' + s2;
+  const target=canonicalPairPath(s1,s2);
   if(window.clusterTrack){
     window.clusterTrack('compatibility_view',{
       selected_sign_1:s1,
@@ -642,13 +654,14 @@ for sign in "${SLUGS[@]}"; do
     other_glyph="${GLYPH[$other]}"
     score=$(calc_score "$sign" "$other")
     label=$(score_label "$score")
-    rows+="<tr><td><a href=\"/${sign}-${other}\">${sign_glyph} ${sign_name} con ${other_glyph} ${other_name}</a></td><td><strong>${score}%</strong></td><td>${label}</td></tr>"
+    pair_slug="$(pair_path "$sign" "$other")"
+    rows+="<tr><td><a href=\"/${pair_slug}\">${sign_glyph} ${sign_name} con ${other_glyph} ${other_name}</a></td><td><strong>${score}%</strong></td><td>${label}</td></tr>"
     if (( score >= 65 )); then
-      best_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+      best_links+="<li><a href=\"/${pair_slug}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
     elif (( score >= 50 )); then
-      moderate_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+      moderate_links+="<li><a href=\"/${pair_slug}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
     else
-      challenge_links+="<li><a href=\"/${sign}-${other}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
+      challenge_links+="<li><a href=\"/${pair_slug}\">${sign_name} con ${other_name}</a>: ${score}% (${label})</li>"
     fi
   done
   [[ -z "$best_links" ]] && best_links="<li>No hay combinaciones de ${sign_name} por encima del 65% en esta tabla; revisa las compatibilidades medias para ver las mejores opciones.</li>"
@@ -732,6 +745,70 @@ ENDSIGN
 done
 echo "  ✓ ${SIGN_TABLE_COUNT} sign table pages generated"
 
+write_firebase_json() {
+  {
+    cat <<'ENDJSON'
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "redirects": [
+ENDJSON
+    local first=1
+    for s1 in "${SLUGS[@]}"; do
+      for s2 in "${SLUGS[@]}"; do
+        local source_slug="${s1}-${s2}"
+        local destination_slug
+        destination_slug="$(canonical_pair_slug "$s1" "$s2")"
+        if [[ "$source_slug" != "$destination_slug" ]]; then
+          if (( first == 0 )); then
+            printf ',\n'
+          fi
+          first=0
+          printf '      { "source": "/%s", "destination": "/%s", "type": 301 }' "$source_slug" "$destination_slug"
+        fi
+      done
+    done
+    cat <<'ENDJSON'
+
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+          { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+          { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600" }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css|ico|png|jpg|svg|webp|woff2)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=604800, s-maxage=604800, stale-while-revalidate=86400" }
+        ]
+      },
+      {
+        "source": "/{robots.txt,sitemap.xml,ads.txt}",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=86400" }
+        ]
+      }
+    ]
+  }
+}
+ENDJSON
+  } > "$SITE_DIR/firebase.json"
+}
+
 # ══════════════════════════════════════════════════════════════
 # STATIC FILES: 404, ads.txt, robots.txt, sitemap.xml
 # ══════════════════════════════════════════════════════════════
@@ -759,6 +836,8 @@ cat > "$PUBLIC/sitemap.xml" <<ENDSITEMAP
 $(echo -e "$SITEMAP_URLS")</urlset>
 ENDSITEMAP
 
+write_firebase_json
+
 # 404
 cat > "$PUBLIC/404.html" <<END404
 <!DOCTYPE html>
@@ -767,6 +846,7 @@ cat > "$PUBLIC/404.html" <<END404
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página no encontrada — Compatibilidad Signos</title>
+  <meta name="description" content="Página no encontrada en Compatibilidad Signos. Vuelve al inicio para calcular la afinidad entre signos zodiacales.">
   <meta name="robots" content="noindex">
 $(canonical_host_redirect_script "$DOMAIN")
   <style>${COMMON_CSS}</style>

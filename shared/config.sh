@@ -588,7 +588,7 @@ gen_publicidad_page() {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publicidad en ${name} - Dosier para anunciantes</title>
-  <meta name="description" content="Anuncia tu marca en ${domain} o en toda la red esotérica. ${hook} Espacios destacados, patrocinios directos y formatos flexibles.">
+  <meta name="description" content="Anuncia tu marca en ${domain}. Dosier comercial con espacios destacados, patrocinios directos y formatos flexibles.">
   <link rel="canonical" href="https://${domain}/publicidad">
   <meta property="og:title" content="Publicidad en ${name}">
   <meta property="og:description" content="${hook}">

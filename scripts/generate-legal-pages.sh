@@ -156,7 +156,7 @@ ENDPRIV
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Términos de Uso — ${site_name}</title>
+  <title>Términos y condiciones — ${site_name}</title>
   <meta name="description" content="Términos y condiciones de uso de ${domain}. Servicio gratuito de ${desc}.">
   <link rel="canonical" href="https://${domain}/terms">
   <meta name="robots" content="index, follow">

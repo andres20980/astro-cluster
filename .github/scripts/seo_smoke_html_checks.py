@@ -6,10 +6,6 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 
-DOMAIN = os.environ["SEO_SMOKE_DOMAIN"]
-html = Path(sys.argv[1]).read_text(encoding="utf-8", errors="ignore")
-html_lower = html.lower()
-
 INTERNAL_COPY_MARKERS = [
     "objetivo cluster-first",
     "si el usuario ya ha mostrado intencion",
@@ -79,27 +75,39 @@ class PageParser(HTMLParser):
             self.has_ldjson = True
 
 
-parser = PageParser()
-parser.feed(html)
-has_adsense_loader = (
-    "pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" in html
-    and "ca-pub-9368517395014039" in html
-)
+def check_html_file(path: Path, domain: str):
+    html = path.read_text(encoding="utf-8", errors="ignore")
+    html_lower = html.lower()
 
-title_text = " ".join(chunk.strip() for chunk in parser.title_chunks if chunk.strip()).strip()
-h1_text = " ".join(chunk.strip() for chunk in parser.h1_chunks if chunk.strip()).strip()
-meta_robots = parser.meta_robots.lower()
-canonical = parser.canonical.rstrip("/")
+    parser = PageParser()
+    parser.feed(html)
+    has_adsense_loader = (
+        "pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" in html
+        and "ca-pub-9368517395014039" in html
+    )
 
-results = {
-    "title_present": bool(title_text),
-    "meta_description_present": bool(parser.meta_description.strip()),
-    "canonical_ok": canonical == f"https://{DOMAIN}",
-    "structured_data_present": parser.has_ldjson,
-    "adsense_script_present": parser.has_adsense_script or has_adsense_loader,
-    "homepage_not_noindex": "noindex" not in meta_robots,
-    "h1_present": bool(h1_text),
-    "internal_copy_leaked": any(marker in html_lower for marker in INTERNAL_COPY_MARKERS),
-}
+    title_text = " ".join(chunk.strip() for chunk in parser.title_chunks if chunk.strip()).strip()
+    h1_text = " ".join(chunk.strip() for chunk in parser.h1_chunks if chunk.strip()).strip()
+    meta_robots = parser.meta_robots.lower()
+    canonical = parser.canonical.rstrip("/")
 
-print(json.dumps(results))
+    return {
+        "title_present": bool(title_text),
+        "meta_description_present": bool(parser.meta_description.strip()),
+        "canonical_ok": canonical == f"https://{domain}",
+        "structured_data_present": parser.has_ldjson,
+        "adsense_script_present": parser.has_adsense_script or has_adsense_loader,
+        "homepage_not_noindex": "noindex" not in meta_robots,
+        "h1_present": bool(h1_text),
+        "internal_copy_leaked": any(marker in html_lower for marker in INTERNAL_COPY_MARKERS),
+    }
+
+
+def main():
+    domain = os.environ["SEO_SMOKE_DOMAIN"]
+    results = check_html_file(Path(sys.argv[1]), domain)
+    print(json.dumps(results))
+
+
+if __name__ == "__main__":
+    main()
