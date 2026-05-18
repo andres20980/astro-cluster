@@ -11,7 +11,7 @@ GA4="${GA4_IDS[carta-astral]}"
 CROSSLINKS_HTML=$(crosslink_footer "carta-astral")
 mkdir -p "$DIR"
 SIGN_PAGE_TITLE_TEMPLATE="Carta Astral {{name}} {{glyph}} — Signo, rasgos y significado natal"
-SIGN_PAGE_DESC_TEMPLATE="Carta astral de {{name}} {{glyph}}: fechas ({{dates}}), elemento {{element}}, planeta regente {{ruler}} y significado en tu carta natal. Calcula tu carta astral gratis."
+SIGN_PAGE_DESC_TEMPLATE="Carta astral de {{name}} {{glyph}}: fechas, elemento {{element}}, planeta {{ruler}} y significado natal. Calcula tu carta astral gratis."
 
 declare -A SIGNS=(
   [aries]="Aries|♈|21 de marzo – 19 de abril|Fuego|Marte|Cardinal|El primer signo del zodíaco. Aries es pura energía de inicio, impulso y coraje. Los nacidos bajo este signo son pioneros naturales, directos y apasionados. Su regente Marte les da una fuerza de voluntad imparable.|independencia, coraje, entusiasmo, determinación|impaciencia, impulsividad, tendencia a la confrontación|En la carta astral, tener el Sol, la Luna o el Ascendente en Aries indica una personalidad que necesita liderar, actuar y no quedarse quieta. Marte en Aries está domiciliado: su energía es pura y directa."
@@ -225,7 +225,7 @@ cat > "$DIR/index.html" <<HEREDOC
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Los 12 Signos del Zodíaco — Carta Astral Gratis</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="description" content="Los 12 signos del zodíaco: características, fechas, elementos y significado en la carta astral. Aries, Tauro, Géminis, Cáncer, Leo, Virgo, Libra, Escorpio, Sagitario, Capricornio, Acuario y Piscis.">
+  <meta name="description" content="Guía de los 12 signos del zodíaco: fechas, elementos, rasgos y significado de cada signo dentro de la carta astral natal.">
   <link rel="canonical" href="https://carta-astral-gratis.es/signos">
   <meta name="robots" content="index, follow">
   <link rel="preconnect" href="https://fonts.googleapis.com">
