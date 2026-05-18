@@ -39,7 +39,7 @@ Firebase project: `carta-astral-f4ab9`
 | `MX` | `@` | `10 mx1.improvmx.com` | `3600` |
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
-| `TXT` | `@` | `google-site-verification=x02IbSeXH-i8nm_h0nEA_iFzvdSa6jdOoILtcyXFsa8` | `3600` |
+| `TXT` | `@` | `google-site-verification=<valor-en-dns>` | `3600` |
 | `TXT` | `_acme-challenge` | `RPkgsG_f6LmpdscQrkyvxKY4o1eHijCDbcoWnjgdr_s` | `3600` |
 
 Estado documentado:
@@ -58,7 +58,7 @@ Firebase project: `compat-signos-es`
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
 | `TXT` | `@` | `hosting-site=compat-signos-es` | `3600` |
-| `TXT` | `@` | `google-site-verification=YLLqhMQrT84LFCfa9WTqOtC5p4fhrzqJjP_VHNgqDqo` | `3600` |
+| `TXT` | `@` | `google-site-verification=<valor-en-dns>` | `3600` |
 | `TXT` | `_acme-challenge` | `ae0XwtyMP3f8cx_unWdHbb17KLvfvzPihaZOyyA33Uk` | `3600` |
 
 Estado documentado:
@@ -77,7 +77,7 @@ Firebase project: `tarot-del-dia-es`
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
 | `TXT` | `@` | `hosting-site=tarot-del-dia-es` | `3600` |
-| `TXT` | `@` | `google-site-verification=y5oDE6p4gSne7dcGB5HRXdvmWeM8St6iSi4aLYqbiFs` | `3600` |
+| `TXT` | `@` | `google-site-verification=<valor-en-dns>` | `3600` |
 | `TXT` | `_acme-challenge` | `ULH29pUoJ6T8LCti3oCYT3zUveH6Df8Xes_vaDmtWlA` | `3600` |
 
 Estado documentado:
@@ -96,7 +96,7 @@ Firebase project: `calc-numerologia-es`
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
 | `TXT` | `@` | `hosting-site=calc-numerologia-es` | `3600` |
-| `TXT` | `@` | `google-site-verification=R7Ml-zTd4yo6NlA8mu4RWpNnE1BcQkfve3o-3MyML84` | `3600` |
+| `TXT` | `@` | `google-site-verification=<valor-en-dns>` | `3600` |
 | `TXT` | `_acme-challenge` | `hY5QfB1UDJHyiHmXMyjeMtQP3BlEOxBzGTK05ijkgRQ` | `3600` |
 
 Estado documentado:
@@ -115,7 +115,7 @@ Firebase project: `horoscopo-hoy-es`
 | `MX` | `@` | `20 mx2.improvmx.com` | `3600` |
 | `TXT` | `@` | `v=spf1 include:spf.improvmx.com ~all` | `3600` |
 | `TXT` | `@` | `hosting-site=horoscopo-hoy-es` | `3600` |
-| `TXT` | `@` | `google-site-verification=J3Doot_Iz9hkGqE6i7-eKO-YPgHaEif-YnPX0NHwfX0` | `3600` |
+| `TXT` | `@` | `google-site-verification=<valor-en-dns>` | `3600` |
 | `TXT` | `_acme-challenge` | `EjFvRk9FSIxsE_6r9wgBAiiddpqZrB22AYnxkO23LuM` | `3600` |
 
 Estado documentado:
