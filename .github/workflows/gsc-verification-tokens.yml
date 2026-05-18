@@ -83,21 +83,54 @@ jobs:
       - name: "🔑 Intercambiar refresh token OAuth"
         id: auth
         env:
+          ACTION: ${{ inputs.action }}
+          SITE_KEY: ${{ inputs.site_key }}
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_SA_CARTA_ASTRAL: ${{ secrets.FIREBASE_SA_CARTA_ASTRAL }}
+          FIREBASE_SA_COMPATIBILIDAD_SIGNOS: ${{ secrets.FIREBASE_SA_COMPATIBILIDAD_SIGNOS }}
+          FIREBASE_SA_TAROT_DEL_DIA: ${{ secrets.FIREBASE_SA_TAROT_DEL_DIA }}
+          FIREBASE_SA_CALCULAR_NUMEROLOGIA: ${{ secrets.FIREBASE_SA_CALCULAR_NUMEROLOGIA }}
+          FIREBASE_SA_HOROSCOPO_DE_HOY: ${{ secrets.FIREBASE_SA_HOROSCOPO_DE_HOY }}
+          FIREBASE_SA_MEDITACION_CHAKRAS: ${{ secrets.FIREBASE_SA_MEDITACION_CHAKRAS }}
         run: |
           set -euo pipefail
 
-          token_json=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
+          token_json=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
             -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
             -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
             -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
-            -d "grant_type=refresh_token")
+            -d "grant_type=refresh_token" || true)
 
           access_token=$(echo "$token_json" | jq -r '.access_token // empty')
           if [ -z "$access_token" ]; then
-            echo "$token_json"
+            echo "OAuth refresh token exchange did not return an access token; trying site service account fallback." >&2
+            echo "$token_json" | jq -c '{error: (.error // ""), error_description: (.error_description // "")}' >&2 || true
+          fi
+
+          if [ -z "$access_token" ] && [ "${ACTION}" = "verify_url_prefix" ]; then
+            firebase_service_account=""
+            case "${SITE_KEY}" in
+              carta-astral) firebase_service_account="${FIREBASE_SA_CARTA_ASTRAL:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              compatibilidad-signos) firebase_service_account="${FIREBASE_SA_COMPATIBILIDAD_SIGNOS:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              tarot-del-dia) firebase_service_account="${FIREBASE_SA_TAROT_DEL_DIA:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              calcular-numerologia) firebase_service_account="${FIREBASE_SA_CALCULAR_NUMEROLOGIA:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              horoscopo-de-hoy) firebase_service_account="${FIREBASE_SA_HOROSCOPO_DE_HOY:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              meditacion-chakras) firebase_service_account="${FIREBASE_SA_MEDITACION_CHAKRAS:-${FIREBASE_SERVICE_ACCOUNT:-}}" ;;
+              *) echo "Unknown site_key for URL prefix verification: ${SITE_KEY}" >&2; exit 1 ;;
+            esac
+
+            creds_file="$RUNNER_TEMP/site-verification-${SITE_KEY}.json"
+            printf '%s' "$firebase_service_account" > "$creds_file"
+            chmod 600 "$creds_file"
+            python3 -m pip -q install google-auth
+            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$creds_file" python3 -c "import google.auth, google.auth.transport.requests; scopes=['https://www.googleapis.com/auth/siteverification','https://www.googleapis.com/auth/webmasters']; creds,_=google.auth.default(scopes=scopes); creds.refresh(google.auth.transport.requests.Request()); print(creds.token or '')")
+            rm -f "$creds_file"
+          fi
+
+          if [ -z "$access_token" ]; then
             echo "Could not mint OAuth access token" >&2
             exit 1
           fi
