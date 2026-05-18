@@ -162,7 +162,7 @@ jobs:
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open',
+              state: 'all',
               labels: 'seo',
               per_page: 100
             });
@@ -174,19 +174,31 @@ jobs:
             const hasIncidents = /403 Acceso denegado|SKIPPED por configuración|No se pudo ejecutar la vigilancia/i.test(body);
 
             if (!hasIncidents) {
-              for (const issue of matching) {
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  body: 'Sin incidencias de indexación en la última ejecución. Cerrando issue automáticamente.'
-                });
+              if (matching.length > 0) {
+                const primary = matching[0];
                 await github.rest.issues.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  issue_number: issue.number,
+                  issue_number: primary.number,
+                  title,
+                  body,
                   state: 'closed'
                 });
+
+                for (const duplicate of matching.slice(1)) {
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: duplicate.number,
+                    body: `Sustituido por #${primary.number}. Mantenemos un único issue canónico de vigilancia de indexación.`
+                  });
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: duplicate.number,
+                    state: 'closed'
+                  });
+                }
               }
               return;
             }
