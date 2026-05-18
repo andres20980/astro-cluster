@@ -12,4 +12,8 @@
   <url><loc>https://horoscopo-de-hoy.es/sagitario</loc><lastmod>2026-05-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://horoscopo-de-hoy.es/capricornio</loc><lastmod>2026-05-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://horoscopo-de-hoy.es/acuario</loc><lastmod>2026-05-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://horoscopo-de-hoy.es/piscis</loc><lastmod>2026-05-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url></urlset>
+  <url><loc>https://horoscopo-de-hoy.es/piscis</loc><lastmod>2026-05-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://horoscopo-de-hoy.es/metodologia</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://horoscopo-de-hoy.es/sobre-nosotros</loc><lastmod>2026-05-18</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://horoscopo-de-hoy.es/privacy</loc><lastmod>2026-05-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://horoscopo-de-hoy.es/terms</loc><lastmod>2026-05-18</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url></urlset>

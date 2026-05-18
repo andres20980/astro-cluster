@@ -160,9 +160,9 @@ gen_footer() {
   cat <<ENDFOOTER
 <footer>
   <p>© $(site_date +%Y) Horóscopo de Hoy — Actualizado diariamente</p>
-  <p><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
-  $(footer_publicidad_line "$SITE_KEY")
-  ${CROSSLINKS_HTML}
+  <p><a href="/metodologia">Metodología</a> · <a href="/sobre-nosotros">Sobre nosotros</a> · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
+$(footer_publicidad_line "$SITE_KEY")
+${CROSSLINKS_HTML}
 </footer>
 ENDFOOTER
 }
@@ -386,7 +386,7 @@ $(ad_block "⭐" "Publicidad destacada en una audiencia que vuelve cada día" "T
 
   <div class="seo-text panel">
     <h2>¿Qué es el horóscopo del día?</h2>
-    <p>El horóscopo diario analiza las influencias astrológicas generales que afectan a cada signo zodiacal durante un día concreto. Se basa en los tránsitos planetarios: el movimiento continuo de los planetas y cómo interactúan con las posiciones natales de cada signo.</p>
+    <p>El horóscopo diario analiza las influencias astrológicas generales que afectan a cada signo zodiacal durante un día concreto. Se basa en los tránsitos planetarios: el movimiento continuo de los planetas y cómo interactúan con las posiciones natales de cada signo. Puedes revisar el enfoque editorial en nuestra <a href="/metodologia">metodología del horóscopo diario</a>.</p>
 
     <h2>¿Cómo leer tu horóscopo?</h2>
     <p>Tu signo solar (el más conocido) es un buen punto de partida, pero para una lectura más precisa, conviene también leer el horóscopo de tu signo ascendente. Si no conoces tu ascendente, puedes calcularlo en nuestra <a href="https://carta-astral-gratis.es/">herramienta de carta astral gratuita</a>.</p>
@@ -413,6 +413,69 @@ $(gen_footer)
 ENDINDEX
 
 SITEMAP_URLS="  <url><loc>https://${DOMAIN}/</loc><lastmod>${TODAY}</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>\n${SITEMAP_URLS}"
+
+echo "Generating trust pages..."
+
+cat > "$PUBLIC/metodologia.html" <<ENDMETHOD
+<!DOCTYPE html>
+<html lang="es">
+$(gen_head "Metodología del Horóscopo de Hoy — Criterio editorial diario" "Conoce cómo se estructura el horóscopo diario: signo solar, ascendente, áreas de lectura, límites interpretativos y actualización editorial." "/metodologia" "trust_page" "metodologia" "metodologia")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Metodología del Horóscopo de Hoy","url":"https://${DOMAIN}/metodologia","description":"Metodología editorial del horóscopo diario por signo.","isPartOf":{"@type":"WebSite","name":"Horóscopo de Hoy","url":"https://${DOMAIN}/"}}
+  </script>
+  <style>${COMMON_CSS}</style>
+</head>
+<body>
+<div class="container">
+  <nav style="margin:1rem 0"><a href="/">Horóscopo de Hoy</a> › Metodología</nav>
+  <main class="panel seo-text">
+    <h1>Metodología del horóscopo diario</h1>
+    <p>El horóscopo se organiza por signo solar y se actualiza para la fecha mostrada en la página. Cada lectura separa amor, trabajo, salud, número de la suerte y color del día para que el contenido sea fácil de consultar y comparar.</p>
+    <h2>Cómo usar la lectura</h2>
+    <p>Recomendamos leer primero el signo solar y, si conoces tu ascendente, revisar también esa página. El signo solar resume motivación y tono general; el ascendente ayuda a interpretar decisiones inmediatas y forma de actuar durante el día.</p>
+    <h2>Criterio editorial</h2>
+    <p>Las predicciones se redactan como orientación simbólica y práctica. Evitamos afirmaciones absolutas, promesas de resultado o mensajes que sustituyan asesoramiento profesional en salud, finanzas o relaciones.</p>
+    <h2>Actualización y límites</h2>
+    <p>El contenido está pensado para consulta diaria y autoconocimiento. La astrología no determina tus decisiones: úsala como un marco de reflexión y contrasta la lectura con hechos reales al final del día.</p>
+  </main>
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDMETHOD
+
+cat > "$PUBLIC/sobre-nosotros.html" <<ENDABOUT
+<!DOCTYPE html>
+<html lang="es">
+$(gen_head "Sobre Horóscopo de Hoy — Predicciones diarias en español" "Conoce el propósito de horoscopo-de-hoy.es: una consulta gratuita y diaria para los 12 signos, con lectura responsable y enlaces útiles." "/sobre-nosotros" "trust_page" "sobre-nosotros" "sobre-nosotros")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"AboutPage","name":"Sobre Horóscopo de Hoy","url":"https://${DOMAIN}/sobre-nosotros","description":"Propósito editorial y criterios de Horóscopo de Hoy.","isPartOf":{"@type":"WebSite","name":"Horóscopo de Hoy","url":"https://${DOMAIN}/"}}
+  </script>
+  <style>${COMMON_CSS}</style>
+</head>
+<body>
+<div class="container">
+  <nav style="margin:1rem 0"><a href="/">Horóscopo de Hoy</a> › Sobre nosotros</nav>
+  <main class="panel seo-text">
+    <h1>Sobre Horóscopo de Hoy</h1>
+    <p>Horóscopo de Hoy es una herramienta gratuita para consultar predicciones diarias de los 12 signos del zodíaco en español.</p>
+    <h2>Qué ofrecemos</h2>
+    <p>Publicamos lecturas breves y escaneables para amor, trabajo y salud, con señales complementarias como color y número del día. El objetivo es ayudar a ordenar la reflexión diaria, no imponer decisiones.</p>
+    <h2>Cómo cuidamos el contenido</h2>
+    <p>Mantenemos una estructura estable por signo, enlazamos recursos de contexto como carta astral y compatibilidad, y revisamos el contenido para que sea claro, responsable y útil para consultas recurrentes.</p>
+    <h2>Red de herramientas</h2>
+    <p>El sitio forma parte de una red de herramientas gratuitas de astrología, tarot, numerología y bienestar. Cada enlace cruzado busca completar la experiencia sin pedir datos personales innecesarios.</p>
+  </main>
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDABOUT
+
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/metodologia</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/sobre-nosotros</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/privacy</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/terms</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
 
 # ══════════════════════════════════════════════════════════════
 # STATIC FILES

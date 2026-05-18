@@ -19,6 +19,18 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://carta-astral-gratis.es/metodologia</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://carta-astral-gratis.es/sobre-nosotros</loc>
+    <lastmod>2026-05-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://carta-astral-gratis.es/signos</loc>
     <lastmod>2026-04-09</lastmod>
     <changefreq>monthly</changefreq>

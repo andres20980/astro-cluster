@@ -74,9 +74,9 @@ gen_footer() {
   cat <<ENDFOOTER
 <footer>
   <p>© $(date +%Y) Calcular Numerología — Herramienta gratuita</p>
-  <p><a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
-  $(footer_publicidad_line "$SITE_KEY")
-  ${CROSSLINKS_HTML}
+  <p><a href="/metodologia">Metodología</a> · <a href="/sobre-nosotros">Sobre nosotros</a> · <a href="/privacy">Privacidad</a> · <a href="/terms">Términos</a></p>
+$(footer_publicidad_line "$SITE_KEY")
+${CROSSLINKS_HTML}
 </footer>
 ENDFOOTER
 }
@@ -399,7 +399,7 @@ $(ad_block "✨" "Publicidad directa con mejor contexto" "Más control, mejor en
     <p>En esta calculadora usamos el número de vida como punto de partida porque se obtiene de la fecha de nacimiento y resulta fácil de comprobar. No pretende sustituir una lectura completa, pero sí ofrece una primera capa estable para entender talentos, retos y formas habituales de reaccionar.</p>
 
     <h2>¿Cómo se calcula el número de vida?</h2>
-    <p>El número de vida (o número de camino de vida) se obtiene sumando todos los dígitos de tu fecha de nacimiento completa y reduciendo el resultado a un solo dígito:</p>
+    <p>El número de vida (o número de camino de vida) se obtiene sumando todos los dígitos de tu fecha de nacimiento completa y reduciendo el resultado a un solo dígito. Puedes revisar el criterio completo en nuestra <a href="/metodologia">metodología de cálculo numerológico</a>:</p>
     <ul>
       <li>Ejemplo: 15 de marzo de 1990</li>
       <li>Día: 1 + 5 = 6</li>
@@ -454,6 +454,71 @@ function calculate(){
 ENDIDX
 
 SITEMAP_URLS="  <url><loc>https://${DOMAIN}/</loc><lastmod>${TODAY}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>\n${SITEMAP_URLS}"
+
+echo "Generating trust pages..."
+
+cat > "$PUBLIC/metodologia.html" <<ENDMETHOD
+<!DOCTYPE html>
+<html lang="es">
+$(gen_head "Metodología de Numerología — Cómo calculamos tu número de vida" "Consulta cómo funciona la calculadora de numerología: reducción de fecha de nacimiento, criterios editoriales, límites de interpretación y uso responsable." "/metodologia" "trust_page" "metodologia" "metodologia")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Metodología de Numerología","url":"https://${DOMAIN}/metodologia","description":"Metodología de cálculo del número de vida y criterio editorial de Calcular Numerología.","isPartOf":{"@type":"WebSite","name":"Calcular Numerología","url":"https://${DOMAIN}/"}}
+  </script>
+  <style>${COMMON_CSS}</style>
+</head>
+<body>
+<div class="container">
+  <nav style="margin:1rem 0"><a href="/">Calcular Numerología</a> › Metodología</nav>
+  <main class="panel seo-text">
+    <h1>Metodología de cálculo numerológico</h1>
+    <p>La calculadora usa una regla simple y verificable: convierte la fecha de nacimiento en dígitos, suma todos los valores y reduce el resultado hasta obtener un número entre el 1 y el 9. Mostramos el desglose para que puedas comprobar el cálculo.</p>
+    <h2>Qué datos usamos</h2>
+    <p>Solo se necesita la fecha de nacimiento introducida en el navegador. No guardamos la fecha ni pedimos nombre, correo o datos personales para obtener el resultado básico.</p>
+    <h2>Cómo interpretamos el resultado</h2>
+    <p>Cada número se acompaña de una lectura editorial sobre tendencias de personalidad, retos habituales, relaciones, trabajo y compatibilidades simbólicas. Las fichas están escritas como guía de autoconocimiento, no como diagnóstico ni predicción cerrada.</p>
+    <h2>Limitaciones</h2>
+    <p>La numerología es una práctica simbólica. Úsala para reflexionar sobre patrones personales y toma decisiones importantes con información objetiva, asesoramiento profesional y tu propio criterio.</p>
+    <h2>Actualización editorial</h2>
+    <p>Revisamos el contenido cuando añadimos nuevas fichas, mejoramos ejemplos de cálculo o detectamos textos demasiado genéricos. La prioridad es que cada página explique el cálculo de forma transparente y tenga utilidad práctica.</p>
+  </main>
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDMETHOD
+
+cat > "$PUBLIC/sobre-nosotros.html" <<ENDABOUT
+<!DOCTYPE html>
+<html lang="es">
+$(gen_head "Sobre Calcular Numerología — Herramienta gratuita en español" "Conoce el propósito editorial de calcular-numerologia.es, una herramienta gratuita para calcular tu número de vida y consultar significados numerológicos." "/sobre-nosotros" "trust_page" "sobre-nosotros" "sobre-nosotros")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"AboutPage","name":"Sobre Calcular Numerología","url":"https://${DOMAIN}/sobre-nosotros","description":"Propósito editorial y criterios de Calcular Numerología.","isPartOf":{"@type":"WebSite","name":"Calcular Numerología","url":"https://${DOMAIN}/"}}
+  </script>
+  <style>${COMMON_CSS}</style>
+</head>
+<body>
+<div class="container">
+  <nav style="margin:1rem 0"><a href="/">Calcular Numerología</a> › Sobre nosotros</nav>
+  <main class="panel seo-text">
+    <h1>Sobre Calcular Numerología</h1>
+    <p>Calcular Numerología ofrece una forma rápida y gratuita de obtener el número de vida a partir de la fecha de nacimiento y leer una interpretación clara en español.</p>
+    <h2>Qué buscamos</h2>
+    <p>Queremos que cualquier persona pueda comprobar el cálculo, entender qué significa cada número y usar la lectura como punto de partida para observar hábitos, relaciones y decisiones.</p>
+    <h2>Criterio editorial</h2>
+    <p>Priorizamos explicaciones verificables, ejemplos de cálculo, lenguaje directo y avisos claros sobre los límites de la numerología. Las páginas se revisan para evitar promesas absolutas o afirmaciones que sustituyan consejo profesional.</p>
+    <h2>Relación con la red</h2>
+    <p>Este sitio forma parte de una red de herramientas gratuitas de astrología, tarot, compatibilidad y bienestar. Los enlaces entre herramientas existen para completar la lectura, no para obligarte a compartir datos personales.</p>
+  </main>
+$(gen_footer)
+</div>
+</body>
+</html>
+ENDABOUT
+
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/metodologia</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/sobre-nosotros</loc><lastmod>${TODAY}</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/privacy</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
+SITEMAP_URLS+="  <url><loc>https://${DOMAIN}/terms</loc><lastmod>${TODAY}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>\n"
 
 # ══════════════════════════════════════════════════════════════
 # STATIC FILES
