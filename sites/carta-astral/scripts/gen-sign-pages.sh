@@ -307,4 +307,5 @@ $(cluster_recirculation_block "carta-astral")
 </html>
 HEREDOC
 echo "✅ Generated $DIR/index.html"
+bash "$REPO_ROOT/scripts/generate-legal-pages.sh" carta-astral
 echo "🎉 All 13 pages generated!"

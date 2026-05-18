@@ -443,6 +443,7 @@ cat > "$PUBLIC/404.html" <<END404
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página no encontrada — Horóscopo de Hoy</title>
+  <meta name="description" content="Página no encontrada en Horóscopo de Hoy. Vuelve al inicio para consultar las predicciones diarias de amor, trabajo y salud de cada signo.">
   <meta name="robots" content="noindex">
 $(canonical_host_redirect_script "$DOMAIN")
   <style>${COMMON_CSS}</style>

@@ -9,6 +9,7 @@ TODAY_DISPLAY="9 de abril de 2026"
 
 # Site-specific descriptions
 declare -A SITE_DESC=(
+  [carta-astral]="cálculo de carta astral natal con fecha, hora y lugar de nacimiento"
   [compatibilidad-signos]="cálculo de compatibilidad entre signos del zodíaco"
   [tarot-del-dia]="tirada de tarot gratuita con los Arcanos Mayores"
   [calcular-numerologia]="cálculo de numerología (número de vida)"
@@ -17,6 +18,7 @@ declare -A SITE_DESC=(
 )
 
 declare -A SITE_DATA_COLLECTED=(
+  [carta-astral]="Para generar tu carta astral, introduces fecha, hora y lugar de nacimiento. Estos datos se usan únicamente para calcular e interpretar el mapa natal solicitado."
   [compatibilidad-signos]="No recopilamos datos personales. La herramienta no requiere registro ni introducción de información personal. Solo seleccionas dos signos del zodíaco."
   [tarot-del-dia]="No recopilamos datos personales. La tirada de tarot es completamente anónima y se ejecuta en tu navegador. No se envía información al servidor."
   [calcular-numerologia]="Para calcular tu número de vida, introduces tu fecha de nacimiento. Este dato se procesa íntegramente en tu navegador (JavaScript) y nunca se envía a nuestros servidores."
@@ -25,6 +27,7 @@ declare -A SITE_DATA_COLLECTED=(
 )
 
 declare -A SITE_SERVICE_DESC=(
+  [carta-astral]="un servicio gratuito de cálculo e interpretación de cartas astrales natales. Usa fecha, hora y lugar de nacimiento para mostrar posiciones planetarias y una lectura orientativa."
   [compatibilidad-signos]="un servicio gratuito de análisis de compatibilidad astrológica entre signos del zodíaco. Analiza la afinidad basándose en elementos, modalidades y planetas regentes."
   [tarot-del-dia]="un servicio gratuito de tirada de tarot con los 22 Arcanos Mayores. Las cartas se seleccionan aleatoriamente en tu navegador."
   [calcular-numerologia]="un servicio gratuito de numerología que calcula tu número de vida a partir de tu fecha de nacimiento. Usa el método pitagórico de reducción a un dígito."
@@ -55,7 +58,7 @@ CSS='
 if [[ $# -gt 0 ]]; then
   SITE_KEYS=("$@")
 else
-  SITE_KEYS=(compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
+  SITE_KEYS=(carta-astral compatibilidad-signos tarot-del-dia calcular-numerologia horoscopo-de-hoy meditacion-chakras)
 fi
 
 for site_key in "${SITE_KEYS[@]}"; do
@@ -89,6 +92,9 @@ for site_key in "${SITE_KEYS[@]}"; do
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="${BRAND_FONTS}" rel="stylesheet">
 $(canonical_host_redirect_script "$domain")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Política de Privacidad — ${site_name}","url":"https://${domain}/privacy","description":"Política de privacidad de ${domain}. Información sobre cookies, analítica y publicidad directa.","isPartOf":{"@type":"WebSite","name":"${site_name}","url":"https://${domain}/"}}
+  </script>
   <style>${CSS}</style>
 </head>
 <body>
@@ -163,6 +169,9 @@ ENDPRIV
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="${BRAND_FONTS}" rel="stylesheet">
 $(canonical_host_redirect_script "$domain")
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"Términos y condiciones — ${site_name}","url":"https://${domain}/terms","description":"Términos y condiciones de uso de ${domain}. Servicio gratuito de ${desc}.","isPartOf":{"@type":"WebSite","name":"${site_name}","url":"https://${domain}/"}}
+  </script>
   <style>${CSS}</style>
 </head>
 <body>

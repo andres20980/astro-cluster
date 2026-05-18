@@ -2,7 +2,10 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT="$(cd "$ROOT_DIR/../.." && pwd)"
 PUBLIC_DIR="$ROOT_DIR/public"
+
+bash "$REPO_ROOT/scripts/generate-legal-pages.sh" meditacion-chakras
 
 required=(index.html privacy.html terms.html publicidad.html robots.txt sitemap.xml ads.txt 404.html)
 missing=0

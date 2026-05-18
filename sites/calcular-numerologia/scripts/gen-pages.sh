@@ -484,6 +484,7 @@ cat > "$PUBLIC/404.html" <<END404
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Página no encontrada — Calcular Numerología</title>
+  <meta name="description" content="Página no encontrada en Calcular Numerología. Vuelve al inicio para calcular tu número de vida y leer su significado completo.">
   <meta name="robots" content="noindex">
 $(canonical_host_redirect_script "$DOMAIN")
   <style>${COMMON_CSS}</style>
