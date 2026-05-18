@@ -384,25 +384,44 @@ cmd_gsc_submit_sitemap() {
   echo "━━━ Submit sitemap to GSC ━━━"
   echo "  Site: $SITE_URL"
   echo "  Sitemap: $sitemap"
-  local resp
-  resp=$(_api_oauth -X PUT -w "\n%{http_code}" \
-    "https://searchconsole.googleapis.com/webmasters/v3/sites/${SITE_URL_ENC}/sitemaps/$(python3 -c "import urllib.parse;print(urllib.parse.quote('$sitemap',''))")")
-  local code
-  code=$(echo "$resp" | tail -1)
-  if [[ "$code" == "204" ]] || [[ "$code" == "200" ]]; then
-    echo "  ✅ Sitemap submitted successfully"
-  else
-    echo "  Response (HTTP $code):"
-    echo "$resp" | head -n -1 | python3 -m json.tool 2>/dev/null || echo "$resp"
-    if _oauth_uses_adc && [[ -z "$(_adc_quota_project)" ]]; then
-      echo ""
-      echo "  Hint: ADC is being used without a quota project."
-      echo "  Run: gcloud auth application-default set-quota-project <project-with-searchconsole-api>"
-      echo "  Or export GOOGLE_CLOUD_QUOTA_PROJECT=<project-with-searchconsole-api>."
-      echo "  Prefer GOOGLE_OAUTH_* env vars for unattended GSC automation."
+  local sitemap_enc
+  sitemap_enc="$(python3 -c "import urllib.parse;print(urllib.parse.quote('$sitemap',''))")"
+
+  local candidates=("$SITE_URL" "https://${DOMAIN}/")
+  local candidate candidate_enc resp code last_resp="" last_code="" last_candidate=""
+  for candidate in "${candidates[@]}"; do
+    [[ -z "$candidate" ]] && continue
+    [[ "$candidate" == "$last_candidate" ]] && continue
+    candidate_enc="$(python3 -c "import urllib.parse;print(urllib.parse.quote('$candidate',''))")"
+    resp=$(_api_oauth -X PUT -w "\n%{http_code}" \
+      "https://searchconsole.googleapis.com/webmasters/v3/sites/${candidate_enc}/sitemaps/${sitemap_enc}")
+    code=$(echo "$resp" | tail -1)
+    last_resp="$resp"
+    last_code="$code"
+    last_candidate="$candidate"
+
+    if [[ "$code" == "204" ]] || [[ "$code" == "200" ]]; then
+      echo "  ✅ Sitemap submitted successfully using ${candidate}"
+      return 0
     fi
-    return 1
+
+    if [[ "$code" == "403" ]]; then
+      echo "  ⚠️  No access to ${candidate}; trying next GSC property candidate"
+      continue
+    fi
+    break
+  done
+
+  echo "  Response (HTTP $last_code) for ${last_candidate}:"
+  echo "$last_resp" | head -n -1 | python3 -m json.tool 2>/dev/null || echo "$last_resp"
+  if _oauth_uses_adc && [[ -z "$(_adc_quota_project)" ]]; then
+    echo ""
+    echo "  Hint: ADC is being used without a quota project."
+    echo "  Run: gcloud auth application-default set-quota-project <project-with-searchconsole-api>"
+    echo "  Or export GOOGLE_CLOUD_QUOTA_PROJECT=<project-with-searchconsole-api>."
+    echo "  Prefer GOOGLE_OAUTH_* env vars for unattended GSC automation."
   fi
+  return 1
 }
 
 cmd_gsc_sitemaps() {

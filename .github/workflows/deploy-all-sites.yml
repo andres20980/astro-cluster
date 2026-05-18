@@ -332,7 +332,6 @@ jobs:
             exit 0
           fi
 
-          site_url_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${GSC_SITE_URL}',''))")
           sitemap_url="https://${DOMAIN}/sitemap.xml"
           sitemap_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${sitemap_url}',''))")
 
@@ -341,15 +340,40 @@ jobs:
             headers+=(-H "X-Goog-User-Project: ${GOOGLE_CLOUD_QUOTA_PROJECT}")
           fi
 
-          code=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -o /tmp/gsc-submit-response.json -w "%{http_code}" \
-            -X PUT \
-            "${headers[@]}" \
-            "https://searchconsole.googleapis.com/webmasters/v3/sites/${site_url_enc}/sitemaps/${sitemap_enc}")
+          candidate_site_urls=("$GSC_SITE_URL" "https://${DOMAIN}/")
+          submitted=0
+          last_code=""
+          last_site_url=""
+          for candidate_site_url in "${candidate_site_urls[@]}"; do
+            if [ -z "$candidate_site_url" ]; then
+              continue
+            fi
+            if [ "$candidate_site_url" = "$last_site_url" ]; then
+              continue
+            fi
 
-          if [ "$code" = "200" ] || [ "$code" = "204" ]; then
-            echo "Sitemap submitted to GSC for ${DOMAIN} using ${token_source} token"
-          else
-            echo "::warning::GSC sitemap submit returned HTTP ${code} for ${DOMAIN}"
+            site_url_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${candidate_site_url}',''))")
+            code=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -o /tmp/gsc-submit-response.json -w "%{http_code}" \
+              -X PUT \
+              "${headers[@]}" \
+              "https://searchconsole.googleapis.com/webmasters/v3/sites/${site_url_enc}/sitemaps/${sitemap_enc}")
+            last_code="$code"
+            last_site_url="$candidate_site_url"
+
+            if [ "$code" = "200" ] || [ "$code" = "204" ]; then
+              echo "Sitemap submitted to GSC for ${DOMAIN} as ${candidate_site_url} using ${token_source} token"
+              submitted=1
+              break
+            fi
+
+            if [ "$code" != "403" ]; then
+              break
+            fi
+            echo "::warning::GSC sitemap submit returned HTTP 403 for ${DOMAIN} as ${candidate_site_url}; trying next property candidate"
+          done
+
+          if [ "$submitted" -ne 1 ]; then
+            echo "::warning::GSC sitemap submit returned HTTP ${last_code} for ${DOMAIN} as ${last_site_url}"
             cat /tmp/gsc-submit-response.json || true
           fi
 
