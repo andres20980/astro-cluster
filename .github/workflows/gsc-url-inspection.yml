@@ -91,12 +91,34 @@ jobs:
 
           for path in $PATHS; do
             url="https://${domain}${path}"
-            body=$(jq -n --arg url "$url" --arg site "sc-domain:${domain}" '{inspectionUrl:$url, siteUrl:$site}')
             echo "## $url"
-            curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 \
-              -X POST \
-              "${headers[@]}" \
-              -d "$body" \
-              "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect" \
-              | jq '{coverageState:.inspectionResult.indexStatusResult.coverageState, indexingState:.inspectionResult.indexStatusResult.indexingState, robotsTxtState:.inspectionResult.indexStatusResult.robotsTxtState, pageFetchState:.inspectionResult.indexStatusResult.pageFetchState, googleCanonical:.inspectionResult.indexStatusResult.googleCanonical, userCanonical:.inspectionResult.indexStatusResult.userCanonical}'
+            inspected="false"
+            for site_url in "sc-domain:${domain}" "https://${domain}/"; do
+              body=$(jq -n --arg url "$url" --arg site "$site_url" '{inspectionUrl:$url, siteUrl:$site}')
+              response=$(curl -sS --fail-with-body --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 \
+                -X POST \
+                "${headers[@]}" \
+                -d "$body" \
+                "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect" || true)
+
+              if [ -z "$response" ]; then
+                echo "WARN: ${site_url} returned an empty response; trying next candidate." >&2
+                continue
+              fi
+
+              error_status=$(echo "$response" | jq -r '.error.status // empty' 2>/dev/null || true)
+              if [ -n "$error_status" ]; then
+                echo "WARN: ${site_url} returned ${error_status}; trying next candidate." >&2
+                continue
+              fi
+
+              echo "$response" | jq --arg site_url "$site_url" '{siteUrl:$site_url, coverageState:.inspectionResult.indexStatusResult.coverageState, indexingState:.inspectionResult.indexStatusResult.indexingState, robotsTxtState:.inspectionResult.indexStatusResult.robotsTxtState, pageFetchState:.inspectionResult.indexStatusResult.pageFetchState, googleCanonical:.inspectionResult.indexStatusResult.googleCanonical, userCanonical:.inspectionResult.indexStatusResult.userCanonical}'
+              inspected="true"
+              break
+            done
+
+            if [ "$inspected" != "true" ]; then
+              echo "Could not inspect $url with any candidate property." >&2
+              exit 1
+            fi
           done
