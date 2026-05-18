@@ -44,6 +44,12 @@ jobs:
           access_token=$(echo "$token_json" | jq -r '.access_token // empty')
           if [ -z "$access_token" ]; then
             echo "$token_json"
+            error_detail=$(echo "$token_json" | jq -r '.error_description // .error // "No se pudo intercambiar GOOGLE_OAUTH_REFRESH_TOKEN por access token"' 2>/dev/null || echo "No se pudo intercambiar GOOGLE_OAUTH_REFRESH_TOKEN por access token")
+            {
+              echo "error_detail<<EOF"
+              echo "$error_detail"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
             echo "missing=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -59,8 +65,11 @@ jobs:
         id: inspect
         env:
           OAUTH_TOKEN: ${{ steps.oauth.outputs.token }}
+          OAUTH_TOKEN_MISSING: ${{ steps.oauth.outputs.missing }}
+          OAUTH_ERROR_DETAIL: ${{ steps.oauth.outputs.error_detail }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GOOGLE_CLOUD_QUOTA_PROJECT: ${{ secrets.GOOGLE_CLOUD_QUOTA_PROJECT }}
+          GSC_ALLOW_SERVICE_ACCOUNT_URL_INSPECTION: ${{ vars.GSC_ALLOW_SERVICE_ACCOUNT_URL_INSPECTION || 'false' }}
           GSC_INDEX_SKIP_DOMAINS: ${{ vars.GSC_INDEX_SKIP_DOMAINS || '' }}
           GSC_SITES_JSON: >-
             [["carta-astral","carta-astral-gratis.es","sc-domain:carta-astral-gratis.es"],["compatibilidad-signos","compatibilidad-signos.es","sc-domain:compatibilidad-signos.es"],["tarot-del-dia","tarot-del-dia.es","sc-domain:tarot-del-dia.es"],["calcular-numerologia","calcular-numerologia.es","sc-domain:calcular-numerologia.es"],["horoscopo-de-hoy","horoscopo-de-hoy.es","sc-domain:horoscopo-de-hoy.es"],["meditacion-chakras","meditacion-chakras.es","sc-domain:meditacion-chakras.es"]]
@@ -79,9 +88,20 @@ jobs:
 
           gsc_token="${OAUTH_TOKEN:-}"
           source_mode="oauth"
-          if [ -z "$gsc_token" ] && [ -n "$adc_token" ]; then
+          if [ -z "$gsc_token" ] && [ "${GSC_ALLOW_SERVICE_ACCOUNT_URL_INSPECTION}" = "true" ] && [ -n "$adc_token" ]; then
             gsc_token="$adc_token"
             source_mode="service-account"
+          elif [ -z "$gsc_token" ] && [ "${OAUTH_TOKEN_MISSING:-}" = "true" ]; then
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "No se pudo ejecutar la vigilancia de indexación porque el OAuth de usuario de Search Console no es utilizable."
+              echo ""
+              echo "Detalle: ${OAUTH_ERROR_DETAIL:-No se pudo intercambiar GOOGLE_OAUTH_REFRESH_TOKEN por access token}."
+              echo ""
+              echo "La service account queda reservada para despliegue/verificación técnica; URL Inspection debe ejecutarse con una cuenta de usuario con acceso explícito a las propiedades de Search Console para evitar falsos 403 por dominio."
+            } > /tmp/gsc-index-watch.md
+            cat /tmp/gsc-index-watch.md
+            exit 0
           fi
 
           if [ -z "$gsc_token" ]; then
