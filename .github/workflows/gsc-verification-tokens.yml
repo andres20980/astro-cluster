@@ -364,4 +364,15 @@ jobs:
           fi
           echo "Sitio verificado para owner: $owner"
 
+          site_url_enc=$(python3 -c "import urllib.parse;print(urllib.parse.quote('${site_url}',''))")
+          add_site_code=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 -o /tmp/gsc-add-site-response.json -w "%{http_code}" -X PUT \
+            -H "Authorization: Bearer $access_token" \
+            "https://searchconsole.googleapis.com/webmasters/v3/sites/${site_url_enc}")
+          if [ "$add_site_code" != "200" ] && [ "$add_site_code" != "204" ]; then
+            cat /tmp/gsc-add-site-response.json || true
+            echo "No se pudo registrar ${site_url} como propiedad de Search Console (HTTP ${add_site_code})." >&2
+            exit 1
+          fi
+          echo "Propiedad Search Console registrada: ${site_url}"
+
           echo "Verificacion completada. El token META se ha desplegado, pero no se guarda en Git."
