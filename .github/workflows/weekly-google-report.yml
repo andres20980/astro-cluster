@@ -25,15 +25,35 @@ jobs:
       - name: "🔐 Obtener token OAuth para GSC y AdSense"
         id: oauth
         env:
+          GOOGLE_OAUTH_ADC_JSON: ${{ secrets.GOOGLE_OAUTH_ADC_JSON }}
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
         run: |
           set -euo pipefail
+          if [ -n "${GOOGLE_OAUTH_ADC_JSON:-}" ]; then
+            pip -q install google-auth
+            adc_file="$RUNNER_TEMP/google-oauth-adc.json"
+            printf '%s' "$GOOGLE_OAUTH_ADC_JSON" > "$adc_file"
+            chmod 600 "$adc_file"
+            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$adc_file" python3 -c "import google.auth,google.auth.transport.requests;creds,_=google.auth.default(scopes=['https://www.googleapis.com/auth/webmasters','https://www.googleapis.com/auth/adsense.readonly']);creds.refresh(google.auth.transport.requests.Request());print(creds.token or '')" 2>/dev/null || true)
+            rm -f "$adc_file"
+            if [ -n "$access_token" ]; then
+              {
+                echo "missing=false"
+                echo "detail=OK"
+                echo "token<<EOF"
+                echo "$access_token"
+                echo "EOF"
+              } >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
           if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
             {
               echo "missing=true"
-              echo "detail=Faltan GOOGLE_OAUTH_*"
+              echo "detail=Faltan GOOGLE_OAUTH_ADC_JSON o GOOGLE_OAUTH_* legacy"
             } >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -90,7 +110,7 @@ jobs:
                 `Detalle: ${detail}`,
                 '',
                 'Acción sugerida:',
-                '- Renovar GOOGLE_OAUTH_REFRESH_TOKEN con scopes de Search Console y AdSense.',
+                '- Regenerar GOOGLE_OAUTH_ADC_JSON con scopes de Search Console y AdSense, o renovar los secretos GOOGLE_OAUTH_* legacy.',
                 '- Reejecutar el workflow semanal para validar recuperación.'
               ].join('\n');
 
@@ -158,10 +178,6 @@ jobs:
           OAUTH_STATUS_DETAIL="${OAUTH_STATUS_DETAIL:-Faltan GOOGLE_OAUTH_*}"
           GSC_TOKEN="$OAUTH_TOKEN"
           GSC_TOKEN_SOURCE="oauth"
-          if [ -z "$GSC_TOKEN" ] && [ -n "$TOKEN" ]; then
-            GSC_TOKEN="$TOKEN"
-            GSC_TOKEN_SOURCE="service-account"
-          fi
           DATA_QUALITY_STATUS="complete"
           if [ -z "$TOKEN" ] || [ -z "$OAUTH_TOKEN" ]; then
             DATA_QUALITY_STATUS="partial"
@@ -206,7 +222,7 @@ jobs:
           if [ -n "$GSC_TOKEN" ]; then
             echo "| GSC token efectivo | ✅ $GSC_TOKEN_SOURCE |" >> /tmp/report.md
           else
-            echo "| GSC token efectivo | ⚠️ no disponible |" >> /tmp/report.md
+            echo "| GSC token efectivo | ⚠️ no disponible: requiere OAuth de usuario |" >> /tmp/report.md
           fi
           echo "" >> /tmp/report.md
 

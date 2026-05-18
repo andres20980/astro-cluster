@@ -19,15 +19,35 @@ jobs:
       - name: "🔐 Obtener token OAuth"
         id: oauth
         env:
+          GOOGLE_OAUTH_ADC_JSON: ${{ secrets.GOOGLE_OAUTH_ADC_JSON }}
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
         run: |
           set -euo pipefail
 
+          if [ -n "${GOOGLE_OAUTH_ADC_JSON:-}" ]; then
+            pip -q install google-auth
+            adc_file="$RUNNER_TEMP/google-oauth-adc.json"
+            printf '%s' "$GOOGLE_OAUTH_ADC_JSON" > "$adc_file"
+            chmod 600 "$adc_file"
+            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$adc_file" python3 -c "import google.auth,google.auth.transport.requests;creds,_=google.auth.default(scopes=['https://www.googleapis.com/auth/webmasters','https://www.googleapis.com/auth/siteverification','https://www.googleapis.com/auth/adsense.readonly']);creds.refresh(google.auth.transport.requests.Request());print(creds.token or '')" 2>/dev/null || true)
+            rm -f "$adc_file"
+            if [ -n "$access_token" ]; then
+              echo "missing=false" >> "$GITHUB_OUTPUT"
+              echo "detail=OK" >> "$GITHUB_OUTPUT"
+              {
+                echo "token<<EOF"
+                echo "$access_token"
+                echo "EOF"
+              } >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+
           if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
             echo "missing=true" >> "$GITHUB_OUTPUT"
-            echo "detail=Faltan GOOGLE_OAUTH_*" >> "$GITHUB_OUTPUT"
+            echo "detail=Faltan GOOGLE_OAUTH_ADC_JSON o GOOGLE_OAUTH_* legacy" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 

@@ -46,6 +46,7 @@ jobs:
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GOOGLE_OAUTH_ADC_JSON: ${{ secrets.GOOGLE_OAUTH_ADC_JSON }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           FIREBASE_SA_CARTA_ASTRAL: ${{ secrets.FIREBASE_SA_CARTA_ASTRAL }}
           FIREBASE_SA_COMPATIBILIDAD_SIGNOS: ${{ secrets.FIREBASE_SA_COMPATIBILIDAD_SIGNOS }}
@@ -56,9 +57,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
+          if [ -z "${GOOGLE_OAUTH_ADC_JSON:-}" ] && { [ -z "${GOOGLE_OAUTH_CLIENT_ID:-}" ] || [ -z "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] || [ -z "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; }; then
             echo "Missing OAuth secrets for Site Verification/GSC API." >&2
-            echo "Required: GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REFRESH_TOKEN." >&2
+            echo "Required: GOOGLE_OAUTH_ADC_JSON or GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET, GOOGLE_OAUTH_REFRESH_TOKEN." >&2
             exit 1
           fi
 
@@ -85,6 +86,7 @@ jobs:
         env:
           ACTION: ${{ inputs.action }}
           SITE_KEY: ${{ inputs.site_key }}
+          GOOGLE_OAUTH_ADC_JSON: ${{ secrets.GOOGLE_OAUTH_ADC_JSON }}
           GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
           GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
           GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
@@ -98,16 +100,28 @@ jobs:
         run: |
           set -euo pipefail
 
-          token_json=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
-            -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
-            -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
-            -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
-            -d "grant_type=refresh_token" || true)
+          access_token=""
+          if [ -n "${GOOGLE_OAUTH_ADC_JSON:-}" ]; then
+            python3 -m pip -q install google-auth
+            adc_file="$RUNNER_TEMP/google-oauth-adc.json"
+            printf '%s' "$GOOGLE_OAUTH_ADC_JSON" > "$adc_file"
+            chmod 600 "$adc_file"
+            access_token=$(GOOGLE_APPLICATION_CREDENTIALS="$adc_file" python3 -c "import google.auth,google.auth.transport.requests;creds,_=google.auth.default(scopes=['https://www.googleapis.com/auth/siteverification','https://www.googleapis.com/auth/webmasters']);creds.refresh(google.auth.transport.requests.Request());print(creds.token or '')" 2>/dev/null || true)
+            rm -f "$adc_file"
+          fi
 
-          access_token=$(echo "$token_json" | jq -r '.access_token // empty')
-          if [ -z "$access_token" ]; then
-            echo "OAuth refresh token exchange did not return an access token; trying site service account fallback." >&2
-            echo "$token_json" | jq -c '{error: (.error // ""), error_description: (.error_description // "")}' >&2 || true
+          if [ -z "$access_token" ] && [ -n "${GOOGLE_OAUTH_CLIENT_ID:-}" ] && [ -n "${GOOGLE_OAUTH_CLIENT_SECRET:-}" ] && [ -n "${GOOGLE_OAUTH_REFRESH_TOKEN:-}" ]; then
+            token_json=$(curl -sS --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 30 https://oauth2.googleapis.com/token \
+              -d "client_id=$GOOGLE_OAUTH_CLIENT_ID" \
+              -d "client_secret=$GOOGLE_OAUTH_CLIENT_SECRET" \
+              -d "refresh_token=$GOOGLE_OAUTH_REFRESH_TOKEN" \
+              -d "grant_type=refresh_token" || true)
+
+            access_token=$(echo "$token_json" | jq -r '.access_token // empty')
+            if [ -z "$access_token" ]; then
+              echo "OAuth refresh token exchange did not return an access token; trying site service account fallback." >&2
+              echo "$token_json" | jq -c '{error: (.error // ""), error_description: (.error_description // "")}' >&2 || true
+            fi
           fi
 
           if [ -z "$access_token" ] && [ "${ACTION}" = "verify_url_prefix" ]; then

@@ -182,7 +182,7 @@ relogin_github() {
   if [[ "$DRY_RUN" != "true" ]]; then
     log_warning "GitHub authentication required. Opening browser..."
     log_info "→ Use account: $GITHUB_ACCOUNT"
-    gh auth login --web --git https
+    gh auth login --web --git-protocol https
   else
     log_info "[DRY-RUN] Would run: gh auth login --web"
   fi
