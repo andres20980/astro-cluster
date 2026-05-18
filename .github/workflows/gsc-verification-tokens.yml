@@ -25,7 +25,7 @@ on:
         default: "meditacion-chakras-es"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: gsc-verification-tokens-${{ github.ref }}
@@ -195,7 +195,13 @@ jobs:
               "https://www.googleapis.com/siteVerification/v1/token" \
               -d "{\"site\":{\"type\":\"INET_DOMAIN\",\"identifier\":\"$domain\"},\"verificationMethod\":\"DNS_TXT\"}")
 
-            echo "$response" | jq -c '{token: (.token // ""), error: (.error.message // ""), status: (.error.status // "")}'
+            token=$(echo "$response" | jq -r '.token // empty')
+            if [ -n "$token" ]; then
+              echo "::add-mask::$token"
+              echo "$response" | jq -c '{token_available: true, error: (.error.message // ""), status: (.error.status // "")}'
+            else
+              echo "$response" | jq -c '{token_available: false, error: (.error.message // ""), status: (.error.status // "")}'
+            fi
           done
 
       - name: "✅ Verificar URL prefix por meta tag"

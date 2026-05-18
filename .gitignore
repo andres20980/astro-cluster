@@ -21,6 +21,7 @@ firebase-debug.log
 client_secret*.json
 google-oauth-client*.json
 application_default_credentials.json
+.github/config/gsc-verification-meta.json
 sites/*/public/
 !sites/carta-astral/public/
 !sites/horoscopo-de-hoy/public/
