@@ -84,6 +84,10 @@ _adc_quota_project() {
     echo "$quota"
     return
   fi
+  if [[ -n "${GCP_PROJECT:-}" ]]; then
+    echo "$GCP_PROJECT"
+    return
+  fi
   python3 - <<'PY' 2>/dev/null || true
 import json
 import os
@@ -455,13 +459,20 @@ cmd_gsc_submit_sitemaps_all() {
 
 cmd_gsc_inspect() {
   local url="${1:-https://${DOMAIN}/}"
+  local resp
   echo "━━━ URL Inspection: $url ━━━"
-  _api_oauth -X POST \
+  resp="$(_api_oauth -X POST \
     -H "Content-Type: application/json" \
     -d "{\"inspectionUrl\": \"$url\", \"siteUrl\": \"$SITE_URL\"}" \
-    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect" | python3 -c "
+    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect")"
+  python3 -c "
 import sys,json
 data=json.load(sys.stdin)
+err=data.get('error')
+if err:
+  print(f\"  Error:          {err.get('status','ERROR')} ({err.get('code','-')})\", file=sys.stderr)
+  print(f\"  Detail:         {err.get('message','sin detalle')}\", file=sys.stderr)
+  raise SystemExit(1)
 r=data.get('inspectionResult',{})
 idx=r.get('indexStatusResult',{})
 print(f\"  Verdict:        {idx.get('verdict','-')}\")
@@ -478,10 +489,7 @@ if rich:
   print(f\"  Rich results:   {rich.get('verdict','-')}\")
   for d in rich.get('detectedItems',[]):
     print(f\"    - {d.get('richResultType','-')}: {[i.get('name','') for i in d.get('items',[])]}\")
-" 2>/dev/null || _api_oauth -X POST \
-    -H "Content-Type: application/json" \
-    -d "{\"inspectionUrl\": \"$url\", \"siteUrl\": \"$SITE_URL\"}" \
-    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect" | python3 -m json.tool
+" <<< "$resp"
 }
 
 cmd_gsc_cluster_inspect() {

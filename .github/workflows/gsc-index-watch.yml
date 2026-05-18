@@ -198,7 +198,8 @@ jobs:
                 repo: context.repo.repo,
                 issue_number: primary.number,
                 title,
-                body
+                body,
+                state: 'open'
               });
 
               for (const duplicate of matching.slice(1)) {
