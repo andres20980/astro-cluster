@@ -1067,5 +1067,157 @@
     "last_contacted_at": "2026-05-05T09:04:35+00:00",
     "message_id": "19df761db0f2ac27",
     "thread_id": "19df761db0f2ac27"
+  },
+  {
+    "email": "alexisceja48@gmail.com",
+    "name": "Cómo se puede tener una consulta con Mhoni Vidente y cuánto cobra",
+    "segment": "esoterismo",
+    "country_hint": "",
+    "source_url": "https://www.tvynovelas.com/famosos/como-se-puede-tener-una-consulta-con-mhoni-vidente-y-cuanto-cobra",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 8
+  },
+  {
+    "email": "mhonividente1@hotmail.com",
+    "name": "Cómo se puede tener una consulta con Mhoni Vidente y cuánto cobra",
+    "segment": "esoterismo",
+    "country_hint": "",
+    "source_url": "https://www.tvynovelas.com/famosos/como-se-puede-tener-una-consulta-con-mhoni-vidente-y-cuanto-cobra",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": true,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 8
+  },
+  {
+    "email": "hola@lallavemagicashop.com",
+    "name": "Tu tienda esotérica online Málaga - La Llave Mágica",
+    "segment": "tienda esoterica",
+    "country_hint": "",
+    "source_url": "https://lallavemagicashop.com/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 5
+  },
+  {
+    "email": "personal@astrologiaespecial.com",
+    "name": "CONSULTAS ASTROLÓGICAS - Astrología Especial",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://www.astrologiaespecial.com/consulta-personal/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": false,
+      "mailto_visible": true,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 4
+  },
+  {
+    "email": "lola@ateneaccb.com",
+    "name": "Consultas Astrología - Centro Atenea",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://ateneaccb.com/consultas-astrologia/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 4
+  },
+  {
+    "email": "micarrozabarroso@gmail.com",
+    "name": "Consultas Astrología - Centro Atenea",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://ateneaccb.com/consultas-astrologia/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": false,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 4
+  },
+  {
+    "email": "andressebtian@hotmail.com",
+    "name": "Contacto - Astrología Védica | Apunte Astral",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://apunteastral.com/contacto/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": true,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 4
+  },
+  {
+    "email": "info@apunteastral.com",
+    "name": "Contacto - Astrología Védica | Apunte Astral",
+    "segment": "astrologia",
+    "country_hint": "",
+    "source_url": "https://apunteastral.com/contacto/",
+    "source_kind": "public_contact_page",
+    "contact_evidence": {
+      "contact_term_in_url": true,
+      "contact_term_in_result": true,
+      "mailto_visible": false,
+      "email_visible": true
+    },
+    "why_fit": "Contacto profesional publicado en una pagina de contacto hispanohablante relacionada con tarot, astrologia o esoterismo.",
+    "status": "new",
+    "first_seen": "2026-05-18",
+    "last_seen": "2026-05-18",
+    "score": 4
   }
 ]
