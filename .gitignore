@@ -6,6 +6,7 @@ __pycache__/
 .firebase/
 .tmp/
 .local/
+.relogin.log
 .env
 .env.*
 !.env.example

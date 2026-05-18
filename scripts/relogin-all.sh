@@ -360,7 +360,7 @@ test_firebase() {
 
   # Preferred path: service account / ADC (non-interactive, CI-friendly)
   if [[ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]] && [[ -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]]; then
-    if GOOGLE_APPLICATION_CREDENTIALS="${GOOGLE_APPLICATION_CREDENTIALS}" firebase projects:list --json --non-interactive >/dev/null 2>&1; then
+    if FIREBASE_CLI_DISABLE_UPDATE_CHECK=true GOOGLE_APPLICATION_CREDENTIALS="${GOOGLE_APPLICATION_CREDENTIALS}" firebase projects:list --json --non-interactive >/dev/null 2>&1; then
       log_success "Firebase authentication test passed (service account)"
       return 0
     fi
