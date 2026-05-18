@@ -315,19 +315,19 @@ declare -a SUIT_SLUGS SUIT_NAMES SUIT_ELEMENTS SUIT_AREAS SUIT_SYMBOLS SUIT_THEM
 SUIT_SLUGS=(bastos copas espadas oros)
 SUIT_NAMES=("Bastos" "Copas" "Espadas" "Oros")
 SUIT_ELEMENTS=("Fuego" "Agua" "Aire" "Tierra")
-SUIT_AREAS=("deseo, iniciativa y energia vital" "emociones, vinculos y sensibilidad" "mente, comunicacion y decisiones" "cuerpo, recursos y resultados concretos")
+SUIT_AREAS=("deseo, iniciativa y energía vital" "emociones, vínculos y sensibilidad" "mente, comunicación y decisiones" "cuerpo, recursos y resultados concretos")
 SUIT_SYMBOLS=("🔥" "💧" "⚔️" "🪙")
-SUIT_THEMES=("movimiento, valor, creatividad y accion visible" "afecto, intuicion, memoria emocional y reciprocidad" "claridad mental, conflicto, palabra y verdad" "trabajo, dinero, salud, paciencia y estabilidad")
-SUIT_SHADOWS=("impulsividad, prisa o desgaste por actuar sin pausa" "dependencia emocional, idealizacion o exceso de nostalgia" "rumiacion, dureza verbal o necesidad de tener razon" "apego a la seguridad, lentitud o miedo a perder recursos")
-SUIT_ACTIONS=("elige una accion pequena y hazla antes de buscar mas senales" "nombra lo que sientes sin convertirlo en exigencia" "escribe la decision con pros, limites y una pregunta honesta" "baja la lectura a tiempo, dinero, energia y compromiso real")
+SUIT_THEMES=("movimiento, valor, creatividad y acción visible" "afecto, intuición, memoria emocional y reciprocidad" "claridad mental, conflicto, palabra y verdad" "trabajo, dinero, salud, paciencia y estabilidad")
+SUIT_SHADOWS=("impulsividad, prisa o desgaste por actuar sin pausa" "dependencia emocional, idealización o exceso de nostalgia" "rumiación, dureza verbal o necesidad de tener razón" "apego a la seguridad, lentitud o miedo a perder recursos")
+SUIT_ACTIONS=("elige una acción pequeña y hazla antes de buscar más señales" "nombra lo que sientes sin convertirlo en exigencia" "escribe la decisión con pros, límites y una pregunta honesta" "baja la lectura a tiempo, dinero, energía y compromiso real")
 
 declare -a RANK_SLUGS RANK_NAMES RANK_ARCS RANK_LIGHTS RANK_SHADOWS RANK_QUESTIONS
 RANK_SLUGS=(as dos tres cuatro cinco seis siete ocho nueve diez sota caballo reina rey)
 RANK_NAMES=("As" "Dos" "Tres" "Cuatro" "Cinco" "Seis" "Siete" "Ocho" "Nueve" "Diez" "Sota" "Caballo" "Reina" "Rey")
-RANK_ARCS=("inicio disponible" "decision o equilibrio" "crecimiento compartido" "estructura y pausa" "tension que pide ajuste" "intercambio y reparacion" "eleccion entre opciones" "avance rapido" "madurez interior" "culminacion del ciclo" "aprendizaje y mensaje" "movimiento y busqueda" "dominio receptivo" "dominio activo")
-RANK_LIGHTS=("abre una puerta nueva y pide atencion al primer impulso" "ayuda a comparar sin paralizarte" "muestra apoyo, colaboracion y senales externas" "ordena la energia para conservar lo importante" "senala una friccion util si se mira de frente" "recupera confianza mediante un gesto concreto" "obliga a priorizar y descartar fantasia" "acelera procesos que ya estaban preparados" "confirma autonomia, criterio y paciencia" "cierra una etapa para mostrar el resultado acumulado" "trae curiosidad, noticia o practica inicial" "empuja a explorar con deseo de experiencia" "cuida, integra y sostiene el aprendizaje" "decide, protege y dirige la energia del palo")
-RANK_SHADOWS=("quedarse solo en la promesa sin iniciar nada" "sostener dos caminos para evitar elegir" "depender demasiado de aprobacion externa" "confundir descanso con cierre emocional" "convertir una dificultad en identidad" "dar o recibir sin equilibrio" "dispersarse entre posibilidades poco reales" "ir tan deprisa que no escuchas el contexto" "aislarse por orgullo o autosuficiencia" "cargar con mas de lo necesario" "actuar desde ingenuidad o reaccion" "confundir intensidad con direccion" "proteger tanto que no dejas fluir" "controlar por miedo a perder autoridad")
-RANK_QUESTIONS=("Que oportunidad esta naciendo aqui" "Que necesito elegir con mas honestidad" "Con quien conviene compartir o contrastar esto" "Que debo estabilizar antes de avanzar" "Que conflicto muestra una necesidad ignorada" "Que gesto repara o equilibra la situacion" "Que opcion tiene hechos y cual solo deseo" "Que debe moverse ahora y que puede esperar" "Que aprendizaje ya puedo sostener sin ayuda" "Que ciclo pide cierre o descanso" "Que mensaje pequeno no debo ignorar" "Hacia donde se mueve mi energia realmente" "Que debo cuidar sin absorberlo todo" "Que decision madura me toca asumir")
+RANK_ARCS=("inicio disponible" "decisión o equilibrio" "crecimiento compartido" "estructura y pausa" "tensión que pide ajuste" "intercambio y reparación" "elección entre opciones" "avance rápido" "madurez interior" "culminación del ciclo" "aprendizaje y mensaje" "movimiento y búsqueda" "dominio receptivo" "dominio activo")
+RANK_LIGHTS=("abre una puerta nueva y pide atención al primer impulso" "ayuda a comparar sin paralizarte" "muestra apoyo, colaboración y señales externas" "ordena la energía para conservar lo importante" "señala una fricción útil si se mira de frente" "recupera confianza mediante un gesto concreto" "obliga a priorizar y descartar fantasía" "acelera procesos que ya estaban preparados" "confirma autonomía, criterio y paciencia" "cierra una etapa para mostrar el resultado acumulado" "trae curiosidad, noticia o práctica inicial" "empuja a explorar con deseo de experiencia" "cuida, integra y sostiene el aprendizaje" "decide, protege y dirige la energía del palo")
+RANK_SHADOWS=("quedarse solo en la promesa sin iniciar nada" "sostener dos caminos para evitar elegir" "depender demasiado de aprobación externa" "confundir descanso con cierre emocional" "convertir una dificultad en identidad" "dar o recibir sin equilibrio" "dispersarse entre posibilidades poco reales" "ir tan deprisa que no escuchas el contexto" "aislarse por orgullo o autosuficiencia" "cargar con más de lo necesario" "actuar desde ingenuidad o reacción" "confundir intensidad con dirección" "proteger tanto que no dejas fluir" "controlar por miedo a perder autoridad")
+RANK_QUESTIONS=("Qué oportunidad está naciendo aquí" "Qué necesito elegir con más honestidad" "Con quién conviene compartir o contrastar esto" "Qué debo estabilizar antes de avanzar" "Qué conflicto muestra una necesidad ignorada" "Qué gesto repara o equilibra la situación" "Qué opción tiene hechos y cuál solo deseo" "Qué debe moverse ahora y qué puede esperar" "Qué aprendizaje ya puedo sostener sin ayuda" "Qué ciclo pide cierre o descanso" "Qué mensaje pequeño no debo ignorar" "Hacia dónde se mueve mi energía realmente" "Qué debo cuidar sin absorberlo todo" "Qué decisión madura me toca asumir")
 
 echo "Generating 56 minor arcana pages..."
 MINOR_GRID=""
@@ -391,37 +391,37 @@ ${COMMON_CSS}
 
   <section class="panel">
     <h2>Significado general</h2>
-    <p>${name} combina el ${rank_arc} con el palo de ${suit_name}, asociado a ${suit_area}. En una tirada diaria, esta carta no se lee como sentencia: muestra una energia concreta que puedes observar en decisiones, vinculos, conversaciones o recursos durante las proximas horas.</p>
-    <p>Su tema principal es ${suit_theme}. La lectura gana precision cuando preguntas donde aparece esta energia hoy y que accion pequena puedes tomar para responder con mas claridad.</p>
+    <p>${name} combina el ${rank_arc} con el palo de ${suit_name}, asociado a ${suit_area}. En una tirada diaria, esta carta no se lee como sentencia: muestra una energía concreta que puedes observar en decisiones, vínculos, conversaciones o recursos durante las próximas horas.</p>
+    <p>Su tema principal es ${suit_theme}. La lectura gana precisión cuando preguntas dónde aparece esta energía hoy y qué acción pequeña puedes tomar para responder con más claridad.</p>
   </section>
 
   <div class="meaning-grid">
     <section class="meaning-card">
       <h2>Al derecho</h2>
-      <p>${rank_light}. En el palo de ${suit_name}, esta energia se expresa a traves de ${suit_area}. Es una invitacion a actuar con presencia y comprobar los hechos antes de cerrar una conclusion.</p>
+      <p>${rank_light}. En el palo de ${suit_name}, esta energía se expresa a través de ${suit_area}. Es una invitación a actuar con presencia y comprobar los hechos antes de cerrar una conclusión.</p>
     </section>
     <section class="meaning-card">
       <h2>Invertida</h2>
-      <p>${rank_shadow}. Tambien puede reflejar ${suit_shadow}. No indica fracaso: pide revisar si la energia esta bloqueada, exagerada o dirigida hacia un lugar que no responde a tu pregunta real.</p>
+      <p>${rank_shadow}. También puede reflejar ${suit_shadow}. No indica fracaso: pide revisar si la energía está bloqueada, exagerada o dirigida hacia un lugar que no responde a tu pregunta real.</p>
     </section>
   </div>
 
 $(ad_block "🃏" "Espacio junto a Arcanos Menores" "Contexto evergreen para usuarios que estudian significados concretos del tarot." "Ver espacios →")
 
   <section class="panel">
-    <h2>${name} en amor y vinculos</h2>
-    <p>En preguntas afectivas, ${name} habla de como se mueve ${suit_area} dentro del vinculo. Si sale al derecho, observa que gesto confirma disponibilidad. Si aparece invertida, pregunta que expectativa o patron esta pesando mas que la realidad visible.</p>
+    <h2>${name} en amor y vínculos</h2>
+    <p>En preguntas afectivas, ${name} habla de cómo se mueve ${suit_area} dentro del vínculo. Si sale al derecho, observa qué gesto confirma disponibilidad. Si aparece invertida, pregunta qué expectativa o patrón está pesando más que la realidad visible.</p>
   </section>
 
   <section class="panel">
     <h2>${name} en trabajo y decisiones</h2>
-    <p>En trabajo, proyectos o dinero, esta carta pide traducir la intuicion a una accion verificable: ${suit_action}. Si la pregunta implica otras personas, separa hechos, interpretaciones y acuerdos pendientes antes de decidir.</p>
+    <p>En trabajo, proyectos o dinero, esta carta pide traducir la intuición a una acción verificable: ${suit_action}. Si la pregunta implica otras personas, separa hechos, interpretaciones y acuerdos pendientes antes de decidir.</p>
   </section>
 
   <section class="panel">
     <h2>Pregunta para tu diario</h2>
     <p><strong>${rank_question}?</strong></p>
-    <p>Anota la pregunta, la orientacion de la carta y una accion concreta para hoy. Revisa al final del dia que ocurrio realmente; ese contraste mejora tus lecturas futuras mas que repetir la tirada.</p>
+    <p>Anota la pregunta, la orientación de la carta y una acción concreta para hoy. Revisa al final del día qué ocurrió realmente; ese contraste mejora tus lecturas futuras más que repetir la tirada.</p>
   </section>
 
   <div class="next-links">
@@ -468,11 +468,11 @@ ${COMMON_CSS}
 <div class="container">
   <nav class="breadcrumb"><a href="/">Tarot del Día</a> › Arcanos Menores</nav>
   <h1>Los 56 <span>Arcanos Menores</span></h1>
-  <p class="intro">Los Arcanos Menores aterrizan la lectura en escenas concretas: deseo, vinculos, conversaciones, recursos, trabajo y acciones del dia. Usa este indice para encontrar cada carta por palo y numero.</p>
+  <p class="intro">Los Arcanos Menores aterrizan la lectura en escenas concretas: deseo, vínculos, conversaciones, recursos, trabajo y acciones del día. Usa este índice para encontrar cada carta por palo y número.</p>
   <section class="panel">
     <h2>Cómo leer los Arcanos Menores</h2>
-    <p>Los palos muestran el area de experiencia y los numeros describen el momento del proceso. Un As inicia, un Cinco tensiona, un Diez culmina; las figuras muestran formas de aprender, moverse, cuidar o dirigir esa energia.</p>
-    <p>En una tirada diaria, los Arcanos Menores suelen responder mejor a preguntas practicas: que conversacion preparar, que recurso revisar, donde poner energia o que limite cuidar. Por eso cada ficha incluye una pregunta de diario y una accion concreta.</p>
+    <p>Los palos muestran el área de experiencia y los números describen el momento del proceso. Un As inicia, un Cinco tensiona, un Diez culmina; las figuras muestran formas de aprender, moverse, cuidar o dirigir esa energía.</p>
+    <p>En una tirada diaria, los Arcanos Menores suelen responder mejor a preguntas prácticas: qué conversación preparar, qué recurso revisar, dónde poner energía o qué límite cuidar. Por eso cada ficha incluye una pregunta de diario y una acción concreta.</p>
   </section>
   ${MINOR_GRID}
 $(cluster_recirculation_block "$SITE_KEY")
@@ -697,6 +697,10 @@ ${COMMON_CSS}
     .intent-nav a{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem;box-shadow:var(--shadow)}
     .intent-nav strong{display:block;color:var(--accent);font-size:.9rem;margin-bottom:.25rem}
     .intent-nav span{display:block;color:var(--muted);font-size:.78rem;line-height:1.45}
+    .editorial-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+    .editorial-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .editorial-card h3{font-size:.98rem;margin-bottom:.45rem;color:var(--accent)}
+    .editorial-card p{color:var(--muted);font-size:.88rem;line-height:1.7}
     .seo-text{margin:2rem 0}
     .seo-text h2{font-size:1.1rem;margin:1.2rem 0 .5rem}
     .seo-text p{line-height:1.7;color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
@@ -774,6 +778,23 @@ $(ad_block "🔮" "¿Quieres llegar a usuarios que consultan tarot hoy?" "Espaci
 
     <h2>¿Cómo hacer una tirada de tarot gratis?</h2>
     <p>Relájate, formula mentalmente tu pregunta o intención. Baraja y pulsa en 3 cartas del mazo para revelarlas. Cada carta puede salir al derecho (energía fluida) o invertida (energía bloqueada o interiorizada). La lectura integra posición, orientación y relación entre cartas para darte un mensaje completo.</p>
+
+    <h2>Método para interpretar las tres cartas</h2>
+    <p>Antes de leer el resultado, distingue el papel de cada posición. Pasado señala el patrón que todavía influye, Presente muestra la energía activa y Futuro describe una tendencia si mantienes el mismo enfoque. Ninguna carta obliga a una decisión: funciona mejor como una pregunta precisa sobre lo que puedes observar y ajustar hoy.</p>
+    <div class="editorial-grid">
+      <article class="editorial-card">
+        <h3>Pasado</h3>
+        <p>Busca qué experiencia reciente condiciona tu lectura. Puede ser una conversación pendiente, una expectativa repetida o una forma de protegerte que ya no encaja con la situación actual.</p>
+      </article>
+      <article class="editorial-card">
+        <h3>Presente</h3>
+        <p>Lee esta carta como el punto de decisión. Pregunta qué hecho concreto confirma su mensaje y qué parte depende de tu acción, tu pausa o tu manera de comunicar.</p>
+      </article>
+      <article class="editorial-card">
+        <h3>Futuro</h3>
+        <p>Trátala como tendencia, no como sentencia. Si el mensaje te ayuda, conviértelo en un paso pequeño; si alerta de bloqueo, revisa qué dato falta antes de reaccionar.</p>
+      </article>
+    </div>
 
     <h2>Los 22 Arcanos Mayores</h2>
     <p>Los Arcanos Mayores son las 22 cartas más poderosas del tarot. Representan arquetipos universales que reflejan las grandes lecciones y transiciones de la vida. Desde El Loco (el inicio del viaje) hasta El Mundo (la completud), cada arcano contiene una sabiduría ancestral que trasciende culturas y épocas.</p>

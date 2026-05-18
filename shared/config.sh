@@ -500,7 +500,7 @@ EOF
 cluster_recirculation_block() {
   local current="$1"
   local heading="Completa tu lectura"
-  local intro="Siguiente capa recomendada segun lo que estas consultando ahora."
+  local intro="Siguiente capa recomendada según lo que estás consultando ahora."
   local cards=""
   local primary=""
   local journey="${CLUSTER_JOURNEY_NAME[$current]:-Cluster astro}"
@@ -508,45 +508,45 @@ cluster_recirculation_block() {
   case "$current" in
     carta-astral)
       primary="compatibilidad-signos"
-      intro="Tu carta es el mapa base. Ahora puedes llevarla a relaciones, identidad simbolica o practica interior."
+      intro="Tu carta es el mapa base. Ahora puedes llevarla a relaciones, identidad simbólica o práctica interior."
       cards+=$(cluster_card "compatibilidad-signos" "Paso principal" "Compatibilidad de Signos" "Cruza la lectura personal con la afinidad de pareja, amistad o convivencia." "Ver compatibilidad" "primary")
-      cards+=$(cluster_card "calcular-numerologia" "Capa simbolica" "Calcular Numerología" "Contrasta tu carta con tu numero de vida y patrones personales." "Calcular mi numero" "secondary")
-      cards+=$(cluster_card "meditacion-chakras" "Integracion" "Meditación de Chakras" "Convierte lo que muestra la carta en una practica breve de equilibrio." "Empezar practica" "secondary")
+      cards+=$(cluster_card "calcular-numerologia" "Capa simbólica" "Calcular Numerología" "Contrasta tu carta con tu número de vida y patrones personales." "Calcular mi número" "secondary")
+      cards+=$(cluster_card "meditacion-chakras" "Integración" "Meditación de Chakras" "Convierte lo que muestra la carta en una práctica breve de equilibrio." "Empezar práctica" "secondary")
       ;;
     compatibilidad-signos)
       primary="carta-astral"
-      intro="La compatibilidad por signo es una primera capa. Para afinar, conviene mirar carta natal, una consulta puntual o integracion emocional."
+      intro="La compatibilidad por signo es una primera capa. Para afinar, conviene mirar carta natal, una consulta puntual o integración emocional."
       cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Personaliza la afinidad con Luna, Venus, Marte y ascendente." "Calcular carta" "primary")
-      cards+=$(cluster_card "tarot-del-dia" "Duda concreta" "Tarot del Día" "Haz una tirada breve si necesitas orientar una decision sentimental." "Hacer tirada" "secondary")
-      cards+=$(cluster_card "meditacion-chakras" "Equilibrio" "Meditación de Chakras" "Trabaja el chakra del corazon antes de sacar conclusiones." "Abrir practica" "secondary")
+      cards+=$(cluster_card "tarot-del-dia" "Duda concreta" "Tarot del Día" "Haz una tirada breve si necesitas orientar una decisión sentimental." "Hacer tirada" "secondary")
+      cards+=$(cluster_card "meditacion-chakras" "Equilibrio" "Meditación de Chakras" "Trabaja el chakra del corazón antes de sacar conclusiones." "Abrir práctica" "secondary")
       ;;
     tarot-del-dia)
       primary="meditacion-chakras"
-      intro="El tarot da una senal inmediata. El siguiente paso es integrarla, contrastarla con el dia o llevarla a una lectura personal."
-      cards+=$(cluster_card "meditacion-chakras" "Paso principal" "Meditación de Chakras" "Aterriza el mensaje de la tirada con una practica guiada." "Integrar ahora" "primary")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Contexto diario" "Horóscopo de Hoy" "Consulta la energia de tu signo para completar la lectura del dia." "Ver mi signo" "secondary")
-      cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "Amplia la tirada con personalidad, ciclos y relaciones." "Calcular carta" "secondary")
+      intro="El tarot da una señal inmediata. El siguiente paso es integrarla, contrastarla con el día o llevarla a una lectura personal."
+      cards+=$(cluster_card "meditacion-chakras" "Paso principal" "Meditación de Chakras" "Aterriza el mensaje de la tirada con una práctica guiada." "Integrar ahora" "primary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Contexto diario" "Horóscopo de Hoy" "Consulta la energía de tu signo para completar la lectura del día." "Ver mi signo" "secondary")
+      cards+=$(cluster_card "carta-astral" "Capa profunda" "Carta Astral Gratis" "Amplía la tirada con personalidad, ciclos y relaciones." "Calcular carta" "secondary")
       ;;
     calcular-numerologia)
       primary="carta-astral"
-      intro="Tu numero describe un patron. Puedes completarlo con carta natal, practica energetica o seguimiento diario."
-      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Combina numero de vida con planetas, casas y ascendente." "Completar perfil" "primary")
-      cards+=$(cluster_card "meditacion-chakras" "Activacion" "Meditación de Chakras" "Lleva el patron numerologico a una practica corporal sencilla." "Activar energia" "secondary")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horóscopo de Hoy" "Anade una lectura ligera del dia para observar tendencias." "Ver hoy" "secondary")
+      intro="Tu número describe un patrón. Puedes completarlo con carta natal, práctica energética o seguimiento diario."
+      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Combina número de vida con planetas, casas y ascendente." "Completar perfil" "primary")
+      cards+=$(cluster_card "meditacion-chakras" "Activación" "Meditación de Chakras" "Lleva el patrón numerológico a una práctica corporal sencilla." "Activar energía" "secondary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Seguimiento" "Horóscopo de Hoy" "Añade una lectura ligera del día para observar tendencias." "Ver hoy" "secondary")
       ;;
     horoscopo-de-hoy)
       primary="tarot-del-dia"
-      intro="El horoscopo marca el clima general del dia. Si quieres una senal concreta, una practica o personalizacion, continua aqui."
-      cards+=$(cluster_card "tarot-del-dia" "Paso principal" "Tarot del Día" "Haz una tirada rapida si buscas una senal adicional para decidir hoy." "Abrir tirada" "primary")
-      cards+=$(cluster_card "meditacion-chakras" "Energia del dia" "Meditación de Chakras" "Complementa tu signo con una practica en el centro que mas necesita atencion." "Meditar ahora" "secondary")
-      cards+=$(cluster_card "carta-astral" "Personalizacion" "Carta Astral Gratis" "Pasa de prediccion general a lectura con fecha, hora y lugar." "Calcular carta" "secondary")
+      intro="El horóscopo marca el clima general del día. Si quieres una señal concreta, una práctica o personalización, continúa aquí."
+      cards+=$(cluster_card "tarot-del-dia" "Paso principal" "Tarot del Día" "Haz una tirada rápida si buscas una señal adicional para decidir hoy." "Abrir tirada" "primary")
+      cards+=$(cluster_card "meditacion-chakras" "Energía del día" "Meditación de Chakras" "Complementa tu signo con una práctica en el centro que más necesita atención." "Meditar ahora" "secondary")
+      cards+=$(cluster_card "carta-astral" "Personalización" "Carta Astral Gratis" "Pasa de predicción general a lectura con fecha, hora y lugar." "Calcular carta" "secondary")
       ;;
     meditacion-chakras)
       primary="carta-astral"
-      intro="Tu practica muestra un estado actual. Puedes cruzarlo con energia natal, clima del dia o una senal intuitiva."
-      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Descubre los planetas que rigen tu energia y como influyen en tu bienestar." "Ver carta" "primary")
-      cards+=$(cluster_card "horoscopo-de-hoy" "Energia diaria" "Horóscopo de Hoy" "Consulta que energia domina hoy segun tu signo para orientar la practica." "Leer horoscopo" "secondary")
-      cards+=$(cluster_card "tarot-del-dia" "Mensaje interior" "Tarot del Día" "Haz una tirada breve antes o despues de meditar." "Tirar cartas" "secondary")
+      intro="Tu práctica muestra un estado actual. Puedes cruzarlo con energía natal, clima del día o una señal intuitiva."
+      cards+=$(cluster_card "carta-astral" "Paso principal" "Carta Astral Gratis" "Descubre los planetas que rigen tu energía y cómo influyen en tu bienestar." "Ver carta" "primary")
+      cards+=$(cluster_card "horoscopo-de-hoy" "Energía diaria" "Horóscopo de Hoy" "Consulta qué energía domina hoy según tu signo para orientar la práctica." "Leer horóscopo" "secondary")
+      cards+=$(cluster_card "tarot-del-dia" "Mensaje interior" "Tarot del Día" "Haz una tirada breve antes o después de meditar." "Tirar cartas" "secondary")
       ;;
     *)
       cards+=$(cluster_card "carta-astral" "Astrología" "Carta Astral Gratis" "Descubre tu carta natal completa con una interpretación personalizada." "Abrir →")

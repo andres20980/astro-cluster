@@ -523,6 +523,10 @@ ${COMMON_CSS}
     .spotlight-links{display:grid;gap:.45rem}
     .spotlight-links a{display:flex;justify-content:space-between;gap:.8rem;text-decoration:none;color:var(--text);font-size:.84rem;border-bottom:1px solid var(--border);padding-bottom:.35rem}
     .spotlight-links strong{color:var(--accent)}
+    .editorial-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1rem 0}
+    .editorial-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;box-shadow:var(--shadow)}
+    .editorial-card h3{font-size:.98rem;margin-bottom:.45rem;color:var(--accent)}
+    .editorial-card p{color:var(--muted);font-size:.88rem;line-height:1.7}
   </style>
 </head>
 <body>
@@ -602,6 +606,26 @@ $(ad_block "🔮" "Patrocina tráfico orgánico de alta intención" "Tu marca pu
     <h2>¿La compatibilidad de signos determina una relación?</h2>
     <p>El signo solar es solo una parte de tu carta astral. La verdadera compatibilidad amorosa depende de la interacción entre las cartas natales completas de ambas personas: la posición de Venus (cómo amas), Marte (cómo deseas), la Luna (tus emociones) y el ascendente (cómo te perciben). Nuestra herramienta gratuita de <a href="https://carta-astral-gratis.es/">carta astral</a> te permite calcular todos estos factores.</p>
   </div>
+
+  <section class="panel">
+    <h2>Cómo leer la tabla sin quedarse solo con el porcentaje</h2>
+    <p>El porcentaje ayuda a ordenar una primera comparación, pero la lectura útil empieza cuando separas atracción, convivencia y reparación. Dos signos pueden tener mucha química y aun así necesitar acuerdos claros sobre tiempos, planes, dinero o forma de discutir. También puede ocurrir lo contrario: una combinación exigente puede estabilizarse si ambos entienden qué activa al otro y qué necesita para bajar la defensa.</p>
+    <p>Por eso cada combinación incluye fortalezas, retos, preguntas prácticas y enlaces a cartas natales. La tabla sirve como mapa de conversación: no decide por la pareja, pero ayuda a detectar qué temas conviene hablar antes de repetir el mismo conflicto.</p>
+    <div class="editorial-grid">
+      <article class="editorial-card">
+        <h3>1. Compara el elemento</h3>
+        <p>Fuego, Tierra, Aire y Agua muestran el clima básico: impulso, seguridad, diálogo o emoción. Cuando los elementos cooperan, la relación suele sentirse natural; cuando chocan, conviene traducir necesidades antes de reaccionar.</p>
+      </article>
+      <article class="editorial-card">
+        <h3>2. Observa el ritmo</h3>
+        <p>La modalidad explica cómo cada signo inicia, sostiene o adapta. Muchas tensiones no nacen de falta de amor, sino de ritmos distintos para decidir, cambiar de plan o cerrar una conversación pendiente.</p>
+      </article>
+      <article class="editorial-card">
+        <h3>3. Lleva la lectura a hechos</h3>
+        <p>Antes de sacar conclusiones, revisa tres escenas concretas: cómo pedís espacio, cómo reparáis una discusión y cómo tomáis decisiones compartidas. Ahí se ve si la compatibilidad se convierte en cuidado real.</p>
+      </article>
+    </div>
+  </section>
 
 $(cluster_recirculation_block "$SITE_KEY")
 
