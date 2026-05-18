@@ -314,7 +314,7 @@ jobs:
             page=$(curl -sS --connect-timeout 10 --max-time 30 \
               -H "Cache-Control: no-cache" \
               "https://${DOMAIN}/?gsc_verify_attempt=${attempt}" || true)
-            if echo "$page" | grep -Fq "$verify_token_value"; then
+            if grep -Fq "$verify_token_value" <<< "$page"; then
               token_visible="true"
               echo "Token META visible en ${DOMAIN} (intento ${attempt})."
               break
