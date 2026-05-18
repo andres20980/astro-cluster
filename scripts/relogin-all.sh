@@ -65,8 +65,8 @@ declare -A GCP_PROJECTS=(
 declare -a SERVICES=(
   "github"
   "gcloud"
-  "firebase"
   "serviceaccount"
+  "firebase"
 )
 
 usage() {
@@ -328,7 +328,9 @@ relogin_serviceaccount() {
     return 1
   fi
   
+  export GOOGLE_APPLICATION_CREDENTIALS="$creds_path"
   log_success "Service account credentials are valid"
+  log_success "GOOGLE_APPLICATION_CREDENTIALS exported"
 }
 
 ##
@@ -358,8 +360,8 @@ test_firebase() {
 
   # Preferred path: service account / ADC (non-interactive, CI-friendly)
   if [[ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]] && [[ -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]]; then
-    if gcloud auth application-default print-access-token >/dev/null 2>&1; then
-      log_success "Firebase authentication test passed (service account / ADC)"
+    if GOOGLE_APPLICATION_CREDENTIALS="${GOOGLE_APPLICATION_CREDENTIALS}" firebase projects:list --json --non-interactive >/dev/null 2>&1; then
+      log_success "Firebase authentication test passed (service account)"
       return 0
     fi
   fi
@@ -375,7 +377,7 @@ test_firebase() {
 }
 
 test_serviceaccount() {
-  if [[ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]] && [[ ! -f "$REPO_ROOT/.firebase/service-account.json" ]]; then
+  if [[ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ]]; then
     log_warning "Service account not configured, skipping test"
     return 0
   fi
